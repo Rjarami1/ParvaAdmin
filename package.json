@@ -1,0 +1,22 @@
+{
+  "name": "parvaadmin",
+  "version": "1.0.0",
+  "description": "This is a desktop app for managing a bakery.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rjarami1/ParvaAdmin.git"
+  },
+  "author": "Ricardo Jaramillo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rjarami1/ParvaAdmin/issues"
+  },
+  "homepage": "https://github.com/Rjarami1/ParvaAdmin#readme",
+  "dependencies": {
+    "electron": "^7.1.8"
+  }
+}
