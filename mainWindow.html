@@ -23,13 +23,13 @@
     
     <script>
     const {ipcRenderer} = require('electron');
+    const errormsg = document.querySelector('#loginError');
     
     document.querySelector('form').addEventListener('submit', (e) => {
         e.preventDefault()
         const userLogin = document.querySelector('#user').value;
         const passLogin = document.querySelector('#password').value;
-        const errormsg = document.querySelector('#loginError');
-
+        
         if(userLogin == '' || passLogin == ''){
             errormsg.textContent = 'Por favor ingresar todos los campos';
         }
@@ -39,6 +39,15 @@
             errormsg.textContent = '';
         }
         
+    })
+
+    ipcRenderer.on('login:info', (e, val) => {
+        if(val == 1){
+            errormsg.textContent = 'Usuario o contraseña no válidos'
+        }
+        else{
+            errormsg.textContent = '';
+        }
     })
 
     </script>
