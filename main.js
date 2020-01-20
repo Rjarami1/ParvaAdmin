@@ -2,14 +2,16 @@ const electron = require('electron');
 const path = require('path');
 const url = require('url')
 
-const pg = require('pg');
-const {Pool} = pg;
+db = require('./connection');
 
 //Initializing electron objects
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 
 //Declaring Browser Windows
 let mainWindow;
+
+let userInfo;
+let mainwc;
 
 function createMainWindow() {
     mainWindow = new BrowserWindow({
@@ -19,6 +21,8 @@ function createMainWindow() {
             nodeIntegration: true
         }
     })
+
+    mainwc = mainWindow.webContents;
 
     mainWindow.loadFile('mainWindow.html');
 
@@ -37,27 +41,31 @@ app.on('ready', () => {
 ipcMain.on('login:in', (e, arr) => {
 
     //Construye consulta
-    const text = 'SELECT * FROM public.users WHERE username = $1 AND password = $2'
+    const text = 'SELECT * FROM security.users WHERE login = $1 AND password = $2'
     const values = arr;
 
-    var result;
 
     //Realiza consulta
-    pool.query(text, values, (err, res) => {
+    db.pool.query(text, values, (err, res) => {
         if(err){
             console.log(err.stack)
         }else{
-            result = res.rows[0];
-            if(result == undefined){ //Revisar por qué no se puede hacer esta validación
+            userInfo = res.rows[0];
+            if(userInfo == undefined){ //Revisar por qué no se puede hacer esta validación
                                      //Fuera de la función 'pool.query'
-                mainWindow.webContents.send('login:info', 1);
+                mainwc.send('login:info', 1);
             }
             else{
                 mainWindow.loadFile('welcome.html');
+                mainwc.on('dom-ready', () => {
+                    mainwc.send('user:name', userInfo.name);
+                })
             }
         }
     })
 })
+
+console.log(userInfo);
 
 const mainMenuTemplate = [
     {
@@ -71,7 +79,10 @@ const mainMenuTemplate = [
                 }
             },
             {
-                label: 'Cerrar Sesión'
+                label: 'Cerrar Sesión',
+                click(){
+                    mainWindow.loadFile('mainWindow.html')
+                }
             }
         ]
     }
@@ -94,11 +105,3 @@ if(process.env.NODE_ENV !== 'production'){
     ]
     })
 }
-
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'postgres',
-    password: 'admin',
-    port: 5432
-});

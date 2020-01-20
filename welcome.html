@@ -5,6 +5,15 @@
     <title>Bienvenido!</title>
 </head>
 <body>
-    <h1>Bienvenido!</h1>
+    <h1>Bienvenido <span id="userName"></span>!</h1>
+
+    <script>
+        const {ipcRenderer} = require('electron');
+
+        ipcRenderer.on('user:name', (e, name) => {
+            document.querySelector('#userName').textContent = name;
+            console.log(name);
+        })
+    </script>
 </body>
 </html>
