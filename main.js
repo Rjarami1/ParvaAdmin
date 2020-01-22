@@ -2,7 +2,8 @@ const electron = require('electron');
 const path = require('path');
 const url = require('url')
 
-db = require('./connection');
+const db = require('./connection');
+const userMenu = require('./menuModules');
 
 //Initializing electron objects
 const {app, BrowserWindow, Menu, ipcMain} = electron;
@@ -34,7 +35,7 @@ function createMainWindow() {
 app.on('ready', () => {
     createMainWindow();
 
-    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+    let mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
     Menu.setApplicationMenu(mainMenu);
 });
 
@@ -60,12 +61,16 @@ ipcMain.on('login:in', (e, arr) => {
                 mainwc.on('dom-ready', () => {
                     mainwc.send('user:name', userInfo.name);
                 })
+                userMenu.createMenu(userInfo.user_id, mainWindow)
+                .then(res => {
+                    mainMenuTemplate.push(res);
+                    mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+                    Menu.setApplicationMenu(mainMenu);
+                })
             }
         }
     })
 })
-
-console.log(userInfo);
 
 const mainMenuTemplate = [
     {
