@@ -86,6 +86,18 @@ const mainMenuTemplate = [
             {
                 label: 'Cerrar Sesión',
                 click(){
+                    if(mainMenuTemplate.length > 2){
+                        let i = 0;
+                        mainMenuTemplate.forEach(element => {
+                            if(element.label == 'Modulos'){
+                                mainMenuTemplate.splice(i,1);
+                                //break;
+                            }
+                            i++;
+                        });
+                        mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+                        Menu.setApplicationMenu(mainMenu);
+                    }
                     mainWindow.loadFile('mainWindow.html')
                 }
             }
