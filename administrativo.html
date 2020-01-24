@@ -9,11 +9,69 @@
 
     <button id="createUser">Crear Usuario</button>
 
+    <p>Lista de Usuarios:</p>
     <ul id="usersList"></ul>
+
+    <table style="width: 75%;">
+        <tr>
+            <th>ID</th>
+            <th>Login</th>
+            <th>Nombres</th>
+            <th>Fecha de Creación</th>
+            <th>Último Ingreso</th>
+        </tr>
+    </table>
 
     <script>
     const {ipcRenderer} = require('electron');
+    const tabla = document.querySelector('table');
+    const btn_addUser = document.querySelector('#createUser');
+    
+    //Informar al Main Renderer que la página está lista.
+    document.addEventListener('DOMContentLoaded', (e) => {
+        ipcRenderer.send('admin:ready');
+    })
 
+    //Recibir la lista de usuarios del Main y desplegarlos
+    ipcRenderer.on('users:info', (e, users) => {
+        let tr;
+        let th1, th2, th3, th4, th5;
+        let itemText1, itemText2, itemText3, itemText4, itemText5;
+
+        users.forEach(user => {
+            tr = document.createElement('tr');
+            th1 = document.createElement('th');
+            th2 = document.createElement('th');
+            th3 = document.createElement('th');
+            th4 = document.createElement('th');
+            th5 = document.createElement('th');
+
+            itemText1 = document.createTextNode(user.user_id);
+            itemText2 = document.createTextNode(user.login);
+            itemText3 = document.createTextNode(user.name);
+            itemText4 = document.createTextNode(user.date_create);
+            itemText5 = document.createTextNode(user.date_last_login);
+
+            th1.appendChild(itemText1);
+            th2.appendChild(itemText2);
+            th3.appendChild(itemText3);
+            th4.appendChild(itemText4);
+            th5.appendChild(itemText5);
+
+            tr.appendChild(th1);
+            tr.appendChild(th2);
+            tr.appendChild(th3);
+            tr.appendChild(th4);
+            tr.appendChild(th5);
+
+            tabla.appendChild(tr);            
+        });
+    })
+
+    btn_addUser.addEventListener('click', (e) => {
+        e.preventDefault();
+        ipcRenderer.send('admin:create');
+    })
    
     </script>
 </body>

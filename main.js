@@ -10,9 +10,11 @@ const {app, BrowserWindow, Menu, ipcMain} = electron;
 
 //Declaring Browser Windows
 let mainWindow;
+let createUserWindow;
 
 let userInfo;
 let mainwc;
+let createwc;
 
 function createMainWindow() {
     mainWindow = new BrowserWindow({
@@ -69,6 +71,38 @@ ipcMain.on('login:in', (e, arr) => {
                 })
             }
         }
+    })
+})
+
+ipcMain.on('admin:ready', (e) => {
+    const text = 'SELECT * FROM security.users';
+    let users;
+
+    db.pool.query(text, (err, res) => {
+        if(err){
+            console.log(err.stack);
+        }else{
+            users = res.rows;
+            mainwc.send('users:info', users);
+        }
+    })
+})
+
+ipcMain.on('admin:create', (e) => {
+    createUserWindow = new BrowserWindow({
+        width: 400,
+        height: 300,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
+
+    createwc = createUserWindow.webContents;
+
+    createUserWindow.loadFile('createUser.html');
+
+    createUserWindow.on('close', () => {
+        createUserWindow = null;
     })
 })
 

@@ -6,8 +6,8 @@ const {Pool} = pg;
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'parva',
-    password: 'riky895-',
+    database: 'postgres',
+    password: 'admin',
     port: 5432
 });
 
