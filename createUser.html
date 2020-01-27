@@ -8,20 +8,87 @@
     <h3>Crear Usuario</h3>
 
     <form>
-        <label for="login">Login</label><br>
-        <input type="text" id="login" name="login"><br>
+        <label for="cedula">Cédula</label><br>
+        <input type="text" id="cedula" name="cedula"><br>
 
         <label for="pass">Contraseña</label><br>
         <input type="password" name="pass" id="pass"><br>
 
         <label for="confirm">Confirmar Contraseña</label><br>
         <input type="password" name="confirm" id="confirm"><br>
+        <p id="msg-confirm"></p><br>
 
         <label for="name">Nombres</label><br>
         <input type="text" name="name" id="name"><br>
 
+        <label for="position">Cargo</label><br>
+        <input type="text" name="position" id="position"><br>
+        <p id="msg-error" style="color: red;"></p><br>
+
         <input type="submit" value="Crear"><br>
-        <input type="button" value="Cancelar"><br>
+        <input type="button" value="Cancelar" id="cancel"><br>
     </form>
+
+    <script>
+        const {ipcRenderer} = require('electron');
+
+        const form = document.querySelector('form');
+        const cancelButton = document.querySelector('#cancel');
+        const msgConfirm = document.querySelector('#msg-confirm');
+        const msgError = document.querySelector('#msg-error');
+
+        const cedula = document.querySelector('#cedula');
+        const confirm = document.querySelector('#confirm');
+        const password = document.querySelector('#pass');
+        const name = document.querySelector('#name');
+        const position = document.querySelector('#position');
+
+        let allDone = true;
+
+        confirm.addEventListener('blur', (e) => {
+            if(password.value != confirm.value){
+                msgConfirm.style.color = 'red';
+                msgConfirm.textContent = 'Las contraseñas no coinciden';
+                allDone = false;
+            }else{
+                msgConfirm.style.color = 'green';
+                msgConfirm.textContent = 'Las contraseñas coinciden!';
+                allDone = true;
+            }
+        })
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if(allDone){
+                if(cedula.value == '' || password.value == '' || confirm.value == ''
+                || name.value == '' || position.value == '')
+                {
+                    msgError.textContent = 'Por favor ingrese todos los campos';
+                    allDone = false;
+                }else{
+                    msgError.textContent = '';
+                    allDone = true;
+                }
+            }
+
+            if(allDone){
+                let userInfo = {
+                    cedula: cedula.value,
+                    password: password.value,
+                    name: name.value,
+                    position: position.value
+                }
+
+                ipcRenderer.send('usrCreate:create', userInfo);
+            }
+        })
+
+        cancelButton.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            ipcRenderer.send('usrCreate:cancel');
+        })
+    </script>
 </body>
 </html>

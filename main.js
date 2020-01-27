@@ -44,14 +44,16 @@ app.on('ready', () => {
 ipcMain.on('login:in', (e, arr) => {
 
     //Construye consulta
-    const text = 'SELECT * FROM security.users WHERE login = $1 AND password = $2'
-    const values = arr;
+    const text1 = 'SELECT * FROM security.users WHERE cedula = $1 AND password = $2'
+    const values1 = arr;
+
+    const text2 = 'UPDATE security.users SET date_last_login = LOCALTIMESTAMP WHERE user_id = $1';
 
 
     //Realiza consulta
-    db.pool.query(text, values, (err, res) => {
+    db.pool.query(text1, values1, (err, res) => {
         if(err){
-            console.log(err.stack)
+            console.log(err.stack);
         }else{
             userInfo = res.rows[0];
             if(userInfo == undefined){ //Revisar por qué no se puede hacer esta validación
@@ -59,6 +61,12 @@ ipcMain.on('login:in', (e, arr) => {
                 mainwc.send('login:info', 1);
             }
             else{
+                const values2 = [userInfo.user_id];
+                db.pool.query(text2, values2, (err, res) => {
+                    if(err){
+                        console.log(err.stack);
+                    }
+                })
                 mainWindow.loadFile('welcome.html');
                 mainwc.on('dom-ready', () => {
                     mainwc.send('user:name', userInfo.name);
@@ -75,17 +83,7 @@ ipcMain.on('login:in', (e, arr) => {
 })
 
 ipcMain.on('admin:ready', (e) => {
-    const text = 'SELECT * FROM security.users';
-    let users;
-
-    db.pool.query(text, (err, res) => {
-        if(err){
-            console.log(err.stack);
-        }else{
-            users = res.rows;
-            mainwc.send('users:info', users);
-        }
-    })
+    sendUsersList();
 })
 
 ipcMain.on('admin:create', (e) => {
@@ -94,7 +92,11 @@ ipcMain.on('admin:create', (e) => {
         height: 300,
         webPreferences: {
             nodeIntegration: true
-        }
+        },
+        parent: mainWindow,
+        modal: true,
+        frame: false,
+        resizable: false,
     })
 
     createwc = createUserWindow.webContents;
@@ -103,6 +105,30 @@ ipcMain.on('admin:create', (e) => {
 
     createUserWindow.on('close', () => {
         createUserWindow = null;
+    })
+})
+
+ipcMain.on('usrCreate:cancel', (e) => {
+    createUserWindow.close();
+})
+
+ipcMain.on('usrCreate:create', (e, obj) => {
+    let values = [
+        obj.cedula,
+        obj.name,
+        obj.password,
+        obj.position
+    ];
+
+    const text = 'INSERT INTO security.users(cedula, name, date_create, password, "position") VALUES ($1, $2, LOCALTIMESTAMP, $3, $4);';
+
+    db.pool.query(text, values, (err, res) => {
+        if(err){
+            console.log(err.stack);
+        }else{
+            sendUsersList();
+            createUserWindow.close();
+        }
     })
 })
 
@@ -154,5 +180,19 @@ if(process.env.NODE_ENV !== 'production'){
             role: 'reload'
         }
     ]
+    })
+}
+
+function sendUsersList(){
+    const text = 'SELECT * FROM security.users';
+    let users;
+
+    db.pool.query(text, (err, res) => {
+        if(err){
+            console.log(err.stack);
+        }else{
+            users = res.rows;
+            mainwc.send('users:info', users);
+        }
     })
 }
