@@ -41,7 +41,7 @@
         cleanList();
 
         let tr;
-        let th1, th2, th3, th4, th5, th6;
+        let td1, td2, td3, td4, td5, td6;
         let itemText1, itemText2, itemText3, itemText4, itemText5;
         let dateCreate, dateLast;
 
@@ -50,12 +50,17 @@
             dateLast = new Date(Date.parse(user.date_last_login));
 
             tr = document.createElement('tr');
-            th1 = document.createElement('th');
-            th2 = document.createElement('th');
-            th3 = document.createElement('th');
-            th4 = document.createElement('th');
-            th5 = document.createElement('th');
-            th6 = document.createElement('th');
+            td1 = document.createElement('td');
+            td2 = document.createElement('td');
+            td3 = document.createElement('td');
+            td4 = document.createElement('td');
+            td5 = document.createElement('td');
+            td6 = document.createElement('td');
+
+            tr.addEventListener('click', (e) => {
+                e.preventDefault();
+                ipcRenderer.send('usrCreate:edit', user.user_id);
+            })
 
             itemText1 = document.createTextNode(user.user_id);
             itemText2 = document.createTextNode(user.cedula);
@@ -67,19 +72,19 @@
             dateCreate = null;
             dateLast = null;
 
-            th1.appendChild(itemText1);
-            th2.appendChild(itemText2);
-            th3.appendChild(itemText3);
-            th4.appendChild(itemText4);
-            th5.appendChild(itemText5);
-            th6.appendChild(itemText6)
+            td1.appendChild(itemText1);
+            td2.appendChild(itemText2);
+            td3.appendChild(itemText3);
+            td4.appendChild(itemText4);
+            td5.appendChild(itemText5);
+            td6.appendChild(itemText6)
 
-            tr.appendChild(th1);
-            tr.appendChild(th2);
-            tr.appendChild(th3);
-            tr.appendChild(th4);
-            tr.appendChild(th5);
-            tr.appendChild(th6);
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            tr.appendChild(td4);
+            tr.appendChild(td5);
+            tr.appendChild(td6);
 
             tabla.appendChild(tr);            
         });

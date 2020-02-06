@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Usuario</title>
+</head>
+<body>
+    <h3>Editar Usuario:</h3><br>
+
+    <form>
+        <label for="name">Nombre:</label><br>
+        <input type="text" name="name" id="name"><br>
+
+        <label for="position">Cargo:</label><br>
+        <input type="text" name="position" id="position"><br>
+
+        <button>Reestablecer Contraseña</button><br>
+
+        <p id="error"></p>
+        
+        <h3>Editar Accesos:</h3><br>
+
+        <table id="modules_table"></table>
+
+        <button type="submit" id="submit">Guardar</button> &nbsp;&nbsp;<button id="cancel">Cancelar</button>
+    </form>
+
+    <script>
+        const {ipcRenderer} = require('electron');
+
+        const table = document.querySelector('#modules_table');
+        const name = document.querySelector('#name');
+        const position = document.querySelector('#position');
+        const cancel = document.querySelector('#cancel');
+        const form = document.querySelector('form');
+        const errormsg = document.querySelector('p');
+
+        let userid;
+        let user_modules = [];
+
+        let addModules = [];
+        let removeModules = [];
+
+        ipcRenderer.on('usrEdit:userInfo', (e, dataObject) => {
+            name.value = dataObject.userInfo.name.trim();
+            position.value = dataObject.userInfo.position.trim();
+            
+            userid = dataObject.userInfo.user_id;
+
+            dataObject.userModules.forEach(module => {
+                user_modules.push(module.module_id);
+            });
+
+            console.log(user_modules);
+
+            let modules = dataObject.modules;
+            let userModules = dataObject.userModules;
+            let tr = document.createElement('tr');
+            let td;
+            let text;
+            let label;
+            let checkbox;
+            let column = 1;
+
+            modules.forEach(module => {
+                if(column > 3){
+                    table.appendChild(tr);
+                    tr = null;
+                    tr = document.createElement('tr');
+                    column = 1;
+                }
+
+                td = document.createElement('td');
+                label = document.createElement('label');
+                label.textContent = module.module_name;
+                checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `module_${module.module_id}`;
+                checkbox.className = "modules";
+                checkbox.value = module.module_id;
+                
+                userModules.forEach(userModule => {
+                    if(module.module_id == userModule.module_id){
+                        checkbox.checked = true;
+                    }
+                });
+
+                td.appendChild(label);
+                td.appendChild(checkbox);
+                tr.appendChild(td);
+
+                td = null;
+                column++;
+            });
+
+            table.appendChild(tr);
+            tr = null;
+        })
+
+        cancel.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            ipcRenderer.send('usrEdit:cancel');
+        })
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            let allModules = document.querySelectorAll('.modules');
+
+            allModules.forEach(module => {
+                if(module.checked){
+                    if(!user_modules.includes(parseInt(module.value))){
+                        addModules.push(module.value);
+                    }
+                }
+                else{
+                    removeModules.push(module.value);
+                }
+            });
+
+            if(name.value == '' || position.value == ''){
+                errormsg.textContent = 'No deje ningún campo vacío.'
+                errormsg.style.color = 'red';
+            }else{
+                errormsg.textContent = '';
+                
+                let sendObject = {
+                    user_id: userid,
+                    userName: name.value,
+                    userPosition: position.value,
+                    addedModules: addModules,
+                    removedModules: removeModules
+                }
+                
+                ipcRenderer.send('usrEdit:update', sendObject);
+            }
+
+        })
+        </script>
+</body>
+</html>

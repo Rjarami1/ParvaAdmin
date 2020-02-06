@@ -11,10 +11,12 @@ const {app, BrowserWindow, Menu, ipcMain} = electron;
 //Declaring Browser Windows
 let mainWindow;
 let createUserWindow;
+let editUserWindow;
 
 let userInfo;
 let mainwc;
 let createwc;
+let editwc;
 
 function createMainWindow() {
     mainWindow = new BrowserWindow({
@@ -99,13 +101,13 @@ ipcMain.on('admin:create', (e) => {
         resizable: false,
     })
 
-    createwc = createUserWindow.webContents;
-
     createUserWindow.loadFile('createUser.html');
+
+    createwc = createUserWindow.webContents;
 
     createUserWindow.on('close', () => {
         createUserWindow = null;
-    })
+    });
 })
 
 ipcMain.on('usrCreate:cancel', (e) => {
@@ -120,7 +122,7 @@ ipcMain.on('usrCreate:create', (e, obj) => {
         obj.position
     ];
 
-    const text = 'INSERT INTO security.users(cedula, name, date_create, password, "position") VALUES ($1, $2, LOCALTIMESTAMP, $3, $4);';
+    const text = 'INSERT INTO security.users(cedula, name, date_create, password, "position", active) VALUES ($1, $2, LOCALTIMESTAMP, $3, $4, true);';
 
     db.pool.query(text, values, (err, res) => {
         if(err){
@@ -130,6 +132,115 @@ ipcMain.on('usrCreate:create', (e, obj) => {
             createUserWindow.close();
         }
     })
+})
+
+ipcMain.on('usrCreate:edit', (e, userid) => {
+    editUserWindow = new BrowserWindow({
+        width: 600,
+        height: 400,
+        webPreferences: {
+            nodeIntegration: true
+        },
+        parent: mainWindow,
+        modal: true,
+        frame: false,
+        resizable: false
+    })
+
+    editUserWindow.loadFile('editUser.html');
+
+    editwc = editUserWindow.webContents;
+
+    editwc.on('dom-ready', () => {
+        const text1 = 'SELECT user_id, cedula, password, date_create, date_last_login, name, "position", active FROM security.users WHERE user_id = $1;';
+        const text2 = 'SELECT "userModule_id", module_id, user_id FROM security."UsersModules" WHERE user_id = $1;';
+        const text3 = 'SELECT module_id, module_name, page_name FROM security.modules;'
+
+        const values = [userid];
+
+        let userInfo;
+        let userModules;
+        let modules;
+        
+        db.pool.query(text1, values)
+        .then(res => {
+            userInfo = res.rows[0];
+            db.pool.query(text2, values)
+            .then(res => {
+                userModules = res.rows;
+                db.pool.query(text3)
+                .then(res => {
+                    modules = res.rows;
+                    let dataObject ={
+                        userInfo: userInfo,
+                        userModules: userModules,
+                        modules: modules
+                    };
+                    // console.log(JSON.stringify(dataObject, null, 2));
+                    editwc.send('usrEdit:userInfo', dataObject);
+                })
+            })
+        })
+        .catch(e => console.error(e.stack));
+    })
+
+    editUserWindow.on('close', () => {
+        editUserWindow = null;
+    });
+})
+
+ipcMain.on('usrEdit:cancel', (e) => {
+    editUserWindow.close();
+})
+
+ipcMain.on('usrEdit:update', (e, obj) => {
+    // console.log(JSON.stringify(obj, null, 2));
+    
+    const userText = 'UPDATE security.users SET name = $1, position = $2 WHERE user_id = $3;'
+    const values1 = [obj.userName, obj.userPosition, obj.user_id];
+
+    let idquery = '';
+    obj.addedModules.forEach(id => {
+        idquery = `${idquery}(${id},${obj.user_id}),`
+    });
+    idquery = idquery.slice(0,-1);
+
+    const addModulesText = `INSERT INTO security."UsersModules" (module_id, user_id) VALUES ${idquery};`
+
+    idquery = '';
+    obj.removedModules.forEach(id => {
+        idquery = `${idquery}${id},`;
+    });
+    idquery = idquery.slice(0,-1);
+
+    const removeModulesText = `DELETE FROM security."UsersModules" WHERE module_id IN (${idquery}) AND user_id = ${obj.user_id};`
+
+    db.pool.query(userText, values1)
+    .then(res => {
+        console.log('User name and position updated!');
+    })
+    .catch(err => console.log(err.stack))
+
+    
+    if(obj.addedModules.length > 0){
+        db.pool.query(addModulesText)
+        .then(res => {
+            console.log('Modules added to user!')
+        })
+        .catch(err => console.log(err.stack))
+    }
+
+    if(obj.removedModules.length > 0){
+        db.pool.query(removeModulesText)
+        .then(res => {
+            console.log('Modules removed from user!')
+        })
+        .catch(err => console.log(err.stack))
+    }
+
+    editUserWindow.close();
+    sendUsersList();
+
 })
 
 const mainMenuTemplate = [
