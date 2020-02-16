@@ -2,18 +2,22 @@
 <html lang="en">
 <head>
 
-    <!-- Bootstrap 4 CSS -->
+<!-- Bootstrap 4 CSS -->
     <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles/stilosDaniel.css">
-    
+
     <meta charset="UTF-8">
     <title>Administración de Usuarios</title>
 </head>
 
 <body>
 
-    <div class="encabezado">
+    <div class="encabezadoPrinSup">
         <h2>Administración de Usuarios</h2>
+    </div>
+
+    <div class="encabezadoPrinInf">
+        <h2 class="encabezadoPrinInflet">Fecha: Febrero 15 de 2020</h2>
     </div>
 
     <button id="createUser">Crear Usuario</button>
@@ -21,16 +25,46 @@
     <p>Lista de Usuarios:</p>
     <ul id="usersList"></ul>
 
-    <table style="width: 75%;">
-        <tr>
-            <th>ID</th>
-            <th>Login</th>
-            <th>Nombres</th>
-            <th>Fecha de Creación</th>
-            <th>Último Ingreso</th>
-            <th>Cargo</th>
-        </tr>
-    </table>
+    <div class="tablaAdmin">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Login</th>
+                    <th>Nombres</th>
+                    <th>Fecha de Creación</th>
+                    <th>Último Ingreso</th>
+                    <th>Cargo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">29298128</th>
+                    <td>Activo</td>
+                    <td>Oscar Zuluaga</td>
+                    <td>26/02/2020</td>
+                    <td>28/02/2020</td>
+                    <td>Panadero</td>
+                </tr>
+                <tr>
+                    <th scope="row">32267327</th>
+                    <td>Activo</td>
+                    <td>Camila López</td>
+                    <td>26/02/2020</td>
+                    <td>28/02/2020</td>
+                    <td>Panadera</td>
+                </tr>
+                <tr>
+                    <th scope="row">828378127</th>
+                    <td>Activo</td>
+                    <td>Esteban Pérez</td>
+                    <td>26/02/2020</td>
+                    <td>28/02/2020</td>
+                    <td>Cajero</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <script>
     const {ipcRenderer} = require('electron');
@@ -119,7 +153,7 @@
 
     </script>
         <!-- jQuery library -->
-        <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuerry.js"></script>
+        <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
 
 </body>
 </html>

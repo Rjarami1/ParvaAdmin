@@ -4,6 +4,15 @@ body .central{
     align-items: center;
 }
 
+body .tablaAdmin{
+    width: 800px;
+    position: absolute;
+    z-index:100000; 
+    left:60%;
+    top: 60%;
+    transform: translate(-50%,-50%);
+}
+
 body.fondo{
     background-color: #B4CBF0;
 }
@@ -23,6 +32,22 @@ body .encabezado{
     background-color: #6B81A4;
     height: 200px;
     position: relative;
+}
+
+body .encabezadoPrinSup{
+    background-color: #6B81A4;
+    height: 130px;
+    position: relative;
+}
+
+body .encabezadoPrinInf{
+    background-color: #B4CBF0;
+    height: 30px;
+    position: relative;
+}
+
+body .encabezadoPrinInflet{
+    font-size: 20px;    
 }
 
 body .central .btn-primary{
