@@ -29,7 +29,7 @@ function createMainWindow() {
 
     mainwc = mainWindow.webContents;
 
-    mainWindow.loadFile('mainWindow.html');
+    mainWindow.loadFile('src/mainWindow.html');
 
     mainWindow.on('close', () => {
         mainWindow = null;
@@ -69,7 +69,7 @@ ipcMain.on('login:in', (e, arr) => {
                         console.log(err.stack);
                     }
                 })
-                mainWindow.loadFile('welcome.html');
+                mainWindow.loadFile('src/welcome.html');
                 mainwc.on('dom-ready', () => {
                     mainwc.send('user:name', userInfo.name);
                 })
@@ -101,7 +101,7 @@ ipcMain.on('admin:create', (e) => {
         resizable: false,
     })
 
-    createUserWindow.loadFile('createUser.html');
+    createUserWindow.loadFile('src/createUser.html');
 
     createwc = createUserWindow.webContents;
 
@@ -147,7 +147,7 @@ ipcMain.on('usrCreate:edit', (e, userid) => {
         resizable: false
     })
 
-    editUserWindow.loadFile('editUser.html');
+    editUserWindow.loadFile('src/editUser.html');
 
     editwc = editUserWindow.webContents;
 
@@ -269,7 +269,7 @@ const mainMenuTemplate = [
                         mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
                         Menu.setApplicationMenu(mainMenu);
                     }
-                    mainWindow.loadFile('mainWindow.html')
+                    mainWindow.loadFile('src/mainWindow.html')
                 }
             }
         ]

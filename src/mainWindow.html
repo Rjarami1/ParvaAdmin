@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/stilosDaniel.css">
+
+    <meta charset="UTF-8">
+    <title>SGP - Ingreso de Usuario</title>
+
+</head> 
+
+<body class="fondo">
+
+    <div class="encabezado">
+    <h3>Bienvenido al Sistema de Gestion de Panadería</h3>
+    </div>
+
+    <!-- Contenedor de login -->
+    <div class= "central">
+    <form id="form1" class="custom-form p-4">
+        <div class="form-group">
+        <label for="exampleDropdownFormEmail2">Usuario</label>
+        <input type="email" class="form-control" id="nombreUsuario" placeholder="Nombre de usuario">
+        </div>
+        <div class="form-group">
+        <label for="exampleDropdownFormPassword2">Contraseña</label>
+        <input type="password" class="form-control" id="contraseñaUsuario" placeholder="Contraseña">
+        </div>
+        <div class="form-check">
+
+        <input type="checkbox" class="form-check-input" id="dropdownCheck2">
+        <label class="form-check-label" for="dropdownCheck2">
+            Recuerdame
+        </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Ingresar</button>
+    </form>
+    </div>
+
+
+    <script>
+    const {ipcRenderer} = require('electron');
+    const errormsg = document.querySelector('#loginError');
+    
+    document.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault()
+        const userLogin = document.querySelector('#user').value;
+        const passLogin = document.querySelector('#password').value;
+        
+        if(userLogin == '' || passLogin == ''){
+            errormsg.textContent = 'Por favor ingresar todos los campos';
+        }
+        else
+        {
+            ipcRenderer.send('login:in', [userLogin, passLogin]);
+            errormsg.textContent = '';
+        }
+        
+    })
+
+    ipcRenderer.on('login:info', (e, val) => {
+        if(val == 1){
+            errormsg.textContent = 'Usuario o contraseña no válidos'
+        }
+        else{
+            errormsg.textContent = '';
+        }
+    })
+
+    </script> 
+
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuerry.js"></script>
+
+</body>
+</html>

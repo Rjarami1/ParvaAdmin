@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/Rjarami1/ParvaAdmin#readme",
   "dependencies": {
-    "electron": "^7.1.8",
     "pg": "^7.17.1"
+  },
+  "devDependencies": {
+    "electron": "^7.1.12"
   }
 }
