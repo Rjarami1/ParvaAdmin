@@ -4,10 +4,10 @@ const pg = require('pg');
 const {Pool} = pg;
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
+    user: 'myadmin@parvaadmin',
+    host: 'parvaadmin.postgres.database.azure.com',
     database: 'postgres',
-    password: 'admin',
+    password: 'abcABC123',
     port: 5432
 });
 
