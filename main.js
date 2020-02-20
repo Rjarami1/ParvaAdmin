@@ -46,7 +46,7 @@ app.on('ready', () => {
 ipcMain.on('login:in', (e, arr) => {
 
     //Construye consulta
-    const text1 = 'SELECT * FROM security.users WHERE cedula = $1 AND password = $2'
+    const text1 = 'SELECT * FROM security.users WHERE cedula = $1 AND password = $2 AND active = true';
     const values1 = arr;
 
     const text2 = 'UPDATE security.users SET date_last_login = LOCALTIMESTAMP WHERE user_id = $1';
