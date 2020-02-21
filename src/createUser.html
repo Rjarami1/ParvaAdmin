@@ -1,13 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/stilosDaniel.css">
+
     <meta charset="UTF-8">
     <title>Crear Usuario</title>
 </head>
 <body>
-    <h3>Crear Usuario</h3>
 
-    <form>
+    <div class="banner">
+        
+    </div>
+
+    <div class="encabezadoPrinSup">
+        <h2>Crear Usuario</h2>
+    </div>
+
+    <div class="encabezadoPrinInf">
+        <h2 class="encabezadoPrinInflet">Fecha: Febrero 15 de 2020</h2>
+    </div>
+
+    <form class='tablaAdmin'>
         <label for="cedula">Cédula</label><br>
         <input type="text" id="cedula" name="cedula"><br>
 
@@ -90,5 +106,9 @@
             ipcRenderer.send('usrCreate:cancel');
         })
     </script>
+
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
 </body>
 </html>
