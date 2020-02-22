@@ -17,7 +17,6 @@
             <th>ID Producto</th>
             <th>Codigo Producto</th>
             <th>Nombre del Producto</th>
-            <th>Cantidad</th>
             <th>Descripcion</th>
             <th>Estado</th>
         </tr>
@@ -43,7 +42,7 @@
 
         btn_addProduct.addEventListener('click', (e) => {
             e.preventDefault();
-            ipcRenderer.send('prod:create');//admin:ready
+            ipcRenderer.send('prod:create');//admin:create
         })
 
         function cleanList()

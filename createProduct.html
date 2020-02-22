@@ -51,9 +51,9 @@
             if(allDone)
             {
                 let prodInfo = {
-                    code_prod = code_prod.value,
-                    name_prod = name_prod.value,
-                    descp_prod = descp_prod.value
+                    code_prod: code_prod.value,
+                    name_prod: name_prod.value,
+                    descp_prod: descp_prod.value
                 }
 
                 ipcRenderer.send('prodCreate:create', prodInfo)
