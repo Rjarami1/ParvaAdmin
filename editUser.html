@@ -112,6 +112,12 @@
             ipcRenderer.send('usrEdit:cancel');
         })
 
+        btn_status.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            ipcRenderer.send('usrEdit:toggle', userid);
+        })
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 

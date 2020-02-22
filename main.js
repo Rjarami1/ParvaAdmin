@@ -243,6 +243,19 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 
 })
 
+ipcMain.on('usrEdit:toggle', (e, id) => {
+    const text = 'SELECT security."user_toggle_status"($1);';
+
+    db.pool.query(text, [id], (err, res) => {
+        if(err){
+            console.log(err.stack);
+        }else{
+            editUserWindow.close();
+            sendUsersList();
+        }
+    })
+})
+
 const mainMenuTemplate = [
     {
         label: 'Archivo',
