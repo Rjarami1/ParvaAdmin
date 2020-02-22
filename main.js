@@ -13,9 +13,12 @@ let mainWindow;
 let createUserWindow;
 let editUserWindow;
 
+let createProdWindow;
+
 let userInfo;
 let mainwc;
 let createwc;
+let createprod;
 let editwc;
 
 function createMainWindow() {
@@ -108,6 +111,36 @@ ipcMain.on('admin:create', (e) => {
     createUserWindow.on('close', () => {
         createUserWindow = null;
     });
+})
+
+ipcMain.on('prod:ready', (e) => {
+    //sendProductList();
+})
+
+ipcMain.on('prod:create', (e) => {
+    createProdWindow = new BrowserWindow({
+        width: 500,
+        height: 400,
+        webPreferences: {
+            nodeIntegration: true
+        },
+        parent: mainWindow,
+        modal: true,
+        frame: false,
+        resizable: false,
+    })
+
+    createProdWindow.loadFile('createProduct.html');
+
+    createprod = createProdWindow.webContents;
+
+    createProdWindow.on('close', () => {
+        createProdWindow = null;
+    });
+})
+
+ipcMain.on('prodCreate:cancel', (e) => {
+    createProdWindow.close();
 })
 
 ipcMain.on('usrCreate:cancel', (e) => {

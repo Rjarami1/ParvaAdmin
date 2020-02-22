@@ -11,5 +11,56 @@
 
     <p>Lista de Productos Terminados:</p>
     <ul id="productlist"></ul>
-    
+
+    <table style="width: 85%;">
+        <tr>
+            <th>ID Producto</th>
+            <th>Codigo Producto</th>
+            <th>Nombre del Producto</th>
+            <th>Descripcion</th>
+            <th>Estado</th>
+        </tr>
+    </table>
+
+    <script>
+        const {ipcRenderer} = require('electron');
+        const tabla = document.querySelector('tabla');
+        const btn_addProduct = document.querySelector('#createProduct');
+
+        let x;
+
+        //Informar a render producto que la pagina esta lista.
+        document.addEventListener('DOMContentLoaded', (e) => {
+            ipcRenderer.send('prod:ready');//admin:ready
+        })
+
+        //Recibir la lista de los prodcutos del Main y desplegarlos.
+        ipcRenderer.on('final_products', (e, final_products) => {
+
+            cleanList();
+        })
+
+        btn_addProduct.addEventListener('click', (e) => {
+            e.preventDefault();
+            ipcRenderer.send('prod:create');//admin:create
+        })
+
+        function cleanList()
+        {
+            let table = document.querySelector('table');
+            let children = table.childElementCount;
+
+            if(children > 1)
+            {
+                let child;
+                while(table.childElementCount > 1)
+                {
+                    child = table.lastElementChild;
+                    table.removeChild(child);
+                }
+            }
+        }
+
+    </script>
 </body>
+</html>
