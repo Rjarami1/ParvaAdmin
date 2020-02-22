@@ -4,12 +4,21 @@ body .central{
     align-items: center;
 }
 
+body .botonNuevoUsuario{
+    width: 800px;
+    position: absolute;
+    z-index:100000; 
+    left:75%;
+    top: 80%;
+    transform: translate(-50%,-50%);
+}
+
 body .tablaAdmin{
     width: 800px;
     position: absolute;
     z-index:100000; 
-    left:60%;
-    top: 60%;
+    left:50%;
+    top: 50%;
     transform: translate(-50%,-50%);
 }
 
@@ -74,16 +83,4 @@ body .custom-form.p-4:before{
 
 body .central .custom-form.p-4 .form-group:first-child{
     margin-top: 2rem;
-}
-
-body .banner{
-    border: 1px solid;
-    background-color: white;
-    width: 500px;
-    height: 700px;
-    position: absolute;
-    z-index:100000; 
-    left: 0;
-    top: 60%;
-    transform: translate(-50%,-50%);
 }
