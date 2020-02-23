@@ -7,6 +7,7 @@ async function  createMenu(id, window){
     const values = [id];
     let submenu = [];
     let userMenu;
+    let userReset;
 
 try{
 
@@ -25,7 +26,14 @@ try{
         submenu: submenu
     }
 
-    return userMenu;
+    userReset = {
+        label:'Cambiar Constraseña',
+        click(){
+            window.loadFile('changePassword.html');
+        }
+    }
+
+    return [userMenu,userReset];
 
 } catch(e) {
         console.log(e.stack);

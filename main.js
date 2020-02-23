@@ -76,9 +76,9 @@ ipcMain.on('login:in', (e, arr) => {
                 mainwc.on('dom-ready', () => {
                     mainwc.send('user:name', userInfo.name);
                 })
-                userMenu.createMenu(userInfo.user_id, mainWindow)
+                userMenu.createMenu(userInfo.user_id, mainWindow) //Construye menu según módulos asignados a usuario
                 .then(res => {
-                    mainMenuTemplate.push(res);
+                    mainMenuTemplate.push(res[0], res[1]);
                     mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
                     Menu.setApplicationMenu(mainMenu);
                 })
@@ -289,6 +289,19 @@ ipcMain.on('usrEdit:toggle', (e, id) => {
     })
 })
 
+ipcMain.on('usrEdit:reset', (e, id) => {
+    const text = 'SELECT security.user_password_reset($1);';
+
+    db.pool.query(text, [id], (err, res) => {
+        if(err){
+            console.log(err.stack)
+        }else{
+            editUserWindow.close();
+            mainwc.send('users:reset');
+        }
+    })
+})
+
 const mainMenuTemplate = [
     {
         label: 'Archivo',
@@ -305,8 +318,18 @@ const mainMenuTemplate = [
                 click(){
                     if(mainMenuTemplate.length > 2){
                         let i = 0;
+                        //Al cerrar sesión busca y elimina el menú de módulos.
                         mainMenuTemplate.forEach(element => {
                             if(element.label == 'Modulos'){
+                                mainMenuTemplate.splice(i,1);
+                                //break;
+                            }
+                            i++;
+                        });
+                        i = 0;
+                        //Al cerrar sesión busca y elimina el menú de cambiar contraseña.
+                        mainMenuTemplate.forEach(element => {
+                            if(element.label =='Cambiar Constraseña'){
                                 mainMenuTemplate.splice(i,1);
                                 //break;
                             }

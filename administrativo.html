@@ -102,6 +102,10 @@
         });
     })
 
+    ipcRenderer.on('users:reset', (e) => {
+        alert('La contraseña del usuario se ha restaurado, ahora su constraseña es su misma cédula. El usuario debe cambiarla.');
+    })
+
     btn_addUser.addEventListener('click', (e) => {
         e.preventDefault();
         ipcRenderer.send('admin:create');
