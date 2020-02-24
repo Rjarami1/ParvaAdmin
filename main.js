@@ -302,6 +302,26 @@ ipcMain.on('usrEdit:reset', (e, id) => {
     })
 })
 
+ipcMain.on('change:pass', (e, arr) => {
+    if(arr[0] == userInfo.password){
+        const text = "UPDATE security.users SET password = $1 WHERE user_id = $2;"
+        
+        db.pool.query(text, [arr[1], userInfo.user_id], (err, res) => {
+            if(err){
+                console.log(err.stack);
+                mainwc.send('change:done', false);
+            }
+            else{
+                mainwc.send('change:done', true);
+            }
+        })
+    }
+    else{
+        mainwc.send('change:done', false);
+    }
+    
+})
+
 const mainMenuTemplate = [
     {
         label: 'Archivo',
