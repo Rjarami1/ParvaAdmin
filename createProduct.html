@@ -14,6 +14,9 @@
         <label for="name_prod">Nombre del Producto</label><br>
         <input type="text" id="name_prod" name="name_prod"><br>
 
+        <label for="val_prod">Valor del Producto (COP)</label><br>
+        <input type="integer" id="val_prod" name="val_prod"><br>
+
         <label for="descp_prod">Descripcion del Producto</label><br>
         <input type="text" id="descp_prod" name="descp_prod"><br>
 
@@ -29,6 +32,7 @@
         
         const code_prod = document.querySelector('#code_prod');
         const name_prod = document.querySelector('#name_prod');
+        const val_prod = document.querySelector('#val_prod');
         const descp_prod = document.querySelector('#descp_prod');
 
         let allDone = true;
@@ -38,9 +42,9 @@
 
             if(allDone)
             {
-                if(code_prod.value == '' || name_prod.value == '' || descp_prod.value == '')
+                if(code_prod.value == '' || name_prod.value == '' || val_prod.value == '' || descp_prod.value == '')
                 {
-                    msgError.textContent = ' Por favor increse todos los campos';
+                    msgError.textContent = ' Por favor ingrese todos los campos';
                     allDone = false;
                 }
                 }else
@@ -53,6 +57,7 @@
                 let prodInfo = {
                     code_prod: code_prod.value,
                     name_prod: name_prod.value,
+                    val_prod: val_prod.value,
                     descp_prod: descp_prod.value
                 }
 

@@ -10,13 +10,13 @@
     <button id="createProduct">Agregar Producto</button>
 
     <p>Lista de Productos Terminados:</p>
-    <ul id="productlist"></ul>
+    <ul id="productList"></ul>
 
     <table style="width: 85%;">
         <tr>
-            <th>ID Producto</th>
             <th>Codigo Producto</th>
             <th>Nombre del Producto</th>
+            <th>Valor (Cop)</th>
             <th>Descripcion</th>
             <th>Estado</th>
         </tr>
@@ -35,14 +35,34 @@
         })
 
         //Recibir la lista de los prodcutos del Main y desplegarlos.
-        ipcRenderer.on('final_products', (e, final_products) => {
+        ipcRenderer.on('products:info', (e, listProducts) => {
 
             cleanList();
+
+            let pr;
+            let pd1, pd2, pd3, pd4, pd5;
+
+            listProducts.forEach(product => 
+            {
+                
+                pr = document.createElement('tr');
+                pd1 = document.createElement('td');
+                pd2 = document.createElement('td');
+                pd3 = document.createElement('td');
+                pd4 = document.createElement('td');
+                pd5 = document.createElement('td');
+
+            pr.addEventListener('click', (e) => 
+            {
+                e.preventDefault();
+                ipcRenderer.send('prodCreate:edit', product.listProducts);
+            })
+            })
         })
 
         btn_addProduct.addEventListener('click', (e) => {
             e.preventDefault();
-            ipcRenderer.send('prod:create');//admin:create
+            ipcRenderer.send('prod:create');
         })
 
         function cleanList()

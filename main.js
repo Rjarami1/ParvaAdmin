@@ -114,13 +114,13 @@ ipcMain.on('admin:create', (e) => {
 })
 
 ipcMain.on('prod:ready', (e) => {
-    //sendProductList();
+    //sendUsersList();
 })
 
 ipcMain.on('prod:create', (e) => {
     createProdWindow = new BrowserWindow({
-        width: 500,
-        height: 400,
+        width: 300,
+        height: 300,
         webPreferences: {
             nodeIntegration: true
         },
@@ -139,8 +139,35 @@ ipcMain.on('prod:create', (e) => {
     });
 })
 
+ipcMain.on('prodCreate:edit', (e) => {
+    //Missing actions inide
+})
+
 ipcMain.on('prodCreate:cancel', (e) => {
     createProdWindow.close();
+})
+
+ipcMain.on('prodCreate:create', (e, obj) => {
+    let values = [
+        obj.code_prod,
+        obj.name_prod,
+        obj.val_prod,
+        obj.descp_prod
+    ];
+    
+    const text = 'INSERT INTO security."listProducts"(code_prod, name_prod, val_prod, descp_prod, status_prod) VALUES ($1, $2, $3, $4, true);';
+
+    db.pool.query(text, values, (err, res) => {
+        if(err)
+        {
+            console.log(err.stack);
+        }
+        else
+        {
+            sendProductlist();
+            createProdWindow.close();
+        }
+    })
 })
 
 ipcMain.on('usrCreate:cancel', (e) => {
@@ -393,6 +420,25 @@ function sendUsersList(){
         }else{
             users = res.rows;
             mainwc.send('users:info', users);
+        }
+    })
+}
+
+function sendProductlist()
+{
+    const text = 'SELECT * FROM security."listProducts"';
+    let products;
+
+    db.pool.query(text, (err, res) => 
+    {
+        if(err)
+        {
+            console.log(err.stack);
+        }
+        else
+        {
+            products = res.rows;
+            mainwc.send('products:info', products);
         }
     })
 }
