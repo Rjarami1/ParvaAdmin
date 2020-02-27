@@ -114,7 +114,7 @@ ipcMain.on('admin:create', (e) => {
 })
 
 ipcMain.on('prod:ready', (e) => {
-    //sendUsersList();
+    sendProductsList();
 })
 
 ipcMain.on('prod:create', (e) => {
@@ -164,7 +164,7 @@ ipcMain.on('prodCreate:create', (e, obj) => {
         }
         else
         {
-            sendProductlist();
+            sendProductsList();
             createProdWindow.close();
         }
     })
@@ -424,9 +424,9 @@ function sendUsersList(){
     })
 }
 
-function sendProductlist()
+function sendProductsList()
 {
-    const text = 'SELECT * FROM security."listProducts"';
+    const text = 'SELECT * FROM security."listProducts";';
     let products;
 
     db.pool.query(text, (err, res) => 
