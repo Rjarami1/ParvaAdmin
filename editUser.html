@@ -14,7 +14,8 @@
         <label for="position">Cargo:</label><br>
         <input type="text" name="position" id="position"><br>
 
-        <button>Reestablecer Contraseña</button><br>
+        <button id="reset_pswd">Reestablecer Contraseña</button><br>
+        <button id="btn_status"></button><br>
 
         <p id="error"></p>
         
@@ -34,6 +35,8 @@
         const cancel = document.querySelector('#cancel');
         const form = document.querySelector('form');
         const errormsg = document.querySelector('p');
+        const btn_status = document.querySelector('#btn_status');
+        const btn_reset = document.querySelector('#reset_pswd');
 
         let userid;
         let user_modules = [];
@@ -50,6 +53,13 @@
             dataObject.userModules.forEach(module => {
                 user_modules.push(module.module_id);
             });
+
+            if(dataObject.userInfo.active){
+                btn_status.textContent = "Desactivar";
+            }
+            else{
+                btn_status.textContent = "Activar";
+            }
 
             console.log(user_modules);
 
@@ -101,6 +111,18 @@
             e.preventDefault();
 
             ipcRenderer.send('usrEdit:cancel');
+        })
+
+        btn_status.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            ipcRenderer.send('usrEdit:toggle', userid);
+        })
+
+        btn_reset.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            ipcRenderer.send('usrEdit:reset', userid);
         })
 
         form.addEventListener('submit', (e) => {

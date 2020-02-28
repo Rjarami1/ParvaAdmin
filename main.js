@@ -13,9 +13,12 @@ let mainWindow;
 let createUserWindow;
 let editUserWindow;
 
+let createProdWindow;
+
 let userInfo;
 let mainwc;
 let createwc;
+let createprod;
 let editwc;
 
 function createMainWindow() {
@@ -46,7 +49,7 @@ app.on('ready', () => {
 ipcMain.on('login:in', (e, arr) => {
 
     //Construye consulta
-    const text1 = 'SELECT * FROM security.users WHERE cedula = $1 AND password = $2'
+    const text1 = 'SELECT * FROM security.users WHERE cedula = $1 AND password = $2 AND active = true';
     const values1 = arr;
 
     const text2 = 'UPDATE security.users SET date_last_login = LOCALTIMESTAMP WHERE user_id = $1';
@@ -73,9 +76,9 @@ ipcMain.on('login:in', (e, arr) => {
                 mainwc.on('dom-ready', () => {
                     mainwc.send('user:name', userInfo.name);
                 })
-                userMenu.createMenu(userInfo.user_id, mainWindow)
+                userMenu.createMenu(userInfo.user_id, mainWindow) //Construye menu según módulos asignados a usuario
                 .then(res => {
-                    mainMenuTemplate.push(res);
+                    mainMenuTemplate.push(res[0], res[1]);
                     mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
                     Menu.setApplicationMenu(mainMenu);
                 })
@@ -108,6 +111,63 @@ ipcMain.on('admin:create', (e) => {
     createUserWindow.on('close', () => {
         createUserWindow = null;
     });
+})
+
+ipcMain.on('prod:ready', (e) => {
+    sendProductsList();
+})
+
+ipcMain.on('prod:create', (e) => {
+    createProdWindow = new BrowserWindow({
+        width: 300,
+        height: 300,
+        webPreferences: {
+            nodeIntegration: true
+        },
+        parent: mainWindow,
+        modal: true,
+        frame: false,
+        resizable: false,
+    })
+
+    createProdWindow.loadFile('createProduct.html');
+
+    createprod = createProdWindow.webContents;
+
+    createProdWindow.on('close', () => {
+        createProdWindow = null;
+    });
+})
+
+ipcMain.on('prodCreate:edit', (e) => {
+    //Missing actions inide
+})
+
+ipcMain.on('prodCreate:cancel', (e) => {
+    createProdWindow.close();
+})
+
+ipcMain.on('prodCreate:create', (e, obj) => {
+    let values = [
+        obj.code_prod,
+        obj.name_prod,
+        obj.val_prod,
+        obj.descp_prod
+    ];
+    
+    const text = 'INSERT INTO security."listProducts"(code_prod, name_prod, val_prod, descp_prod, status_prod) VALUES ($1, $2, $3, $4, true);';
+
+    db.pool.query(text, values, (err, res) => {
+        if(err)
+        {
+            console.log(err.stack);
+        }
+        else
+        {
+            sendProductsList();
+            createProdWindow.close();
+        }
+    })
 })
 
 ipcMain.on('usrCreate:cancel', (e) => {
@@ -243,6 +303,52 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 
 })
 
+ipcMain.on('usrEdit:toggle', (e, id) => {
+    const text = 'SELECT security."user_toggle_status"($1);';
+
+    db.pool.query(text, [id], (err, res) => {
+        if(err){
+            console.log(err.stack);
+        }else{
+            editUserWindow.close();
+            sendUsersList();
+        }
+    })
+})
+
+ipcMain.on('usrEdit:reset', (e, id) => {
+    const text = 'SELECT security.user_password_reset($1);';
+
+    db.pool.query(text, [id], (err, res) => {
+        if(err){
+            console.log(err.stack)
+        }else{
+            editUserWindow.close();
+            mainwc.send('users:reset');
+        }
+    })
+})
+
+ipcMain.on('change:pass', (e, arr) => {
+    if(arr[0] == userInfo.password){
+        const text = "UPDATE security.users SET password = $1 WHERE user_id = $2;"
+        
+        db.pool.query(text, [arr[1], userInfo.user_id], (err, res) => {
+            if(err){
+                console.log(err.stack);
+                mainwc.send('change:done', false);
+            }
+            else{
+                mainwc.send('change:done', true);
+            }
+        })
+    }
+    else{
+        mainwc.send('change:done', false);
+    }
+    
+})
+
 const mainMenuTemplate = [
     {
         label: 'Archivo',
@@ -259,8 +365,18 @@ const mainMenuTemplate = [
                 click(){
                     if(mainMenuTemplate.length > 2){
                         let i = 0;
+                        //Al cerrar sesión busca y elimina el menú de módulos.
                         mainMenuTemplate.forEach(element => {
                             if(element.label == 'Modulos'){
+                                mainMenuTemplate.splice(i,1);
+                                //break;
+                            }
+                            i++;
+                        });
+                        i = 0;
+                        //Al cerrar sesión busca y elimina el menú de cambiar contraseña.
+                        mainMenuTemplate.forEach(element => {
+                            if(element.label =='Cambiar Constraseña'){
                                 mainMenuTemplate.splice(i,1);
                                 //break;
                             }
@@ -304,6 +420,25 @@ function sendUsersList(){
         }else{
             users = res.rows;
             mainwc.send('users:info', users);
+        }
+    })
+}
+
+function sendProductsList()
+{
+    const text = 'SELECT * FROM security."listProducts";';
+    let products;
+
+    db.pool.query(text, (err, res) => 
+    {
+        if(err)
+        {
+            console.log(err.stack);
+        }
+        else
+        {
+            products = res.rows;
+            mainwc.send('products:info', products);
         }
     })
 }

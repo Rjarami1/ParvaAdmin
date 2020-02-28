@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos de la Panaderia</title>
+</head>
+<body>
+    <h2>Productos de la Pandeboneria</h2>
+
+    <button id="createProduct">Agregar Producto</button>
+
+    <p>Lista de Productos Terminados:</p>
+    <ul id="productList"></ul>
+
+    <table style="width: 85%;">
+        <tr>
+            <th>ID Producto</th>
+            <th>Codigo Producto</th>
+            <th>Nombre del Producto</th>
+            <th>Valor (Cop)</th>
+            <th>Descripcion</th>
+            <th>Estado</th>
+        </tr>
+    </table>
+
+    <script>
+        const {ipcRenderer} = require('electron');
+        const tablaProd = document.querySelector('table');
+        const btn_addProduct = document.querySelector('#createProduct');
+
+        //let x;
+
+        //Informar a render producto que la pagina esta lista.
+        document.addEventListener('DOMContentLoaded', (e) => {
+            ipcRenderer.send('prod:ready');
+            console.log('Se actualizo la tabla para visualizacion');
+        })
+
+        //Recibir la lista de los prodcutos del Main y desplegarslos.
+        ipcRenderer.on('products:info', (e, listProducts) => {
+            cleanList();
+
+            let pr;
+            let pd1, pd2, pd3, pd4, pd5, pd6;
+            let prodText1, prodText2, prodText3, prodText4, prodText5;
+            console.log('Se crearon las variables');
+
+            listProducts.forEach(product => 
+            {
+                
+                pr = document.createElement('tr');
+                pd1 = document.createElement('td');
+                pd2 = document.createElement('td');
+                pd3 = document.createElement('td');
+                pd4 = document.createElement('td');
+                pd5 = document.createElement('td');
+                pd6 = document.createElement('td');
+
+                pr.addEventListener('click', (e) => 
+                {
+                    e.preventDefault();
+                    ipcRenderer.send('prodCreate:edit', product.product_id);
+                })
+            
+                prodText1 = document.createTextNode(product.product_id);
+                prodText2 = document.createTextNode(product.code_prod);
+                prodText3 = document.createTextNode(product.name_prod);
+                prodText4 = document.createTextNode(product.val_prod);
+                prodText5 = document.createTextNode(product.descp_prod);
+
+                if(product.status_prod)
+                {
+                    prodText6 = document.createTextNode("Activo");
+                }
+                else
+                {
+                    prodText6 = document.createTextNode('Inactivo');
+                }
+
+                pd1.appendChild(prodText1);
+                pd2.appendChild(prodText2);
+                pd3.appendChild(prodText3);
+                pd4.appendChild(prodText4);
+                pd5.appendChild(prodText5);
+                pd6.appendChild(prodText6)
+
+                pr.appendChild(pd1);
+                pr.appendChild(pd2);
+                pr.appendChild(pd3);
+                pr.appendChild(pd4);
+                pr.appendChild(pd5);
+                pr.appendChild(pd6);
+
+                tablaProd.appendChild(pr);
+                console.log('Magia variables');
+                console.log('Se estan las variables');
+            });
+        })
+
+        btn_addProduct.addEventListener('click', (e) => {
+            e.preventDefault();
+            ipcRenderer.send('prod:create');
+        })
+
+        function cleanList()
+        {
+            let table = document.querySelector('table');
+            let children = table.childElementCount;
+
+            if(children > 1)
+            {
+                let child;
+                while(table.childElementCount > 1)
+                {
+                    child = table.lastElementChild;
+                    table.removeChild(child);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
