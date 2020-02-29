@@ -3,10 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Editar Usuario</title>
-</head>
-<body>
-    <h3>Editar Usuario:</h3><br>
 
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/stilosDaniel.css">
+</head>
+
+<body>
+
+    <div class="encabezadoPrinSup">
+    <h3>Editar Usuario:</h3><br>
+    </div>
+
+    <div class='central'>
     <form>
         <label for="name">Nombre:</label><br>
         <input type="text" name="name" id="name"><br>
@@ -25,6 +34,7 @@
 
         <button type="submit" id="submit">Guardar</button> &nbsp;&nbsp;<button id="cancel">Cancelar</button>
     </form>
+    </div>
 
     <script>
         const {ipcRenderer} = require('electron');
@@ -147,5 +157,9 @@
 
         })
         </script>
+
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
 </body>
 </html>

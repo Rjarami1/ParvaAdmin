@@ -26,6 +26,15 @@ body.fondo{
     background-color: #B4CBF0;
 }
 
+body .central .custom-form .formulario{
+    width: 200px;
+    height: 200px; 
+    padding-top: 2rem;
+    margin: 70px;
+    border: 2.5px solid;
+    position: relative;
+}
+
 body .central .custom-form.p-4{
     width: 350px;
     padding-top: 2rem;

@@ -90,8 +90,8 @@ ipcMain.on('admin:ready', (e) => {
 
 ipcMain.on('admin:create', (e) => {
     createUserWindow = new BrowserWindow({
-        width: 400,
-        height: 300,
+        width: 500,
+        height: 400,
         webPreferences: {
             nodeIntegration: true
         },

@@ -11,19 +11,12 @@
 </head>
 <body>
 
-    <div class="banner">
-        
-    </div>
-
     <div class="encabezadoPrinSup">
         <h2>Crear Usuario</h2>
     </div>
 
-    <div class="encabezadoPrinInf">
-        <h2 class="encabezadoPrinInflet">Fecha: Febrero 15 de 2020</h2>
-    </div>
-
-    <form class='tablaAdmin'>
+    <div class= "central">
+    <form class='custom-form formulario'>
         <label for="cedula">Cédula</label><br>
         <input type="text" id="cedula" name="cedula"><br>
 
@@ -41,9 +34,18 @@
         <input type="text" name="position" id="position"><br>
         <p id="msg-error" style="color: red;"></p><br>
 
-        <input type="submit" value="Crear"><br>
-        <input type="button" value="Cancelar" id="cancel"><br>
+        
+        <div class="row justify-content-between">
+            <div class="col-6">
+                <input type="submit" value="Crear"><br>
+            </div>
+            <div class="col-6">
+                <input type="button" value="Cancelar" id="cancel"><br>
+            </div>
+        </div>
+
     </form>
+    </div>
 
     <script>
         const {ipcRenderer} = require('electron');
