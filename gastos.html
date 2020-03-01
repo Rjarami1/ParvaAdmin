@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gastos</title>
+</head>
+<body>
+    <h2>Gastos</h2><br>
+    <br>
+
+    <form>
+        <label for="expense_date">Fecha: </label>
+        <input type="date" name="expense_date" id="expense_date">&nbsp;&nbsp;
+
+        <label for="expense_type">Tipo Gasto:</label>
+        <select name="expense_type" id="expense_type">
+            <option value="" selected></option>
+        </select><br>
+
+        <label for="expense_code">Código Gasto</label>
+        <input type="text" name="expense_code" id="expense_code">&nbsp;&nbsp;
+
+        <label for="expense_description">Descripción:</label>
+        <input type="text" name="expense_description" id="expense_description" disabled><br>
+
+        <label for="expense_value">Valor:</label>
+        <input type="number" name="expense_value" id="expense_value">&nbsp;&nbsp;
+        
+        <label for="expense_quantity">Cantidad:</label>
+        <input type="number" name="expense_quantity" id="expense_quantity">
+        <br>
+
+        <button type="submit">Adicionar Gasto</button>
+        <br>
+
+        <h3>Gastos Adicionados:</h3><br>
+        <table id="expenses_to_register">
+        </table>
+        <br>
+        
+    </form>
+
+    <button>Registrar Gastos</button>
+
+    <script>
+        const {ipcRenderer} = require('electron');
+
+        const date = document.querySelector('#expense_date');
+        const type = document.querySelector('#expense_type');
+        const code = document.querySelector('#expense_code');
+        const description = document.querySelector('#expense_description');
+        const value = document.querySelector('#expense_value');
+        const quantity = document.querySelector('#expense_quantity');
+
+        document.addEventListener('DOMContentLoaded', (e) => {
+            ipcRenderer.send('expense:ready');
+        })
+
+        let exp_types;
+        let exp_codes;
+        ipcRenderer.on('expense:info', (e, arr) => {
+            exp_types = arr[0];
+            exp_codes = arr[1];
+
+            let option;
+            exp_types.forEach(exp_type => {
+                option = document.createElement('option');
+                option.value = exp_type.type_id;
+                option.textContent = exp_type.type_description;
+
+                type.appendChild(option);
+            });
+        })
+
+        //console.log(Date.prototype.toISOString());
+
+
+    </script>
+
+</body>
+</html>
