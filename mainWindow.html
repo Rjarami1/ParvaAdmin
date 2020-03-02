@@ -18,6 +18,8 @@
 
         <button type="submit" value="Ingresar">Ingresar</button>
         <br>
+        <br>
+        <img src="./load.gif" alt="loading..." style="visibility: hidden; height: 50px; width: 50px;">
         <p style="color: red;" id="loginError"></p>
     </form>
     
@@ -26,11 +28,16 @@
     const errormsg = document.querySelector('#loginError');
     
     document.querySelector('form').addEventListener('submit', (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        document.querySelector('img').style.visibility = 'visible';
+        document.querySelector('button').disabled = true;
+
         const userLogin = document.querySelector('#user').value;
         const passLogin = document.querySelector('#password').value;
         
         if(userLogin == '' || passLogin == ''){
+            document.querySelector('img').style.visibility = 'hidden';
+            document.querySelector('button').disabled = false;
             errormsg.textContent = 'Por favor ingresar todos los campos';
         }
         else
@@ -43,6 +50,8 @@
 
     ipcRenderer.on('login:info', (e, val) => {
         if(val == 1){
+            document.querySelector('img').style.visibility = 'hidden';
+            document.querySelector('button').disabled = false;
             errormsg.textContent = 'Usuario o contraseña no válidos'
         }
         else{

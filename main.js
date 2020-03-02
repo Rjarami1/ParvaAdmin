@@ -349,6 +349,25 @@ ipcMain.on('change:pass', (e, arr) => {
     
 })
 
+ipcMain.on('expense:ready', (e) => {
+    const text1 = 'SELECT * FROM security."expenseTypes" WHERE active = true;';
+    const text2 = 'SELECT * FROM security."expenseCodes" WHERE active = true;';
+
+    db.pool.query(text1, (err1, res1) =>{
+        if(err1){
+            console.log(err1.stack);
+        }else{
+            db.pool.query(text2, (err2, res2) => {
+                if(err2){
+                    console.log(err2.stack);
+                }else{
+                    mainwc.send('expense:info', [res1.rows, res2.rows]);
+                }
+            })
+        }
+    })
+})
+
 const mainMenuTemplate = [
     {
         label: 'Archivo',
