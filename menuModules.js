@@ -16,7 +16,7 @@ try{
         submenu.push({
             label: item.module_name,
             click() {
-                window.loadFile(item.page_name)
+                window.loadFile(`src/${item.page_name}`);
             }
         })
     });
