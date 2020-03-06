@@ -14,6 +14,7 @@ let createUserWindow;
 let editUserWindow;
 
 let createProdWindow;
+let editProdWindow;
 
 let userInfo;
 let mainwc;
@@ -139,12 +140,62 @@ ipcMain.on('prod:create', (e) => {
     });
 })
 
-ipcMain.on('prodCreate:edit', (e) => {
-    //Missing actions inide
+ipcMain.on('prodEdit:cancel', (e) => {
+    editProdWindow.close();
+})
+
+ipcMain.on('prodCreate:edit', (e, productid) => {
+    editProdWindow = new BrowserWindow
+    ({
+        widt: 500,
+        height: 300,
+        webPreferences:
+        {
+            nodeIntegration: true
+        },
+        parent: mainWindow,
+        modal: true,
+        frame: false,
+        resizable: false
+    })
+    editProdWindow.loadFile("editProduct.html");
+    editwc = editProdWindow.webContents;
+
+    editwc.on('dom-ready', () =>
+    {
+        const text1 = 'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod FROM security."listProducts" WHERE product_id = $1';
+
+        const values = [productid];
+        let prodInfo;
+
+        db.pool.query(text1, values)
+        .then (res => {
+            productInfo = res.rows[0];
+            
+            let dataObject ={
+                prodInfo: prodInfo
+            };
+            editwc.send('prodEdit:prodInfo', dataObject);
+        })
+        .catch(e => console.error(e.stack));
+    })
 })
 
 ipcMain.on('prodCreate:cancel', (e) => {
     createProdWindow.close();
+})
+
+ipcMain.on('prodEdit:toggle', (e, id) => {
+    const text = 'SELECT security."prod_toggle_status"($1);';
+
+    db.pool.query(text, [id], (err, res) => {
+        if(err){
+            console.log(err.stack);
+        }else{
+            editUserWindow.close();
+            sendProductsList();
+        }
+    })
 })
 
 ipcMain.on('prodCreate:create', (e, obj) => {

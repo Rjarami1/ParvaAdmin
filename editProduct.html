@@ -69,13 +69,31 @@
         btn_status.addEventListener('click', (e) =>
         {
             e.preventDefault();
-            ipcRenderer.send('prodEdit:toogle', productid)
+            ipcRenderer.send('prodEdit:toggle', productid)
         })
         //Formato para el envio de la nueva informacion a editar del producto
         form.addEventListener('submit', (e) =>
         {
             e.preventDefault();
-            if((code_prod.value == '' || name_prod.value == '' || val_prod.value == '' || descp_prod.value == '')
+
+            if (code_prod.value == '' || name_prod.value == '' || val_prod.value == '' || descp_prod.value == '')
+            {
+                errormsg.textContent = 'No deje ningún campo vacío.'
+                errormsg.style.color = 'red';
+            }
+            else
+            {
+                errormsg.textContent = '';
+
+                let sendObject = 
+                {
+                    code_prod: code_prod.value,
+                    name_prod: name_prod.value,
+                    val_prod: val_prod.value,
+                    descp_prod: descp_prod.value     
+                }
+                ipcRenderer.send('prodEdit:update', sendObject);
+            }
         })
     </script>
 </body>
