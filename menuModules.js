@@ -29,7 +29,7 @@ try{
     userReset = {
         label:'Cambiar Constraseña',
         click(){
-            window.loadFile('changePassword.html');
+            window.loadFile('src/changePassword.html');
         }
     }
 
