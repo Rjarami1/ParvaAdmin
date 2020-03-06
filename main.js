@@ -147,8 +147,8 @@ ipcMain.on('prodEdit:cancel', (e) => {
 ipcMain.on('prodCreate:edit', (e, productid) => {
     editProdWindow = new BrowserWindow
     ({
-        widt: 500,
-        height: 300,
+        widt: 400,
+        height: 350,
         webPreferences:
         {
             nodeIntegration: true
@@ -158,7 +158,7 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
         frame: false,
         resizable: false
     })
-    editProdWindow.loadFile("editProduct.html");
+    editProdWindow.loadFile("src/editProduct.html");
     editwc = editProdWindow.webContents;
 
     editwc.on('dom-ready', () =>
