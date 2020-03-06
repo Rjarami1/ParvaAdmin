@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/stilosDaniel.css">
+
     <meta charset="UTF-8">
     <title>Crear Usuario</title>
 </head>
 <body>
-    <h3>Crear Usuario</h3>
 
-    <form>
+    <div class="encabezadoPrinSup">
+        <h2>Crear Usuario</h2>
+    </div>
+
+    <div class= "central">
+    <form class='custom-form formulario'>
         <label for="cedula">Cédula</label><br>
         <input type="text" id="cedula" name="cedula"><br>
 
@@ -25,9 +34,18 @@
         <input type="text" name="position" id="position"><br>
         <p id="msg-error" style="color: red;"></p><br>
 
-        <input type="submit" value="Crear"><br>
-        <input type="button" value="Cancelar" id="cancel"><br>
+        
+        <div class="row justify-content-between">
+            <div class="col-6">
+                <input type="submit" value="Crear"><br>
+            </div>
+            <div class="col-6">
+                <input type="button" value="Cancelar" id="cancel"><br>
+            </div>
+        </div>
+
     </form>
+    </div>
 
     <script>
         const {ipcRenderer} = require('electron');
@@ -90,5 +108,9 @@
             ipcRenderer.send('usrCreate:cancel');
         })
     </script>
+
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
 </body>
 </html>
