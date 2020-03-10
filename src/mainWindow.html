@@ -1,79 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- Bootstrap 4 CSS -->
-    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/stilosDaniel.css">
+	<head>
+		<!-- Bootstrap 4 CSS -->
+		<link
+			rel="stylesheet"
+			href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css"
+		/>
+		<link rel="stylesheet" href="styles/stilosDaniel.css" />
 
-    <meta charset="UTF-8">
-    <title>SGP - Ingreso de Usuario</title>
-</head>
-<body class="fondo">
-    <h3>Bienvenido al Sistema de Gestion de Panadería</h3>
+		<meta charset="UTF-8" />
+		<title>SGP - Ingreso de Usuario</title>
+	</head>
+	<body class="fondo">
+		<h3>Bienvenido al Sistema de Gestion de Panadería</h3>
 
-    <div class= "central">
-        <form id="form1" class="custom-form p-4">
-            <div class="form-group">
-                <label for="nombreUsuario">Usuario</label>
-                <input type="text" class="form-control" id="user" placeholder="Nombre de usuario">
-            </div>
-            <div class="form-group">
-                <label for="contraseñaUsuario">Contraseña</label>
-                <input type="password" class="form-control" id="password" placeholder="Contraseña">
-            </div>
-            <div class="form-check">
-        
-                <input type="checkbox" class="form-check-input" id="dropdownCheck2">
-                <label class="form-check-label" for="dropdownCheck2">
-                    Recuerdame
-                </label>
-            </div>
-                <button type="submit" class="btn btn-primary">Ingresar</button>
-            <img src="../images/load.gif" alt="loading..." style="visibility: hidden; height: 50px; width: 50px;">
-            <p style="color: red;" id="loginError"></p>
-        </form>
-    </div>
-    
-    <script>
-    const {ipcRenderer} = require('electron');
-    const errormsg = document.querySelector('#loginError');
-    
-    document.querySelector('form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        document.querySelector('img').style.visibility = 'visible';
-        document.querySelector('button').disabled = true;
+		<div class="central">
+			<form id="form1" class="custom-form p-4">
+				<div class="form-group">
+					<label for="nombreUsuario">Usuario</label>
+					<input
+						type="text"
+						class="form-control"
+						id="user"
+						placeholder="Nombre de usuario"
+					/>
+				</div>
+				<div class="form-group">
+					<label for="contraseñaUsuario">Contraseña</label>
+					<input
+						type="password"
+						class="form-control"
+						id="password"
+						placeholder="Contraseña"
+					/>
+				</div>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="dropdownCheck2" />
+					<label class="form-check-label" for="dropdownCheck2">
+						Recuerdame
+					</label>
+				</div>
+				<button type="submit" class="btn btn-primary">Ingresar</button>
+				<img
+					src="../images/load.gif"
+					alt="loading..."
+					style="visibility: hidden; height: 50px; width: 50px;"
+				/>
+				<p style="color: red;" id="loginError"></p>
+			</form>
+		</div>
 
-        const userLogin = document.querySelector('#user').value;
-        const passLogin = document.querySelector('#password').value;
-        
-        if(userLogin == '' || passLogin == ''){
-            document.querySelector('img').style.visibility = 'hidden';
-            document.querySelector('button').disabled = false;
-            errormsg.textContent = 'Por favor ingresar todos los campos';
-        }
-        else
-        {
-            ipcRenderer.send('login:in', [userLogin, passLogin]);
-            errormsg.textContent = '';
-        }
-        
-    })
+		<script>
+			const { ipcRenderer } = require('electron')
+			const errormsg = document.querySelector('#loginError')
 
-    ipcRenderer.on('login:info', (e, val) => {
-        if(val == 1){
-            document.querySelector('img').style.visibility = 'hidden';
-            document.querySelector('button').disabled = false;
-            errormsg.textContent = 'Usuario o contraseña no válidos'
-        }
-        else{
-            errormsg.textContent = '';
-        }
-    })
+			document.querySelector('form').addEventListener('submit', e => {
+				e.preventDefault()
+				document.querySelector('img').style.visibility = 'visible'
+				document.querySelector('button').disabled = true
 
-    </script>
+				const userLogin = document.querySelector('#user').value
+				const passLogin = document.querySelector('#password').value
 
-    <!-- jQuery library -->
-    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+				if (userLogin == '' || passLogin == '') {
+					document.querySelector('img').style.visibility = 'hidden'
+					document.querySelector('button').disabled = false
+					errormsg.textContent = 'Por favor ingresar todos los campos'
+				} else {
+					ipcRenderer.send('login:in', [userLogin, passLogin])
+					errormsg.textContent = ''
+				}
+			})
 
-</body>
+			ipcRenderer.on('login:info', (e, val) => {
+				if (val == 1) {
+					document.querySelector('img').style.visibility = 'hidden'
+					document.querySelector('button').disabled = false
+					errormsg.textContent = 'Usuario o contraseña no válidos'
+				} else {
+					errormsg.textContent = ''
+				}
+			})
+		</script>
+
+		<!-- jQuery library -->
+		<script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+	</body>
 </html>
