@@ -18,10 +18,9 @@
         </select><br>
 
         <label for="expense_code">Código Gasto</label>
-        <input type="text" name="expense_code" id="expense_code">&nbsp;&nbsp;
-
-        <label for="expense_description">Descripción:</label>
-        <input type="text" name="expense_description" id="expense_description" disabled><br>
+        <select name="expense_code" id="expense_code">
+            <option value="" selected></option>
+        </select><br>
 
         <label for="expense_value">Valor:</label>
         <input type="number" name="expense_value" id="expense_value">&nbsp;&nbsp;
@@ -37,12 +36,28 @@
 
         <h3>Gastos Adicionados:</h3><br>
         <table id="expenses_to_register">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Tipo</th>
+                    <th>Código</th>
+                    <th>Valor</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
         </table>
         <br>
         
     </form>
 
     <button id="save_expenses">Registrar Gastos</button>
+    <p id="msg"></p>
+
+    <!-- jQuery library -->
+    <script src="../dependencies/jQuery/jquery-3.4.1.js"></script>
 
     <script>
         //Importando electron
@@ -52,11 +67,13 @@
         const date = document.querySelector('#expense_date');
         const type = document.querySelector('#expense_type');
         const code = document.querySelector('#expense_code');
-        const description = document.querySelector('#expense_description');
         const value = document.querySelector('#expense_value');
         const quantity = document.querySelector('#expense_quantity');
         const form = document.querySelector('form');
         const error_msg = document.querySelector('#error_msg');
+        const table = document.querySelector('#expenses_to_register');
+        const save = document.querySelector('#save_expenses');
+        const msg = document.querySelector('#msg');
 
         //Evento para cuando la página termine de cargar y poder modificarla
         document.addEventListener('DOMContentLoaded', (e) => {
@@ -104,49 +121,27 @@
             });
         })
 
-        //Evento que se registra cuando se agregan códigos en el formulario
-        let codeValue;
-        let type_value;
-        code.addEventListener('input', (e) => {
-            e.preventDefault();
-
-            //Esta parte busca si el código ingresado por el usuario coincide con algún código existente
-            //en la base de datos que tenga el mismo tipo (type) seleccionado en la lista de selección.
-            description.value = '';
-            if(type.options[type.selectedIndex].value != ""){
-                type_value = type.options[type.selectedIndex].value;
-                codeValue = code.value;
-
-                //Si existe el código imprime la descripción de este en el campo de descripción que es
-                //de sólo lectura
-                exp_codes.forEach(exp_code => {
-                    if(exp_code.expense_type_id == type_value){
-                        if(exp_code.expense_code.trim() == codeValue){
-                            description.value = exp_code.code_description.trim();
-                        }
-                    }
-                });
-            }
-        })
 
         let added_expenses = [];
         let expense_obj;
+        let identifier = 0;
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            if(date.value != "" && type.options[type.selectedIndex].value != "" && code.value != "" && description.value != "" && value.value != "" && quantity.value != ""){
+            if(date.value != "" && type.options[type.selectedIndex].value != "" && code.options[code.selectedIndex].value != "" &&  value.value != "" && quantity.value != ""){
                 expense_obj = {
+                    identifier: identifier,
                     date: date.value,
                     type: type.options[type.selectedIndex].value,
                     code: code.value,
-                    description: description.value,
                     value: parseInt(value.value),
                     quantity: parseInt(quantity.value)
                 }
                 
+                identifier++;
+
                 added_expenses.push(expense_obj);
                 code.value = '';
-                description.value = '';
                 value.value = '';
                 quantity.value = '';
                 error_msg.textContent = "";
@@ -157,14 +152,10 @@
                 error_msg.textContent = "";
                 error_msg.textContent = 'Debe ingresar todos los campos.\n';
 
-                if(description.value == ""){
-                    error_msg.textContent += 'El código ingresado no esta asociado al tipo de gasto seleccionado.\n';
-                }
                 if(parseInt(quantity.value) <= 0){
                     error_msg.textContent += 'La cantidad del gasto no puede ser menor o igual a cero.';
                 }
             }
-
 
         })
 
@@ -172,12 +163,160 @@
         type.addEventListener('change', (e) => {
             e.preventDefault();
 
-            code.value = '';
-            description.value = '';
+            let option_number = code.childElementCount;
+            let child;
+            for(var i = 1;i < option_number;i++){
+                child = code.lastElementChild;
+                code.removeChild(child);
+            }
+
+            let option;
+            exp_codes.forEach(exp_code => {
+                if(exp_code.expense_type_id == type.options[type.selectedIndex].value){
+                    option = document.createElement('option');
+                    option.value = exp_code.code_id;
+                    option.textContent = `${exp_code.expense_code} - ${exp_code.code_description}`;
+
+                    code.appendChild(option);
+                }
+            });
+
+        })
+
+        save.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            ipcRenderer.send('expense:save', added_expenses);   
+        })
+
+        ipcRenderer.on('expense:error', (e) => {
+            e.preventDefault();
+
+            msg.style.color = 'red';
+            msg.textContent = 'Ha ocurrido un error, no se pudo guardar la información.';
+        })
+
+        ipcRenderer.on('expense:success', (e) => {
+
+            msg.style.color = 'green';
+            msg.textContent = 'La información se ha guardado exitosamente.';
+
+            added_expenses = [];
+
+            let children = table.childElementCount;
+
+            if(children > 1){
+                let child;
+                while(table.childElementCount > 1){
+                    child = table.lastElementChild;
+                    table.removeChild(child);
+                }
+            }
         })
 
         function display_added_expenses(){
-            //Imprimir gastos que se han adicionado
+
+            let children = table.childElementCount;
+
+            if(children > 1){
+                let child;
+                while(table.childElementCount > 1){
+                    child = table.lastElementChild;
+                    table.removeChild(child);
+                }
+            }   
+
+            let tr;
+            let td1, td2, td3, td4, td5
+            let itemText1, itemText2, itemText3, itemText4, itemText5;
+
+            added_expenses.forEach(expense => {
+                
+                tr = document.createElement('tr');
+                tr.className = `tr_${expense.identifier}`;
+                td1 = document.createElement('td');
+                td2 = document.createElement('td');
+                td3 = document.createElement('td');
+                td4 = document.createElement('td');
+                td5 = document.createElement('td');
+
+                tr.addEventListener('dblclick', (e) => {
+                    deleteExpense(expense.identifier);
+                })
+
+                itemText1 = document.createTextNode(expense.identifier);
+                itemText2 = document.createTextNode(typeText(expense.type));
+                itemText3 = document.createTextNode(codeText(expense.code));
+                itemText4 = document.createTextNode(expense.value);
+                itemText5 = document.createTextNode(expense.quantity);
+
+                td1.appendChild(itemText1);
+                td2.appendChild(itemText2);
+                td3.appendChild(itemText3);
+                td4.appendChild(itemText4);
+                td5.appendChild(itemText5);
+
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+                tr.appendChild(td4);
+                tr.appendChild(td5);
+
+                table.appendChild(tr);
+            });
+        }
+
+        function typeText(idType){
+            
+            let res = '';
+
+            exp_types.forEach(exp_type => {
+                if(exp_type.type_id == idType){
+                    res = exp_type.type_description;
+                }
+            });
+            
+            if(res != ''){
+                return res;
+            }
+            else{
+                return 'Not Found';
+            }
+            
+        }
+
+        function codeText(idCode){
+
+            let res = '';
+
+            exp_codes.forEach(exp_code => {
+                if(exp_code.code_id == idCode){
+                    res = `${exp_code.expense_code} - ${exp_code.code_description}`;
+                }
+            });
+            
+            if(res != ''){
+                return res;
+            }
+            else{
+                return 'Not Found';
+            }
+        }
+
+        function deleteExpense(ident){
+            
+            table.removeChild(document.querySelector(`.tr_${ident}`));
+
+            let i = 0;
+            let j = 0;
+            added_expenses.forEach(expense => {
+                if(expense.identifier == ident){
+                    j = i;
+                }
+                ++i;
+            });
+
+            added_expenses.splice(j,1);
         }
 
     </script>

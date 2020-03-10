@@ -179,6 +179,10 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
         })
         .catch(e => console.error(e.stack));
     })
+
+    editProdWindow.on('close', () => {
+        editProdWindow = null;
+    });
 })
 
 ipcMain.on('prodCreate:cancel', (e) => {
@@ -415,6 +419,29 @@ ipcMain.on('expense:ready', (e) => {
                     mainwc.send('expense:info', [res1.rows, res2.rows]);
                 }
             })
+        }
+    })
+})
+
+ipcMain.on('expense:save', (e, arr) => {
+    let query = 'INSERT INTO public.expenses(expense_code, expense_type, expense_date, expense_value, expense_quantity) VALUES ';
+    let exp_value;
+
+    arr.forEach(element => {
+        exp_value = `(${element.code}, ${element.type}, '${element.date}', ${element.value}, ${element.quantity}),`;
+        query += exp_value;
+    });
+
+    query = query.slice(0,-1);
+    query += ';'
+
+    db.pool.query(query, (err, res) => {
+        if(err){
+            console.log(err.stack);
+            mainwc.send('expense:error');
+        }
+        else{
+            mainwc.send('expense:success');
         }
     })
 })
