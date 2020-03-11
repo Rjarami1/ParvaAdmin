@@ -163,18 +163,19 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 
     editwc.on('dom-ready', () =>
     {
-        const text1 = 'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod FROM security."listProducts" WHERE product_id = $1';
+        const text1 = 'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod FROM security."listProducts" WHERE product_id = $1;';
 
         const values = [productid];
         let prodInfo;
 
         db.pool.query(text1, values)
         .then (res => {
-            productInfo = res.rows[0];
-            
+            prodInfo = res.rows[0];
+            console.log(prodInfo);
             let dataObject ={
                 prodInfo: prodInfo
             };
+            
             editwc.send('prodEdit:prodInfo', dataObject);
         })
         .catch(e => console.error(e.stack));
@@ -186,13 +187,13 @@ ipcMain.on('prodCreate:cancel', (e) => {
 })
 
 ipcMain.on('prodEdit:toggle', (e, id) => {
-    const text = 'SELECT security."prod_toggle_status"($1);';
+    const text = 'SELECT security."product_toggle_status"($1);';
 
     db.pool.query(text, [id], (err, res) => {
         if(err){
             console.log(err.stack);
         }else{
-            editUserWindow.close();
+            editProdWindow.close();
             sendProductsList();
         }
     })
