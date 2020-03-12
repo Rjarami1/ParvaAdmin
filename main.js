@@ -187,6 +187,23 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
     });
 })
 
+ipcMain.on('prodEdit:update', (e, obj) => {
+    console.log('Entro a prodEdit:update')
+    const prodText = 'UPDATE security."listProducts" SET code_prod=$1, name_prod=$2, val_prod=$3, descp_prod=$4 WHERE product_id=$5;'
+    const valuesP = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.product_id]
+    console.log(valuesP)
+    console.log('Antes del enviar el query')
+    db.pool
+        .query(prodText, valuesP)
+        .then(res => {
+            console.log('Product details has been updated!')
+        })
+        .catch(err => console.log(err.stack))
+
+        editProdWindow.close()
+        sendProductsList()
+})
+
 ipcMain.on('prodCreate:cancel', e => {
 	createProdWindow.close()
 })
@@ -308,7 +325,7 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 	const userText =
 		'UPDATE security.users SET name = $1, position = $2 WHERE user_id = $3;'
 	const values1 = [obj.userName, obj.userPosition, obj.user_id]
-
+    //Start modules
 	let idquery = ''
 	obj.addedModules.forEach(id => {
 		idquery = `${idquery}(${id},${obj.user_id}),`
@@ -324,7 +341,7 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 	idquery = idquery.slice(0, -1)
 
 	const removeModulesText = `DELETE FROM security."UsersModules" WHERE module_id IN (${idquery}) AND user_id = ${obj.user_id};`
-
+    //End Modules
 	db.pool
 		.query(userText, values1)
 		.then(res => {

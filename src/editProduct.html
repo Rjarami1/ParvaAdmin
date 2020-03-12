@@ -83,17 +83,20 @@
             }
             else
             {
-                errormsg.textContent = '';
-
+                //errormsg.textContent = ''; REVISAR!
+                console.log('Se va a crear sendObject!')
                 let sendObject = 
                 {
-                    product_id: product_id,
+                    product_id: productid,  
                     code_prod: code_prod.value,
                     name_prod: name_prod.value,
                     val_prod: val_prod.value,
-                    descp_prod: descp_prod.value     
+                    descp_prod: descp_prod.value   
                 }
+                console.log('Antes del envio del objecto')
                 ipcRenderer.send('prodEdit:update', sendObject);
+                console.log('Envio del objecto')
+                console.log(sendObject);
             }
         })
     </script>
