@@ -96,7 +96,7 @@ ipcMain.on('admin:ready', e => {
 ipcMain.on('admin:create', e => {
 	createUserWindow = new BrowserWindow({
 		width: 500,
-		height: 400,
+		height: 600,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -146,62 +146,39 @@ ipcMain.on('prodEdit:cancel', e => {
 })
 
 ipcMain.on('prodCreate:edit', (e, productid) => {
-    editProdWindow = new BrowserWindow
-    ({
-        widt: 400,
-        height: 350,
-        webPreferences:
-        {
-            nodeIntegration: true
-        },
-        parent: mainWindow,
-        modal: true,
-        frame: false,
-        resizable: false
-    })
-    editProdWindow.loadFile("src/editProduct.html");
-    editwc = editProdWindow.webContents;
+	editProdWindow = new BrowserWindow({
+		widt: 400,
+		height: 350,
+		webPreferences: {
+			nodeIntegration: true
+		},
+		parent: mainWindow,
+		modal: true,
+		frame: false,
+		resizable: false
+	})
+	editProdWindow.loadFile('src/editProduct.html')
+	editwc = editProdWindow.webContents
 
-    editwc.on('dom-ready', () =>
-    {
-        const text1 = 'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod FROM security."listProducts" WHERE product_id = $1;';
+	editwc.on('dom-ready', () => {
+		const text1 =
+			'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod FROM security."listProducts" WHERE product_id = $1'
 
-        const values = [productid];
-        let prodInfo;
+		const values = [productid]
+		let prodInfo
 
-        db.pool.query(text1, values)
-        .then (res => {
-            prodInfo = res.rows[0];
-            console.log(prodInfo);
-            let dataObject ={
-                prodInfo: prodInfo
-            };
-            
-            editwc.send('prodEdit:prodInfo', dataObject);
-        })
-        .catch(e => console.error(e.stack));
-    })
+		db.pool
+			.query(text1, values)
+			.then(res => {
+				productInfo = res.rows[0]
 
-    editProdWindow.on('close', () => {
-        editProdWindow = null;
-    });
-})
-
-ipcMain.on('prodEdit:update', (e, obj) => {
-    console.log('Entro a prodEdit:update')
-    const prodText = 'UPDATE security."listProducts" SET code_prod=$1, name_prod=$2, val_prod=$3, descp_prod=$4 WHERE product_id=$5;'
-    const valuesP = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.product_id]
-    console.log(valuesP)
-    console.log('Antes del enviar el query')
-    db.pool
-        .query(prodText, valuesP)
-        .then(res => {
-            console.log('Product details has been updated!')
-        })
-        .catch(err => console.log(err.stack))
-
-        editProdWindow.close()
-        sendProductsList()
+				let dataObject = {
+					prodInfo: prodInfo
+				}
+				editwc.send('prodEdit:prodInfo', dataObject)
+			})
+			.catch(e => console.error(e.stack))
+	})
 })
 
 ipcMain.on('prodCreate:cancel', e => {
@@ -209,17 +186,16 @@ ipcMain.on('prodCreate:cancel', e => {
 })
 
 ipcMain.on('prodEdit:toggle', (e, id) => {
+	const text = 'SELECT security."prod_toggle_status"($1);'
 
-    const text = 'SELECT security."product_toggle_status"($1);';
-
-    db.pool.query(text, [id], (err, res) => {
-        if(err){
-            console.log(err.stack);
-        }else{
-            editProdWindow.close();
-            sendProductsList();
-        }
-    })
+	db.pool.query(text, [id], (err, res) => {
+		if (err) {
+			console.log(err.stack)
+		} else {
+			editUserWindow.close()
+			sendProductsList()
+		}
+	})
 })
 
 ipcMain.on('prodCreate:create', (e, obj) => {
@@ -260,8 +236,8 @@ ipcMain.on('usrCreate:create', (e, obj) => {
 
 ipcMain.on('usrCreate:edit', (e, userid) => {
 	editUserWindow = new BrowserWindow({
-		width: 600,
-		height: 400,
+		width: 450,
+		height: 550,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -325,7 +301,7 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 	const userText =
 		'UPDATE security.users SET name = $1, position = $2 WHERE user_id = $3;'
 	const values1 = [obj.userName, obj.userPosition, obj.user_id]
-    //Start modules
+
 	let idquery = ''
 	obj.addedModules.forEach(id => {
 		idquery = `${idquery}(${id},${obj.user_id}),`
@@ -341,7 +317,7 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 	idquery = idquery.slice(0, -1)
 
 	const removeModulesText = `DELETE FROM security."UsersModules" WHERE module_id IN (${idquery}) AND user_id = ${obj.user_id};`
-    //End Modules
+
 	db.pool
 		.query(userText, values1)
 		.then(res => {
@@ -431,29 +407,6 @@ ipcMain.on('expense:ready', e => {
 			})
 		}
 	})
-})
-
-ipcMain.on('expense:save', (e, arr) => {
-    let query = 'INSERT INTO public.expenses(expense_code, expense_type, expense_date, expense_value, expense_quantity) VALUES ';
-    let exp_value;
-
-    arr.forEach(element => {
-        exp_value = `(${element.code}, ${element.type}, '${element.date}', ${element.value}, ${element.quantity}),`;
-        query += exp_value;
-    });
-
-    query = query.slice(0,-1);
-    query += ';'
-
-    db.pool.query(query, (err, res) => {
-        if(err){
-            console.log(err.stack);
-            mainwc.send('expense:error');
-        }
-        else{
-            mainwc.send('expense:success');
-        }
-    })
 })
 
 const mainMenuTemplate = [
