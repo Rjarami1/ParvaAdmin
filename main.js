@@ -188,11 +188,11 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 })
 
 ipcMain.on('prodEdit:update', (e, obj) => {
-    console.log('Entro a prodEdit:update')
+    //console.log('Entro a prodEdit:update')
     const prodText = 'UPDATE security."listProducts" SET code_prod=$1, name_prod=$2, val_prod=$3, descp_prod=$4 WHERE product_id=$5;'
     const valuesP = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.product_id]
-    console.log(valuesP)
-    console.log('Antes del enviar el query')
+    //console.log(valuesP)
+    //console.log('Antes del enviar el query')
     db.pool
         .query(prodText, valuesP)
         .then(res => {
@@ -200,8 +200,8 @@ ipcMain.on('prodEdit:update', (e, obj) => {
         })
         .catch(err => console.log(err.stack))
 
-        editProdWindow.close()
-        sendProductsList()
+    editProdWindow.close()
+    sendProductsList()
 })
 
 ipcMain.on('prodCreate:cancel', e => {

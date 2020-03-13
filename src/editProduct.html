@@ -84,7 +84,7 @@
             else
             {
                 //errormsg.textContent = ''; REVISAR!
-                console.log('Se va a crear sendObject!')
+                //console.log('Se va a crear sendObject!')
                 let sendObject = 
                 {
                     product_id: productid,  
@@ -93,10 +93,10 @@
                     val_prod: val_prod.value,
                     descp_prod: descp_prod.value   
                 }
-                console.log('Antes del envio del objecto')
+                //console.log('Antes del envio del objecto')
                 ipcRenderer.send('prodEdit:update', sendObject);
-                console.log('Envio del objecto')
-                console.log(sendObject);
+                //console.log('Envio del objecto')
+                //console.log(sendObject);
             }
         })
     </script>
