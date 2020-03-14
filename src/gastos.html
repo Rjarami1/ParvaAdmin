@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Gastos</title>
+    <title>Registro de Gastos</title>
 </head>
 <body>
-    <h2>Gastos</h2><br>
+    <h2>Registro de Gastos</h2><br>
     <br>
 
     <form>
@@ -56,8 +56,12 @@
     <button id="save_expenses">Registrar Gastos</button>
     <p id="msg"></p>
 
-    <!-- jQuery library -->
-    <script src="../dependencies/jQuery/jquery-3.4.1.js"></script>
+    <img
+        id = "loading"
+        src="../images/load.gif"
+        alt="loading..."
+        style="visibility: hidden; height: 50px; width: 50px;"
+    />
 
     <script>
         //Importando electron
@@ -74,6 +78,7 @@
         const table = document.querySelector('#expenses_to_register');
         const save = document.querySelector('#save_expenses');
         const msg = document.querySelector('#msg');
+        const loading = document.querySelector('#loading');
 
         //Evento para cuando la página termine de cargar y poder modificarla
         document.addEventListener('DOMContentLoaded', (e) => {
@@ -186,7 +191,17 @@
         save.addEventListener('click', (e) => {
             e.preventDefault();
 
-            ipcRenderer.send('expense:save', added_expenses);   
+            if(added_expenses.length > 0){
+                msg.textContent = '';
+                ipcRenderer.send('expense:save', added_expenses);
+                loading.style.visibility = 'visible';
+                save.disabled = true;   
+            }
+            else{
+                msg.style.color = 'red';
+                msg.textContent = 'No se ha agregado ningún gasto.';
+            }
+            
         })
 
         ipcRenderer.on('expense:error', (e) => {
@@ -194,6 +209,9 @@
 
             msg.style.color = 'red';
             msg.textContent = 'Ha ocurrido un error, no se pudo guardar la información.';
+
+            loading.style.visibility = 'hidden';
+            save.disabled = false; 
         })
 
         ipcRenderer.on('expense:success', (e) => {
@@ -212,6 +230,9 @@
                     table.removeChild(child);
                 }
             }
+
+            loading.style.visibility = 'hidden';
+            save.disabled = false;
         })
 
         function display_added_expenses(){

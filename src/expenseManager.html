@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Gastos</title>
+</head>
+<body>
+    <h1>Gestión de Gastos</h1>
+
+    <h2>Crear Tipo:</h2><br>
+    <label for="newType">Descripción:</label>&nbsp;&nbsp;
+    <input type="text" name="newType" id="newType">
+
+    <h2>Tipos y Códigos Existentes:</h2><br>
+
+    <ul id="exp_list">
+
+    </ul>
+
+    <script>
+        window.$ = window.jQuery = require('jquery');
+        
+        $(document).ready(function (){
+            $("h1").css("color","red");
+        })
+    </script>
+</body>
+</html>
