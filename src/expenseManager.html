@@ -19,9 +19,39 @@
 
     <script>
         window.$ = window.jQuery = require('jquery');
-        
+        const {ipcRenderer} = require('electron');
+
         $(document).ready(function (){
-            $("h1").css("color","red");
+            ipcRenderer.send('expenseManager:ready');
+        })
+
+        let exp_types;
+        let exp_codes;
+        ipcRenderer.on('expenseManager:info', (e,arr) => {
+            exp_types = arr[0];
+            exp_codes = arr[1];
+
+            let ul_id;
+            let li_id;
+            exp_types.forEach(exp_type => {
+                ul_id = `list_${exp_type.type_id}`;
+                li_id = `type_${exp_type.type_id}`
+                $('#exp_list').append(`<li id="${li_id}">${exp_type.type_description.trim()}<ul id="${ul_id}"></ul></li>`);
+                
+                exp_codes.forEach(exp_code => {
+                    if(exp_code.expense_type_id == exp_type.type_id){
+                        $(`#${ul_id}`).append(`<li code_${exp_code.code_id}>${exp_code.expense_code.trim()} - ${exp_code.code_description}</li>`);
+                    }
+                });
+
+                $(`#${ul_id}`).hide();
+
+                $(`#${li_id}`).click(function(){
+                    $(`#${ul_id}`).toggle();
+                })
+                
+            });
+
         })
     </script>
 </body>
