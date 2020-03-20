@@ -4,12 +4,19 @@
     <meta charset="UTF-8">
     <title>Gestión de Gastos</title>
 </head>
+
+<style>
+    li span:hover {
+        cursor: pointer;
+    }
+</style>
 <body>
     <h1>Gestión de Gastos</h1>
 
     <h2>Crear Tipo:</h2><br>
     <label for="newType">Descripción:</label>&nbsp;&nbsp;
-    <input type="text" name="newType" id="newType">
+    <input type="text" name="newType" id="newType">&nbsp;&nbsp;
+    <button id="createType">Crear</button>
 
     <h2>Tipos y Códigos Existentes:</h2><br>
 
@@ -17,26 +24,52 @@
 
     </ul>
 
+    <h2>Agregar Código:</h2><br>
+
+    <label for="expenseType">Tipo de Gasto</label>&nbsp;&nbsp;
+    <select name="expenseType" id="expenseType">
+        <option value="" selected></option>
+    </select><br>
+
+    <label for="newCodeCode">Código:</label>&nbsp;&nbsp;
+    <input type="text" name="newCodeCode" id="newCodeCode">&nbsp;&nbsp;
+    <label for="newCodeDesc">Descripción</label>&nbsp;&nbsp;
+    <input type="text" name="newCodeDesc" id="newCodeDesc">&nbsp;&nbsp;
+    <button id="addCode">Agregar</button>
+
+    <br>
+    <br>
+    <button id="saveAll">Guardar Cambios</button>
+
     <script>
+
+        //Se importan los modulos de jquery y electron
         window.$ = window.jQuery = require('jquery');
         const {ipcRenderer} = require('electron');
 
+        //Cuando la página esté lista se le avisa al main.js que mandé la info de la base de datos
         $(document).ready(function (){
             ipcRenderer.send('expenseManager:ready');
         })
 
+        //Procedimiento de recepción de datos y preparación de la página
         let exp_types;
         let exp_codes;
         ipcRenderer.on('expenseManager:info', (e,arr) => {
+            //Se almacenan tanto los tipos de gasto como los códigos existentes
+            //desde base de datos en variables globales
             exp_types = arr[0];
             exp_codes = arr[1];
 
+            //Se hace un bucle para pasar por cada tipo de gasto y sus respectivos códigos
             let ul_id;
             let li_id;
-            exp_types.forEach(exp_type => {
+            exp_types.forEach(exp_type => {            
+                //Se construye una lista no ordenada con cada tipo y se le asigna un 'child'
+                //por cada código dentro del tipo.
                 ul_id = `list_${exp_type.type_id}`;
-                li_id = `type_${exp_type.type_id}`
-                $('#exp_list').append(`<li id="${li_id}">${exp_type.type_description.trim()}<ul id="${ul_id}"></ul></li>`);
+                li_id = `type_${exp_type.type_id}`;
+                $('#exp_list').append(`<li id="${li_id}"><span>${exp_type.type_description.trim()}</span><ul id="${ul_id}"></ul></li>`);
                 
                 exp_codes.forEach(exp_code => {
                     if(exp_code.expense_type_id == exp_type.type_id){
@@ -44,15 +77,31 @@
                     }
                 });
 
+                //Se ocultan los códigos de cada tipo.
                 $(`#${ul_id}`).hide();
 
-                $(`#${li_id}`).click(function(){
-                    $(`#${ul_id}`).toggle();
-                })
+                //Se asigna un evento de modo que se puedan ocultar o mostrar los
+                //códigos cada vez que se haga click al nombre de su respectivo tipo.
+                $(`#${li_id} span`).on('click', toggleList(ul_id));
                 
             });
 
+            //Se rellena la lista desplegable del tipo de código en la sección
+            //de agregar nuevo código.
+            exp_types.forEach(exp_type => {
+                $('#expenseType').append(`<option value="${exp_type.type_id}">${exp_type.type_description}</option>`);
+            });
+
         })
+
+        //Función que devuelve la función del event handler de ocultar o mostrar lista de códigos
+        //pasando como parámetro el id de su respectivo elemento.
+        function toggleList(element){
+            return function() {
+                $(`#${element}`).toggle();
+            }
+        }
+
     </script>
 </body>
 </html>
