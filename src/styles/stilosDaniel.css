@@ -22,6 +22,11 @@ body .tablaAdmin {
 	transform: translate(-50%, -50%);
 }
 
+body .tablaAdmin tr:hover {
+	background-color: rgba(0,0,0,.05);
+	cursor: pointer;
+}
+
 body .botonCrearProducto {
 	width: 200px;
 	position: absolute;
@@ -39,6 +44,11 @@ body .tablaProductos {
 	left: 55%;
 	top: 50%;
 	transform: translate(-50%, -50%);
+}
+
+body .tablaProductos tr:hover {
+	background-color: rgba(0,0,0,.05);
+	cursor: pointer;
 }
 
 body.fondo {
@@ -94,10 +104,25 @@ body .custom-form.p-4:before {
 	left: 50%;
 	top: 0;
 	transform: translate(-50%, -50%);
-	background-image: url('../../imagenes/login.png');
+	background-image: url('../../images/login.png');
 	width: 100px;
 	height: 100px;
 	background-size: 100px;
+}
+
+body .central .custom-form.p-4 .gifInicio {
+	width: 70px;
+	height: 70px;
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 65%;
+	transform: translate(-50%, -50%);
+	visibility: hidden;
+}
+
+body .central .custom-form.p-4.visibilidad .visibilidad{
+	visibility: hidden;
 }
 
 body .central .custom-form.p-4 .form-group:first-child {

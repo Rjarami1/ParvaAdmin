@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-<!-- Bootstrap 4 CSS -->
+    <!-- Bootstrap 4 CSS -->
     <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles/stilosDaniel.css">
 
@@ -46,97 +47,98 @@
     </div>
 
     <script>
-    const {ipcRenderer} = require('electron');
-    const tabla = document.querySelector('table');
-    const btn_addUser = document.querySelector('#createUser');
+        const { ipcRenderer } = require('electron');
+        const tabla = document.querySelector('table');
+        const btn_addUser = document.querySelector('#createUser');
 
-    let x;
-    
-    //Informar al Main Renderer que la página está lista.
-    document.addEventListener('DOMContentLoaded', (e) => {
-        ipcRenderer.send('admin:ready');
-    })
+        let x;
 
-    //Recibir la lista de usuarios del Main y desplegarlos
-    ipcRenderer.on('users:info', (e, users) => {
+        //Informar al Main Renderer que la página está lista.
+        document.addEventListener('DOMContentLoaded', (e) => {
+            ipcRenderer.send('admin:ready');
+        })
 
-        cleanList();
+        //Recibir la lista de usuarios del Main y desplegarlos
+        ipcRenderer.on('users:info', (e, users) => {
 
-        let tr;
-        let td1, td2, td3, td4, td5, td6;
-        let itemText1, itemText2, itemText3, itemText4, itemText5, itemText6;
-        let dateCreate, dateLast;
+            cleanList();
 
-        users.forEach(user => {
-            dateCreate = new Date(Date.parse(user.date_create));
-            dateLast = new Date(Date.parse(user.date_last_login));
+            let tr;
+            let td1, td2, td3, td4, td5, td6;
+            let itemText1, itemText2, itemText3, itemText4, itemText5, itemText6;
+            let dateCreate, dateLast;
 
-            tr = document.createElement('tr');
-            td1 = document.createElement('td');
-            td2 = document.createElement('td');
-            td3 = document.createElement('td');
-            td4 = document.createElement('td');
-            td5 = document.createElement('td');
-            td6 = document.createElement('td');
+            users.forEach(user => {
+                dateCreate = new Date(Date.parse(user.date_create));
+                dateLast = new Date(Date.parse(user.date_last_login));
 
-            tr.addEventListener('click', (e) => {
-                e.preventDefault();
-                ipcRenderer.send('usrCreate:edit', user.user_id);
-            })
+                tr = document.createElement('tr');
+                td1 = document.createElement('td');
+                td2 = document.createElement('td');
+                td3 = document.createElement('td');
+                td4 = document.createElement('td');
+                td5 = document.createElement('td');
+                td6 = document.createElement('td');
 
-            itemText1 = document.createTextNode(user.user_id);
-            itemText2 = document.createTextNode(user.cedula);
-            itemText3 = document.createTextNode(user.name);
-            itemText4 = document.createTextNode(dateCreate.toLocaleString());
-            itemText5 = document.createTextNode(dateLast.toLocaleString());
-            itemText6 = document.createTextNode(user.position);
+                tr.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    ipcRenderer.send('usrCreate:edit', user.user_id);
+                })
 
-            dateCreate = null;
-            dateLast = null;
+                itemText1 = document.createTextNode(user.user_id);
+                itemText2 = document.createTextNode(user.cedula);
+                itemText3 = document.createTextNode(user.name);
+                itemText4 = document.createTextNode(dateCreate.toLocaleString());
+                itemText5 = document.createTextNode(dateLast.toLocaleString());
+                itemText6 = document.createTextNode(user.position);
 
-            td1.appendChild(itemText1);
-            td2.appendChild(itemText2);
-            td3.appendChild(itemText3);
-            td4.appendChild(itemText4);
-            td5.appendChild(itemText5);
-            td6.appendChild(itemText6);
+                dateCreate = null;
+                dateLast = null;
 
-            tr.appendChild(td1);
-            tr.appendChild(td2);
-            tr.appendChild(td3);
-            tr.appendChild(td4);
-            tr.appendChild(td5);
-            tr.appendChild(td6);
+                td1.appendChild(itemText1);
+                td2.appendChild(itemText2);
+                td3.appendChild(itemText3);
+                td4.appendChild(itemText4);
+                td5.appendChild(itemText5);
+                td6.appendChild(itemText6);
 
-            tabla.appendChild(tr);            
-        });
-    })
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+                tr.appendChild(td4);
+                tr.appendChild(td5);
+                tr.appendChild(td6);
 
-    ipcRenderer.on('users:reset', (e) => {
-        alert('La contraseña del usuario se ha restaurado, ahora su constraseña es su misma cédula. El usuario debe cambiarla.');
-    })
+                tabla.appendChild(tr);
+            });
+        })
 
-    btn_addUser.addEventListener('click', (e) => {
-        e.preventDefault();
-        ipcRenderer.send('admin:create');
-    })
+        ipcRenderer.on('users:reset', (e) => {
+            alert('La contraseña del usuario se ha restaurado, ahora su constraseña es su misma cédula. El usuario debe cambiarla.');
+        })
 
-    function cleanList(){
-        let table = document.querySelector('table');
-        let children = table.childElementCount;
+        btn_addUser.addEventListener('click', (e) => {
+            e.preventDefault();
+            ipcRenderer.send('admin:create');
+        })
 
-        if(children > 1){
-            let child;
-            while(table.childElementCount > 1){
-                child = table.lastElementChild;
-                table.removeChild(child);
+        function cleanList() {
+            let table = document.querySelector('table');
+            let children = table.childElementCount;
+
+            if (children > 1) {
+                let child;
+                while (table.childElementCount > 1) {
+                    child = table.lastElementChild;
+                    table.removeChild(child);
+                }
             }
         }
-    }
 
     </script>
     <!-- jQuery library -->
     <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
 
 </body>
+
 </html>

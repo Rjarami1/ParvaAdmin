@@ -1,104 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UFT-8">
-    <title>Editar Producto</title>
-</head>
-<body>
-    <h3>Editar Producto:</h3><br>
+	<head>
+		<!-- Bootstrap 4 CSS -->
+		<link
+			rel="stylesheet"
+			href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css"
+		/>
+		<link rel="stylesheet" href="styles/stilosDaniel.css" />
 
-    <form>
-        <label for="code_prod">Codigo del Producto:</label><br>
-        <input type="text" id="code_prod" name="code_prod"><br>
+		<meta charset="UFT-8" />
+		<title>Editar Producto</title>
+	</head>
+	<body>
+		<h3>Editar Producto:</h3>
+		<br />
 
-        <label for="name_prod">Nombre del Producto:</label><br>
-        <input type="text" id="name_prod" name="name_prod"><br>
+		<form>
+			<label for="code_prod">Codigo del Producto:</label><br />
+			<input type="text" id="code_prod" name="code_prod" /><br />
 
-        <label for="val_prod">Valor del Producto (COP):</label><br>
-        <input type="integer" id="val_prod" name="val_prod"><br>
+			<label for="name_prod">Nombre del Producto:</label><br />
+			<input type="text" id="name_prod" name="name_prod" /><br />
 
-        <label for="descp_prod">Descripcion del Producto:</label><br>
-        <input type="text" id="descp_prod" name="descp_prod"><br>
+			<label for="val_prod">Valor del Producto (COP):</label><br />
+			<input type="integer" id="val_prod" name="val_prod" /><br />
 
-        <input type="submit" value="Actualizar Producto"><br>
-        <button id="btn_status"></button><br>
-        <input type="button" value="Cancelar" id="cancel"><br>
-    </form>
+			<label for="descp_prod">Descripcion del Producto:</label><br />
+			<input type="text" id="descp_prod" name="descp_prod" /><br />
 
-    <script>
-        const {ipcRenderer} = require('electron');
+			<input type="submit" value="Actualizar Producto" /><br />
+			<button id="btn_status"></button><br />
+			<input type="button" value="Cancelar" id="cancel" /><br />
+		</form>
 
-        const form = document.querySelector('form');
-        const cancelButton = document.querySelector('#cancel');
-        const errormsg = document.querySelector('p');
+		<script>
+			const { ipcRenderer } = require('electron')
 
-        const code_prod = document.querySelector('#code_prod');
-        const name_prod = document.querySelector('#name_prod');
-        const val_prod = document.querySelector('#val_prod');
-        const descp_prod = document.querySelector('#descp_prod');
+			const form = document.querySelector('form')
+			const cancelButton = document.querySelector('#cancel')
+			const errormsg = document.querySelector('p')
 
-        const btn_status = document.querySelector('#btn_status');
+			const code_prod = document.querySelector('#code_prod')
+			const name_prod = document.querySelector('#name_prod')
+			const val_prod = document.querySelector('#val_prod')
+			const descp_prod = document.querySelector('#descp_prod')
 
-        let product_id;
+			const btn_status = document.querySelector('#btn_status')
 
-        ipcRenderer.on('prodEdit:prodInfo', (e, dataObject) => 
-        {
-            code_prod.value = dataObject.prodInfo.code_prod.trim();
-            name_prod.value = dataObject.prodInfo.name_prod.trim();
-            val_prod.value = dataObject.prodInfo.val_prod.trim();
-            descp_prod.value = dataObject.prodInfo.descp_prod.trim();
+			let product_id
 
-            productid = dataObject.prodInfo.product_id;
+			ipcRenderer.on('prodEdit:prodInfo', (e, dataObject) => {
+				code_prod.value = dataObject.prodInfo.code_prod.trim()
+				name_prod.value = dataObject.prodInfo.name_prod.trim()
+				val_prod.value = dataObject.prodInfo.val_prod.trim()
+				descp_prod.value = dataObject.prodInfo.descp_prod.trim()
 
-            if(dataObject.prodInfo.status_prod)
-            {
-                btn_status.textContent = "Desactivar";
-            }
-            else
-            {
-                btn_status.textContent = "Activar";
-            }
-        })
-        //Boton para cancelar la edicion del usuario
-        cancel.addEventListener('click', (e) =>
-        {
-            e.preventDefault();
-            ipcRenderer.send('prodEdit:cancel');
-        })
-        //Boton para activar o desactivar el producto en edicion
-        btn_status.addEventListener('click', (e) =>
-        {
-            e.preventDefault();
-            ipcRenderer.send('prodEdit:toggle', productid)
-        })
-        //Formato para el envio de la nueva informacion a editar del producto
-        form.addEventListener('submit', (e) =>
-        {
-            e.preventDefault();
+				productid = dataObject.prodInfo.product_id
 
-            if (code_prod.value == '' || name_prod.value == '' || val_prod.value == '' || descp_prod.value == '')
-            {
-                errormsg.textContent = 'No deje ningún campo vacío.'
-                errormsg.style.color = 'red';
-            }
-            else
-            {
-                //errormsg.textContent = ''; REVISAR!
-                console.log('Se va a crear sendObject!')
-                let sendObject = 
-                {
-                    product_id: productid,  
-                    code_prod: code_prod.value,
-                    name_prod: name_prod.value,
-                    val_prod: val_prod.value,
-                    descp_prod: descp_prod.value   
-                }
-                console.log('Antes del envio del objecto')
-                ipcRenderer.send('prodEdit:update', sendObject);
-                console.log('Envio del objecto')
-                console.log(sendObject);
-            }
-        })
-    </script>
-</body>
+				if (dataObject.prodInfo.status_prod) {
+					btn_status.textContent = 'Desactivar'
+				} else {
+					btn_status.textContent = 'Activar'
+				}
+			})
+			//Boton para cancelar la edicion del usuario
+			cancel.addEventListener('click', e => {
+				e.preventDefault()
+				ipcRenderer.send('prodEdit:cancel')
+			})
+			//Boton para activar o desactivar el producto en edicion
+			btn_status.addEventListener('click', e => {
+				e.preventDefault()
+				ipcRenderer.send('prodEdit:toggle', productid)
+			})
+			//Formato para el envio de la nueva informacion a editar del producto
+			form.addEventListener('submit', e => {
+				e.preventDefault()
+
+				if (
+					code_prod.value == '' ||
+					name_prod.value == '' ||
+					val_prod.value == '' ||
+					descp_prod.value == ''
+				) {
+					errormsg.textContent = 'No deje ningún campo vacío.'
+					errormsg.style.color = 'red'
+				} else {
+					//errormsg.textContent = ''; REVISAR!
+					console.log('Se va a crear sendObject!')
+					let sendObject = {
+						product_id: productid,
+						code_prod: code_prod.value,
+						name_prod: name_prod.value,
+						val_prod: val_prod.value,
+						descp_prod: descp_prod.value
+					}
+					console.log('Antes del envio del objecto')
+					ipcRenderer.send('prodEdit:update', sendObject)
+					console.log('Envio del objecto')
+					console.log(sendObject)
+				}
+			})
+		</script>
+
+		<!-- jQuery library -->
+		<script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+	</body>
 </html>
