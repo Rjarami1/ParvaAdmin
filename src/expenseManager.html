@@ -9,6 +9,15 @@
     li span:hover {
         cursor: pointer;
     }
+
+    li img{
+        height: 10px;
+        width: 10px;
+    }
+
+    li img:hover {
+        cursor: pointer;
+    }
 </style>
 <body>
     <h1>Gestión de Gastos</h1>
@@ -28,8 +37,8 @@
 
     <label for="expenseType">Tipo de Gasto</label>&nbsp;&nbsp;
     <select name="expenseType" id="expenseType">
-        <option value="" selected></option>
-    </select><br>
+
+    </select><br><br>
 
     <label for="newCodeCode">Código:</label>&nbsp;&nbsp;
     <input type="text" name="newCodeCode" id="newCodeCode">&nbsp;&nbsp;
@@ -39,7 +48,8 @@
 
     <br>
     <br>
-    <button id="saveAll">Guardar Cambios</button>
+    <button id="saveAll">Guardar Cambios</button>&nbsp;&nbsp;
+    <button id="cancel">Cancelar</button>
 
     <script>
 
@@ -53,27 +63,148 @@
         })
 
         //Procedimiento de recepción de datos y preparación de la página
+
+        //Variables globales de arreglo de tipos y códigos existentes en BD.
         let exp_types;
         let exp_codes;
+
+        //Variables globales de arreglo de tipos y códigos locales.
+        let local_exp_types;
+        let local_exp_codes;
+
+        //Variables globales transaccionales de tipos y códigos creados y/o eliminados
+        let added_types = [];
+        let added_codes = [];
+
+        let deleted_types = [];
+        let deleted_codes = [];
+
         ipcRenderer.on('expenseManager:info', (e,arr) => {
             //Se almacenan tanto los tipos de gasto como los códigos existentes
             //desde base de datos en variables globales
             exp_types = arr[0];
             exp_codes = arr[1];
 
-            //Se hace un bucle para pasar por cada tipo de gasto y sus respectivos códigos
+            local_exp_types = exp_types.slice();
+            local_exp_codes = exp_codes.slice();
+
+            //Se ejecuta la siguiente función para mostrar los tipos de gasto y sus códigos.
+            displayExpenses();
+
+            //Se ejecuta la siguiente función para rellenar
+            //la lista desplegable del tipo de código en la sección
+            populateSelector();
+
+            $('#cancel').click(cancelChanges());
+        })
+
+        function cancelChanges(){
+            return function(){
+                if(confirm('¿Esta seguro que desa cancelar todos los cambios?')){
+                    local_exp_types = exp_types.slice();
+                    local_exp_codes = exp_codes.slice();
+
+                    added_types = [];
+                    added_codes = [];
+                    deleted_types = [];
+                    deleted_codes = [];
+
+                    displayExpenses();
+                    populateSelector();
+                }
+            }
+        }
+
+        //Función que devuelve la función del event handler de ocultar o mostrar lista de códigos
+        //pasando como parámetro el id de su respectivo elemento.
+        function toggleList(element){
+            return function() {
+                $(`#${element}`).toggle();
+            }
+        }
+
+        //Función que devuelve la función del event handles de eliminar tipo o código de gasto con sus
+        //respectivos códigos pasando como parámetro el id del elemento de la lista, la descripción
+        //del tipo de gasto o código, y un true o false indicando si es tipo o no.
+        function deleteTypeCode(desc, id, isType){
+            return function(){
+
+                let pos = -1;
+                let i = 0;
+
+                if(isType){
+                    if(confirm(`Esta seguro que desea eliminar "${desc.trim()}" y todos sus códigos asociados?`)){
+                        local_exp_types.forEach(exp_type => {
+                            if(exp_type.type_id == id){
+                                pos = i;
+                            }
+                            else{
+                                ++i;
+                            }
+                        });
+                        local_exp_types.splice(pos, 1);
+                        deleted_types.push(id);
+                        populateSelector();
+                    }
+                }
+                else{
+                    if(confirm(`Esta seguro que desea eliminar "${desc.trim()}"?`)){
+                        local_exp_codes.forEach(exp_code => {
+                            if(exp_code.code_id == id){
+                                pos = i;
+                            }
+                            else{
+                                ++i;
+                            }
+                        });
+                        local_exp_codes.splice(pos, 1);
+                        deleted_codes.push(id);
+                    }
+                }
+
+                displayExpenses();
+            }
+        }
+
+        //Función que rellena el selector de tipos para crear nuevos códigos tomando los tipos de gastos
+        //acutalmente activos localmente.
+        function populateSelector(){
+
+            $('#expenseType').empty();
+            $('#expenseType').append('<option value=""></option>');
+
+            local_exp_types.forEach(exp_type => {
+                $('#expenseType').append(`<option value="${exp_type.type_id}">${exp_type.type_description}</option>`);
+            });
+        }
+
+        function displayExpenses(){
+
+            //Primero se limpia la lista.
+            $('#exp_list').empty();
+        
             let ul_id;
             let li_id;
-            exp_types.forEach(exp_type => {            
+            let li_id_code;
+
+            //Se ejecuta un bucle para pasar por todos los tipos de gasto activos localmente.
+            local_exp_types.forEach(exp_type => {            
                 //Se construye una lista no ordenada con cada tipo y se le asigna un 'child'
                 //por cada código dentro del tipo.
                 ul_id = `list_${exp_type.type_id}`;
                 li_id = `type_${exp_type.type_id}`;
-                $('#exp_list').append(`<li id="${li_id}"><span>${exp_type.type_description.trim()}</span><ul id="${ul_id}"></ul></li>`);
+
+                $('#exp_list').append(`<li id="${li_id}"><span>${exp_type.type_description.trim()}</span>&nbsp<img id="delType" src="../imagenes/trash-alt-solid.svg" alt="Eliminar"><ul id="${ul_id}"></ul></li>`);
                 
-                exp_codes.forEach(exp_code => {
+                local_exp_codes.forEach(exp_code => {
                     if(exp_code.expense_type_id == exp_type.type_id){
-                        $(`#${ul_id}`).append(`<li code_${exp_code.code_id}>${exp_code.expense_code.trim()} - ${exp_code.code_description}</li>`);
+                        li_id_code = `code_${exp_code.code_id}`;
+
+                        $(`#${ul_id}`).append(`<li id="${li_id_code}">${exp_code.expense_code.trim()} - ${exp_code.code_description}&nbsp<img src="../imagenes/trash-alt-solid.svg" alt="Eliminar"></li>`);
+
+                        //Se asigna un evento al icono de eliminar para eliminar
+                        //El código.
+                        $(`#${li_id_code} img`).on('click', deleteTypeCode(exp_code.code_description, exp_code.code_id, false));
                     }
                 });
 
@@ -83,23 +214,11 @@
                 //Se asigna un evento de modo que se puedan ocultar o mostrar los
                 //códigos cada vez que se haga click al nombre de su respectivo tipo.
                 $(`#${li_id} span`).on('click', toggleList(ul_id));
-                
+
+                //Se asigna un evento al icono de eliminar para eliminar
+                //El tipo de gasto y todos los códigos asociados a este.
+                $(`#${li_id} #delType`).on('click', deleteTypeCode(exp_type.type_description, exp_type.type_id, true));
             });
-
-            //Se rellena la lista desplegable del tipo de código en la sección
-            //de agregar nuevo código.
-            exp_types.forEach(exp_type => {
-                $('#expenseType').append(`<option value="${exp_type.type_id}">${exp_type.type_description}</option>`);
-            });
-
-        })
-
-        //Función que devuelve la función del event handler de ocultar o mostrar lista de códigos
-        //pasando como parámetro el id de su respectivo elemento.
-        function toggleList(element){
-            return function() {
-                $(`#${element}`).toggle();
-            }
         }
 
     </script>
