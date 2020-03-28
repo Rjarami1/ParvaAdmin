@@ -3,10 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Editar Usuario</title>
-</head>
-<body>
-    <h3>Editar Usuario:</h3><br>
 
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/stilosDaniel.css">
+</head>
+
+<body>
+
+    <div class="encabezadoPrinSup">
+    <h3>Editar Usuario:</h3><br>
+    </div>
+
+    <div class='central'>
     <form>
         <label for="name">Nombre:</label><br>
         <input type="text" name="name" id="name"><br>
@@ -25,6 +34,7 @@
 
         <button type="submit" id="submit">Guardar</button> &nbsp;&nbsp;<button id="cancel">Cancelar</button>
     </form>
+    </div>
 
     <script>
         const {ipcRenderer} = require('electron');
@@ -63,6 +73,7 @@
 
             console.log(user_modules);
 
+            //Aca esta el codigo para los checkbox de la edicion de los moudlos por usuario.
             let modules = dataObject.modules;
             let userModules = dataObject.userModules;
             let tr = document.createElement('tr');
@@ -82,7 +93,7 @@
 
                 td = document.createElement('td');
                 label = document.createElement('label');
-                label.textContent = module.module_name;
+                label.textContent = `${module.module_name} `;
                 checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.id = `module_${module.module_id}`;
@@ -105,7 +116,7 @@
 
             table.appendChild(tr);
             tr = null;
-        })
+        })//Aca termina la porcion de codigo para editar los modulos del usuario a editar.
 
         cancel.addEventListener('click', (e) => {
             e.preventDefault();
@@ -160,5 +171,9 @@
 
         })
         </script>
+
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
 </body>
 </html>

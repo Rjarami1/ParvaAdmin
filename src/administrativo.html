@@ -1,28 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/stilosDaniel.css">
+
     <meta charset="UTF-8">
     <title>Administración de Usuarios</title>
 </head>
-<body>
-    <h2>Administración de Usuarios</h2>
 
-    <button id="createUser">Crear Usuario</button>
+<body>
+
+    <div class="encabezadoPrinSup">
+        <h2>Administración de Usuarios</h2>
+    </div>
+
+    <div class="encabezadoPrinInf">
+        <h2 class="encabezadoPrinInflet">Fecha: Febrero 15 de 2020</h2>
+    </div>
+
+    <div class="botonNuevoUsuario">
+        <button id="createUser">Crear Usuario</button>
+    </div>
 
     <p>Lista de Usuarios:</p>
     <ul id="usersList"></ul>
 
-    <table style="width: 75%;">
-        <tr>
-            <th>ID</th>
-            <th>Login</th>
-            <th>Nombres</th>
-            <th>Fecha de Creación</th>
-            <th>Último Ingreso</th>
-            <th>Cargo</th>
-            <th>Estado</th>
-        </tr>
-    </table>
+    <div class="tablaAdmin">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Login</th>
+                    <th>Nombres</th>
+                    <th>Fecha de Creación</th>
+                    <th>Último Ingreso</th>
+                    <th>Cargo</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
 
     <script>
     const {ipcRenderer} = require('electron');
@@ -42,8 +63,8 @@
         cleanList();
 
         let tr;
-        let td1, td2, td3, td4, td5, td6, td7;
-        let itemText1, itemText2, itemText3, itemText4, itemText5;
+        let td1, td2, td3, td4, td5, td6;
+        let itemText1, itemText2, itemText3, itemText4, itemText5, itemText6;
         let dateCreate, dateLast;
 
         users.forEach(user => {
@@ -57,7 +78,6 @@
             td4 = document.createElement('td');
             td5 = document.createElement('td');
             td6 = document.createElement('td');
-            td7 = document.createElement('td');
 
             tr.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -71,14 +91,6 @@
             itemText5 = document.createTextNode(dateLast.toLocaleString());
             itemText6 = document.createTextNode(user.position);
 
-            if(user.active){
-                itemText7 = document.createTextNode("Activo");
-            }
-            else{
-                itemText7 = document.createTextNode("Inactivo");
-            }
-            
-
             dateCreate = null;
             dateLast = null;
 
@@ -88,7 +100,6 @@
             td4.appendChild(itemText4);
             td5.appendChild(itemText5);
             td6.appendChild(itemText6);
-            td7.appendChild(itemText7)
 
             tr.appendChild(td1);
             tr.appendChild(td2);
@@ -96,7 +107,6 @@
             tr.appendChild(td4);
             tr.appendChild(td5);
             tr.appendChild(td6);
-            tr.appendChild(td7);
 
             tabla.appendChild(tr);            
         });
@@ -123,7 +133,10 @@
             }
         }
     }
-   
+
     </script>
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
 </body>
 </html>

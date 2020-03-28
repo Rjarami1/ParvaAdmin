@@ -1,0 +1,105 @@
+body .central {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+body .botonNuevoUsuario {
+	width: 800px;
+	position: absolute;
+	z-index: 100000;
+	left: 75%;
+	top: 80%;
+	transform: translate(-50%, -50%);
+}
+
+body .tablaAdmin {
+	width: 800px;
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+body .botonCrearProducto {
+	width: 200px;
+	position: absolute;
+	z-index: 100000;
+	left: 91%;
+	top: 26%;
+	transform: translate(-50%, -50%);
+}
+
+body .tablaProductos {
+	width: 1000px;
+	height: 300px;
+	position: absolute;
+	z-index: 100000;
+	left: 55%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+body.fondo {
+	background-color: #b4cbf0;
+}
+
+body .central .custom-form.p-4 {
+	width: 350px;
+	padding-top: 2rem;
+	background-color: #b4cbf0;
+	margin: 70px;
+	border: 2.5px solid;
+	border-radius: 20px;
+	border-color: #574727;
+	position: relative;
+}
+
+body .encabezado {
+	background-color: #6b81a4;
+	height: 200px;
+	position: relative;
+}
+
+body .encabezadoPrinSup {
+	background-color: #6b81a4;
+	height: 130px;
+	position: relative;
+}
+
+body .encabezadoPrinInf {
+	background-color: #b4cbf0;
+	height: 30px;
+	position: relative;
+}
+
+body .encabezadoPrinInflet {
+	font-size: 20px;
+}
+
+body .central .btn-primary {
+	margin: 20px auto;
+	display: block;
+	background-color: #6b81a4;
+	border-color: #6b81a4;
+	height: 50px;
+	width: 100%;
+}
+
+body .custom-form.p-4:before {
+	content: '';
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 0;
+	transform: translate(-50%, -50%);
+	background-image: url('../../imagenes/login.png');
+	width: 100px;
+	height: 100px;
+	background-size: 100px;
+}
+
+body .central .custom-form.p-4 .form-group:first-child {
+	margin-top: 2rem;
+}
