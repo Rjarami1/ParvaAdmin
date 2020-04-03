@@ -25,7 +25,8 @@
     <h2>Crear Tipo:</h2><br>
     <label for="newType">Descripción:</label>&nbsp;&nbsp;
     <input type="text" name="newType" id="newType">&nbsp;&nbsp;
-    <button id="createType">Crear</button>
+    <button id="createType">Crear</button><br>
+    <p id="msg_type" style="color: red"></p>
 
     <h2>Tipos y Códigos Existentes:</h2><br>
 
@@ -44,7 +45,8 @@
     <input type="text" name="newCodeCode" id="newCodeCode">&nbsp;&nbsp;
     <label for="newCodeDesc">Descripción</label>&nbsp;&nbsp;
     <input type="text" name="newCodeDesc" id="newCodeDesc">&nbsp;&nbsp;
-    <button id="addCode">Agregar</button>
+    <button id="addCode">Agregar</button><br>
+    <p id="msg_code" style="color: red"></p>
 
     <br>
     <br>
@@ -61,8 +63,6 @@
         $(document).ready(function (){
             ipcRenderer.send('expenseManager:ready');
         })
-
-        //Procedimiento de recepción de datos y preparación de la página
 
         //Variables globales de arreglo de tipos y códigos existentes en BD.
         let exp_types;
@@ -96,6 +96,15 @@
             populateSelector();
 
             $('#cancel').click(cancelChanges());
+
+            $('#saveAll').click(() => {
+                //Llama la función findDifference() para encontrar las diferencias entre los tipos y
+                //códigos de gastos originalmente traídos de la base de datos y los locales con las modificaciones
+                //hechas por los usuarios.
+                findDifference();
+
+
+            })
         })
 
         function cancelChanges(){
@@ -108,6 +117,7 @@
                     added_codes = [];
                     deleted_types = [];
                     deleted_codes = [];
+                    local_code_id = 0;
 
                     displayExpenses();
                     populateSelector();
@@ -143,7 +153,6 @@
                             }
                         });
                         local_exp_types.splice(pos, 1);
-                        deleted_types.push(id);
                         populateSelector();
                     }
                 }
@@ -158,7 +167,6 @@
                             }
                         });
                         local_exp_codes.splice(pos, 1);
-                        deleted_codes.push(id);
                     }
                 }
 
@@ -220,6 +228,138 @@
                 $(`#${li_id} #delType`).on('click', deleteTypeCode(exp_type.type_description, exp_type.type_id, true));
             });
         }
+
+        function findDifference(){
+            let deletedCodes = [];
+            let deletedTypes = [];
+            let addedCodes = [];
+            let addedTypes = [];
+
+            let exists = false;
+
+            //Loop en busca de tipos eliminados
+            exp_types.forEach(db_type => {
+                local_exp_types.forEach(local_type => {
+                    if(local_type.type_id == db_type.type_id){
+                        exists = true;
+                    }
+                });
+                if(!exists){
+                    deletedTypes.push(db_type.type_id);
+                }
+                else{
+                    exists = false;
+                }
+            });
+
+            //Loop en busca de tipos agregados
+            exists = false;
+            local_exp_types.forEach(local_type => {
+                exp_types.forEach(db_type => {
+                    if(db_type.type_id == local_type.type_id){
+                        exists = true;
+                    }
+                });
+                if(!exists){
+                    addedTypes.push(local_type);
+                }
+                else{
+                    exists = false;
+                }
+            });
+        
+
+            //Loop en busca de códigos eliminados
+            exists = false;
+            exp_codes.forEach(db_code => {
+                local_exp_codes.forEach(local_code => {
+                    if(local_code.code_id == db_code.code_id){
+                        exists = true;
+                    }
+                });
+                if(!exists){
+                    deletedCodes.push(db_code.code_id);
+                }
+                else{
+                    exists = false;
+                }
+            });
+
+            //Loop en busca de códigos agregados
+            exists = false;
+            local_exp_codes.forEach(local_code => {
+                exp_codes.forEach(db_code => {
+                    if(db_code.code_id == local_code.code_id){
+                        exists = true;
+                    }
+                });
+                if(!exists){
+                    addedCodes.push(local_code);
+                }
+                else{
+                    exists = false;
+                }
+            });
+
+            added_types = addedTypes;
+            added_codes = addedCodes;
+
+            deleted_types = deletedTypes;
+            deleted_codes = deletedCodes;
+        }
+
+        let local_code_id = 0;
+        let local_code_object;
+        $('#addCode').click(() => {
+            if($('#expenseType option:selected').val() != ""){
+                if($('#newCodeCode').val().trim() != "" && $('#newCodeDesc').val().trim() != ""){
+                    local_code_object = {
+                        code_description: $('#newCodeDesc').val().trim(),
+                        code_id: `L${local_code_id}`,
+                        expense_code: $('#newCodeCode').val().trim(),
+                        expense_type_id: $('#expenseType option:selected').val()
+                    };
+
+                    local_exp_codes.push(local_code_object);
+                    ++local_code_id;
+
+                    $('#newCodeCode').val('');
+                    $('#newCodeDesc').val('');
+                    $('#msg_code').text('');
+                    
+                    displayExpenses();
+                }
+                else{
+                    $('#msg_code').text('No pueden haber campos vacíos.');
+                }
+            }
+            else{
+                $('#msg_code').text('Debe seleccionar un tipo de gasto.');
+            }
+        })
+
+        let local_type_id = 0;
+        let local_type_object;
+        $('#createType').click(() => {
+            if($('#newType').val().trim() != ""){
+                local_type_object = {
+                    type_description: $('#newType').val().trim(),
+                    type_id: `L${local_type_id}`
+                };
+
+                local_exp_types.push(local_type_object);
+                ++local_type_id;
+
+                $('#newType').val('');
+                $('#msg_type').text('');
+
+                displayExpenses();
+                populateSelector();
+            }
+            else{
+                $('#msg_type').text('No pueden haber campos vacíos.');
+            }
+        })
 
     </script>
 </body>
