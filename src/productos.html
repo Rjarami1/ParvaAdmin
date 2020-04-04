@@ -35,6 +35,7 @@
 					<th>Valor (Cop)</th>
 					<th>Descripcion</th>
 					<th>Estado</th>
+					<th>Tipo de Produccion</th>
 				</tr>
 			</table>
 		</div>
@@ -57,8 +58,8 @@
 				cleanList()
 
 				let pr
-				let pd1, pd2, pd3, pd4, pd5, pd6
-				let prodText1, prodText2, prodText3, prodText4, prodText5
+				let pd1, pd2, pd3, pd4, pd5, pd6, pd7
+				let prodText1, prodText2, prodText3, prodText4, prodText5, prodText6
 				console.log('Se crearon las variables')
 
 				listProducts.forEach(product => {
@@ -69,6 +70,7 @@
 					pd4 = document.createElement('td')
 					pd5 = document.createElement('td')
 					pd6 = document.createElement('td')
+					pd7 = document.createElement('td')
 
 					pr.addEventListener('click', e => {
 						e.preventDefault()
@@ -80,6 +82,7 @@
 					prodText3 = document.createTextNode(product.name_prod)
 					prodText4 = document.createTextNode(product.val_prod)
 					prodText5 = document.createTextNode(product.descp_prod)
+					prodText7 = document.createTextNode(product.productype)
 
 					if (product.status_prod) {
 						prodText6 = document.createTextNode('Activo')
@@ -93,6 +96,7 @@
 					pd4.appendChild(prodText4)
 					pd5.appendChild(prodText5)
 					pd6.appendChild(prodText6)
+					pd7.appendChild(prodText7)
 
 					pr.appendChild(pd1)
 					pr.appendChild(pd2)
@@ -100,10 +104,9 @@
 					pr.appendChild(pd4)
 					pr.appendChild(pd5)
 					pr.appendChild(pd6)
+					pr.appendChild(pd7)
 
 					tablaProd.appendChild(pr)
-					console.log('Magia variables')
-					console.log('Se estan las variables')
 				})
 			})
 
