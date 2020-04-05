@@ -21,7 +21,7 @@
 		<h2 class="encabezadoPrinInflet">Fecha: Febrero 15 de 2020</h2>
 	</div>
 
-	<form>
+	<form class="central">
 		<label for="expense_date">Fecha: </label>
 		<input type="date" name="expense_date" id="expense_date" />&nbsp;&nbsp;
 
@@ -43,13 +43,15 @@
 		<br /><br />
 
 		<button type="submit" id="add_expenses">Adicionar Gasto</button>
-		<br />
+
+		<button id="save_expenses">Registrar Gastos</button>
+		<p id="msg"></p>
 
 		<p id="error_msg" style="color: red;"></p>
 
 		<h3>Gastos Adicionados:</h3>
 		<br />
-		<table id="expenses_to_register">
+		<table id="expenses_to_register" class="table table-striped">
 			<thead>
 				<tr>
 					<th>Número</th>
@@ -62,10 +64,11 @@
 			<tbody></tbody>
 		</table>
 		<br />
+
+
 	</form>
 
-	<button id="save_expenses">Registrar Gastos</button>
-	<p id="msg"></p>
+
 
 	<!-- jQuery library -->
 	<script src="../dependencies/jQuery/jquery-3.4.1.js"></script>
@@ -96,7 +99,7 @@
 			if (day.length < 2) {
 				day = `0${day}`
 			}
-
+			// cambiar definición de variables a let
 			//Si el mes es de un solo digito se antepone un cero (Para seguir el formato de fecha)
 			var month = today.getMonth() + 1
 			month = month.toString()

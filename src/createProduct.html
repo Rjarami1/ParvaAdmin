@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<!-- Bootstrap 4 CSS -->
-		<link
-			rel="stylesheet"
-			href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css"
-		/>
-		<link rel="stylesheet" href="styles/stilosDaniel.css" />
 
-		<meta charset="UTF-8" />
-		<title>Inscribir Producto</title>
-	</head>
-	<body>
-		<h3>Inscribir Producto</h3>
+<head>
+	<!-- Bootstrap 4 CSS -->
+	<link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="styles/stilosDaniel.css" />
+
+	<meta charset="UTF-8" />
+	<title>Inscribir Producto</title>
+</head>
+
+<body>
+	<h3>Inscribir Producto</h3>
+
+	<div class="central">
 
 		<form>
 			<label for="code_prod">Codigo del Producto</label><br />
@@ -27,60 +28,62 @@
 			<label for="descp_prod">Descripcion del Producto</label><br />
 			<input type="text" id="descp_prod" name="descp_prod" /><br />
 
-			<input type="submit" value="Inscribir Producto" /><br />
-			<input type="button" value="Cancelar" id="cancel" /><br />
+			<input class="buttonInsProd" type="submit" value="Inscribir Producto" /><br />
+			<input class="buttonCancel" type="button" value="Cancelar" id="cancel" /><br />
 		</form>
+	</div>
 
-		<script>
-			const { ipcRenderer } = require('electron')
+	<script>
+		const { ipcRenderer } = require('electron')
 
-			const form = document.querySelector('form')
-			const cancelButton = document.querySelector('#cancel')
+		const form = document.querySelector('form')
+		const cancelButton = document.querySelector('#cancel')
 
-			const code_prod = document.querySelector('#code_prod')
-			const name_prod = document.querySelector('#name_prod')
-			const val_prod = document.querySelector('#val_prod')
-			const descp_prod = document.querySelector('#descp_prod')
+		const code_prod = document.querySelector('#code_prod')
+		const name_prod = document.querySelector('#name_prod')
+		const val_prod = document.querySelector('#val_prod')
+		const descp_prod = document.querySelector('#descp_prod')
 
-			let allDone = true
+		let allDone = true
 
-			form.addEventListener('submit', e => {
-				e.preventDefault()
+		form.addEventListener('submit', e => {
+			e.preventDefault()
 
-				if (allDone) {
-					if (
-						code_prod.value == '' ||
-						name_prod.value == '' ||
-						val_prod.value == '' ||
-						descp_prod.value == ''
-					) {
-						msgError.textContent = ' Por favor ingrese todos los campos'
-						allDone = false
-					}
-				} else {
-					msgError.textContent = ''
-					allDone = true
+			if (allDone) {
+				if (
+					code_prod.value == '' ||
+					name_prod.value == '' ||
+					val_prod.value == '' ||
+					descp_prod.value == ''
+				) {
+					msgError.textContent = ' Por favor ingrese todos los campos'
+					allDone = false
 				}
-				if (allDone) {
-					let prodInfo = {
-						code_prod: code_prod.value,
-						name_prod: name_prod.value,
-						val_prod: val_prod.value,
-						descp_prod: descp_prod.value
-					}
-
-					ipcRenderer.send('prodCreate:create', prodInfo)
+			} else {
+				msgError.textContent = ''
+				allDone = true
+			}
+			if (allDone) {
+				let prodInfo = {
+					code_prod: code_prod.value,
+					name_prod: name_prod.value,
+					val_prod: val_prod.value,
+					descp_prod: descp_prod.value
 				}
-			})
 
-			cancelButton.addEventListener('click', e => {
-				e.preventDefault()
+				ipcRenderer.send('prodCreate:create', prodInfo)
+			}
+		})
 
-				ipcRenderer.send('prodCreate:cancel')
-			})
-		</script>
+		cancelButton.addEventListener('click', e => {
+			e.preventDefault()
 
-		<!-- jQuery library -->
-		<script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
-	</body>
+			ipcRenderer.send('prodCreate:cancel')
+		})
+	</script>
+
+	<!-- jQuery library -->
+	<script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+</body>
+
 </html>
