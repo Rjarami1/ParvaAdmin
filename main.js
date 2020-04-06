@@ -1,6 +1,5 @@
-const electron = require('electron')
-const path = require('path')
-const url = require('url')
+const electron = require('electron');
+const _ = require('lodash');
 
 const db = require('./connection')
 const userMenu = require('./menuModules')
@@ -464,16 +463,116 @@ ipcMain.on('expenseManager:ready', (e) => {
 
 	db.pool.query(text1, (err1, res1) => {
 		if (err1) {
-			console.log(err1.stack)
+			console.log(err1.stack);
 		} else {
 			db.pool.query(text2, (err2, res2) => {
 				if (err2) {
-					console.log(err2.stack)
+					console.log(err2.stack);
 				} else {
 					mainwc.send('expenseManager:info', [res1.rows, res2.rows]);
 				}
 			})
 		}
+	})
+})
+
+ipcMain.on('expenseManager:save', (e, arr) => {
+	let added_types = arr[0];
+	let added_codes = arr[1];
+	let deleted_types = arr[2];
+	let deleted_codes = arr[3];
+
+	let new_types_obj = [];
+	let new_codes = [];
+
+	let text, text2, text6;
+
+	let promises = [];
+	let promise1, promise2, promise3, promise4;
+	
+	if(added_types.length > 0){
+		text = 'INSERT INTO security."expenseTypes" (type_description, active) VALUES ';
+		added_types.forEach(type => {
+			text += `('${type.type_description}',true),`;
+
+			new_codes = new_codes.concat(_.remove(added_codes, (n) => {
+				return n.expense_type_id == type.type_id;
+			}));
+		});
+
+		text = text.slice(0,-1);
+		text += ' RETURNING type_id';
+
+		promise1 = db.pool.query(text);
+		promise1.then(res => {
+			res.rows.forEach((row,index) => {
+				new_types_obj.push({
+					local_id: added_types[index].type_id,
+					db_id: row.type_id
+				});
+			});
+
+			new_codes.forEach((code, index) => {
+				new_types_obj.forEach(type_obj => {
+					if(code.expense_type_id == type_obj.local_id){
+						new_codes[index].expense_type_id = type_obj.db_id;
+					}
+				});
+			});
+
+			text6 = 'INSERT INTO security."expenseCodes" (expense_code, expense_type_id, code_description, active) VALUES ';
+			new_codes.forEach(code => {
+				text6 += `('${code.expense_code}',${code.expense_type_id},'${code.code_description}', true),`;
+			});
+			text6 = text6.slice(0,-1);
+			db.pool.query(text6);
+		})
+		.catch(err => {
+			console.log(err.stack);
+		});
+
+		promises.push(promise1);
+	}
+
+	if(added_codes.length > 0){
+		text2 = 'INSERT INTO security."expenseCodes" (expense_code, expense_type_id, code_description, active) VALUES ';
+		added_codes.forEach(code => {
+			text2 += `('${code.expense_code}',${code.expense_type_id},'${code.code_description}', true),`;
+		});
+		
+		text2 = text2.slice(0,-1);
+		promise2 = db.pool.query(text2);
+		promises.push(promise2);
+	}
+
+	if(deleted_types.length > 0){
+		const text3 = `UPDATE security."expenseTypes" SET active = false WHERE type_id IN (${deleted_types});`;
+		const text4 = `UPDATE security."expenseCodes" SET active = false WHERE expense_type_id IN (${deleted_types});`;
+
+		promise3 = db.pool.query(text3).then(res => {
+			db.pool.query(text4)
+		})
+		.catch(err => {
+			console.log(err.stack);
+		})
+
+		promises.push(promise3);
+	}
+
+	if(deleted_codes.length > 0){
+		const text5 = `UPDATE security."expenseCodes" SET active = false WHERE code_id IN (${deleted_codes});`;
+
+		promise4 = db.pool.query(text5);
+		promises.push(promise4);
+	}
+
+	Promise.all(promises).then(e => {
+			mainwc.send('expenseManager:done');
+		}
+	)
+	.catch(err => {
+		console.log(err.stack);
+		mainwc.send('expenseManager:error');
 	})
 })
 

@@ -51,7 +51,15 @@
     <br>
     <br>
     <button id="saveAll">Guardar Cambios</button>&nbsp;&nbsp;
-    <button id="cancel">Cancelar</button>
+    <button id="cancel">Cancelar</button><br>
+
+    <img
+        id="loading"
+        src="../imagenes/load.gif"
+        alt="loading..."
+        style="height: 50px; width: 50px;"
+    />
+    <p id="msg_done"></p>
 
     <script>
 
@@ -61,6 +69,7 @@
 
         //Cuando la página esté lista se le avisa al main.js que mandé la info de la base de datos
         $(document).ready(function (){
+            $('#loading').hide();
             ipcRenderer.send('expenseManager:ready');
         })
 
@@ -103,8 +112,21 @@
                 //hechas por los usuarios.
                 findDifference();
 
-
+                ipcRenderer.send('expenseManager:save', [added_types, added_codes, deleted_types, deleted_codes]);
+                $('#loading').show();
             })
+        })
+
+        ipcRenderer.on('expenseManager:done', (e) => {
+            $('#loading').hide();
+            $('#msg_done').css('color','green');
+            $('#msg_done').text('¡Cambios guardados con éxito!');
+        })
+
+        ipcRenderer.on('expenseManager:error', (e) => {
+            $('#loading').hide();
+            $('#msg_done').css('color','red');
+            $('#msg_done').text('Ha ocurrido un error.');
         })
 
         function cancelChanges(){
