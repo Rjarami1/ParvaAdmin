@@ -121,8 +121,8 @@ ipcMain.on('prod:ready', e => {
 
 ipcMain.on('prod:create', e => {
 	createProdWindow = new BrowserWindow({
-		width: 300,
-		height: 300,
+		width: 400,
+		height: 400,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -223,10 +223,10 @@ ipcMain.on('prodEdit:toggle', (e, id) => {
 })
 
 ipcMain.on('prodCreate:create', (e, obj) => {
-	let values = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod]
-
+	let values = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.production_type]
+	console.log(obj.production_type);
 	const text =
-		'INSERT INTO security."listProducts"(code_prod, name_prod, val_prod, descp_prod, status_prod) VALUES ($1, $2, $3, $4, true);'
+		'INSERT INTO security."listProducts"(code_prod, name_prod, val_prod, descp_prod, status_prod, productype) VALUES ($1, $2, $3, $4, true, $5);'
 
 	db.pool.query(text, values, (err, res) => {
 		if (err) {
@@ -412,6 +412,24 @@ ipcMain.on('change:pass', (e, arr) => {
 	} else {
 		mainwc.send('change:done', false)
 	}
+})
+
+//Production
+ipcMain.on('production:ready', e => {
+	console.log("Entro a production:ready");
+	const text1 = 'SELECT * FROM security."productionTypes" WHERE status = true;'
+
+	db.pool.query(text1, (err1, res1) => {
+		if(err1) 
+		{
+			console.log(err1.stack)
+		}
+		else 
+		{
+			createProdWindow.send('productionTypes:info', res1.rows)
+			console.log('Production ready!')
+		}
+	})
 })
 
 ipcMain.on('expense:ready', e => {
