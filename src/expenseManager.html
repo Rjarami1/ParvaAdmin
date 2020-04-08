@@ -66,6 +66,7 @@
         //Se importan los modulos de jquery y electron
         window.$ = window.jQuery = require('jquery');
         const {ipcRenderer} = require('electron');
+        const {dialog} = require('electron').remote
 
         //Cuando la página esté lista se le avisa al main.js que mandé la info de la base de datos
         $(document).ready(function (){
@@ -131,19 +132,29 @@
 
         function cancelChanges(){
             return function(){
-                if(confirm('¿Esta seguro que desa cancelar todos los cambios?')){
-                    local_exp_types = exp_types.slice();
-                    local_exp_codes = exp_codes.slice();
+                dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar", "Cancelar"],
+                    defaultId: 1,
+                    title: "Deshacer Cambios",
+                    message: "¿Está seguro que desea deshacer los cambios?",
+                    cancelId: 1
+                }).then(index => {
+                    console.log(index.response);
+                    if(index.response == 0){
+                        local_exp_types = exp_types.slice();
+                        local_exp_codes = exp_codes.slice();
 
-                    added_types = [];
-                    added_codes = [];
-                    deleted_types = [];
-                    deleted_codes = [];
-                    local_code_id = 0;
+                        added_types = [];
+                        added_codes = [];
+                        deleted_types = [];
+                        deleted_codes = [];
+                        local_code_id = 0;
 
-                    displayExpenses();
-                    populateSelector();
-                }
+                        displayExpenses();
+                        populateSelector();
+                    }
+                }).catch();
             }
         }
 
