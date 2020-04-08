@@ -14,6 +14,7 @@ let editUserWindow
 
 let createProdWindow
 let editProdWindow
+let prodwc
 
 let userInfo
 let mainwc
@@ -164,7 +165,7 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 
     editwc.on('dom-ready', () =>
     {
-        const text1 = 'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod FROM security."listProducts" WHERE product_id = $1;';
+        const text1 = 'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod, productype FROM security."listProducts" WHERE product_id = $1;';
 
         const values = [productid];
         let prodInfo;
@@ -414,20 +415,35 @@ ipcMain.on('change:pass', (e, arr) => {
 	}
 })
 
-//Production
+//Production types
 ipcMain.on('production:ready', e => {
-	console.log("Entro a production:ready");
 	const text1 = 'SELECT * FROM security."productionTypes" WHERE status = true;'
 
 	db.pool.query(text1, (err1, res1) => {
 		if(err1) 
 		{
-			console.log(err1.stack)
+			console.log(err1.stack);
 		}
 		else 
 		{
 			createProdWindow.send('productionTypes:info', res1.rows)
-			console.log('Production ready!')
+		}
+	})
+})
+
+ipcMain.on('production:create', e => {
+	const text1 = 'SELECT * FROM security."productionTypes" WHERE status = true;'
+
+	db.pool.query(text1, (err1, res1) => {
+		if(err1) 
+		{
+			console.log(err1.stack);
+		}
+		else 
+		{
+			mainwc.send('prodTypes:info', res1.rows)
+			console.log("Envio de tabla:")
+			console.log(res1.rowss)
 		}
 	})
 })
