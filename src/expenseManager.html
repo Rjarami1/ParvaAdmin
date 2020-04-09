@@ -68,6 +68,7 @@
         window.$ = window.jQuery = require('jquery');
         const {ipcRenderer} = require('electron');
         const {dialog} = require('electron').remote
+        const {_} = require('lodash');
 
         //Cuando la página esté lista se le avisa al main.js que mandé la info de la base de datos
         $(document).ready(function (){
@@ -109,13 +110,24 @@
             $('#cancel').click(cancelChanges());
 
             $('#saveAll').click(() => {
-                //Llama la función findDifference() para encontrar las diferencias entre los tipos y
-                //códigos de gastos originalmente traídos de la base de datos y los locales con las modificaciones
-                //hechas por los usuarios.
-                findDifference();
+                dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar", "Cancelar"],
+                    defaultId: 1,
+                    title: "Guardar Cambios",
+                    message: "¿Guardar todos los cambios?",
+                    cancelId: 1
+                }).then(index => {
+                    if(index.response == 0){
+                         //Llama la función findDifference() para encontrar las diferencias entre los tipos y
+                         //códigos de gastos originalmente traídos de la base de datos y los locales con las modificaciones
+                         //hechas por los usuarios.
+                        findDifference();
 
-                ipcRenderer.send('expenseManager:save', [added_types, added_codes, deleted_types, deleted_codes]);
-                $('#loading').show();
+                        ipcRenderer.send('expenseManager:save', [added_types, added_codes, deleted_types, deleted_codes]);
+                        $('#loading').show();
+                    }
+                }).catch();
             })
         })
 
@@ -181,7 +193,7 @@
                     buttons: ["Aceptar", "Cancelar"],
                     defaultId: 1,
                     title: "Eliminar Tipo",
-                    message: `Esta seguro que desea eliminar "${desc.trim()}" y todos sus códigos asociados?`,
+                    message: `¿Esta seguro que desea eliminar "${desc.trim()}" y todos sus códigos asociados?`,
                     cancelId: 1
                     }).then(index => {
                         if(index.response == 0){
@@ -193,8 +205,12 @@
                                     ++i;
                                 }
                             });
+                            _.remove(local_exp_codes, (n) => {
+                                return n.expense_type_id == id;
+                            });
                             local_exp_types.splice(pos, 1);
                             populateSelector();
+                            displayExpenses();
                         }
                     }).catch();
                 }
@@ -204,7 +220,7 @@
                     buttons: ["Aceptar", "Cancelar"],
                     defaultId: 1,
                     title: "Eliminar Tipo",
-                    message: `Esta seguro que desea eliminar "${desc.trim()}"?`,
+                    message: `¿Esta seguro que desea eliminar "${desc.trim()}"?`,
                     cancelId: 1
                     }).then(index => {
                         if(index.response == 0){
@@ -217,10 +233,10 @@
                                 }
                             });
                             local_exp_codes.splice(pos, 1);
+                            displayExpenses();
                         }
                     }).catch();
                 }
-                displayExpenses();
             }
         }
 
