@@ -63,7 +63,8 @@
 
     <script>
 
-        //Se importan los modulos de jquery y electron
+        //Se importan los modulos de jquery, electron y dialog que es un módulo de electron
+        //para ventanas emergentes.
         window.$ = window.jQuery = require('jquery');
         const {ipcRenderer} = require('electron');
         const {dialog} = require('electron').remote
@@ -140,7 +141,6 @@
                     message: "¿Está seguro que desea deshacer los cambios?",
                     cancelId: 1
                 }).then(index => {
-                    console.log(index.response);
                     if(index.response == 0){
                         local_exp_types = exp_types.slice();
                         local_exp_codes = exp_codes.slice();
@@ -176,33 +176,50 @@
                 let i = 0;
 
                 if(isType){
-                    if(confirm(`Esta seguro que desea eliminar "${desc.trim()}" y todos sus códigos asociados?`)){
-                        local_exp_types.forEach(exp_type => {
-                            if(exp_type.type_id == id){
-                                pos = i;
-                            }
-                            else{
-                                ++i;
-                            }
-                        });
-                        local_exp_types.splice(pos, 1);
-                        populateSelector();
-                    }
+                    dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar", "Cancelar"],
+                    defaultId: 1,
+                    title: "Eliminar Tipo",
+                    message: `Esta seguro que desea eliminar "${desc.trim()}" y todos sus códigos asociados?`,
+                    cancelId: 1
+                    }).then(index => {
+                        if(index.response == 0){
+                            local_exp_types.forEach(exp_type => {
+                                if(exp_type.type_id == id){
+                                    pos = i;
+                                }
+                                else{
+                                    ++i;
+                                }
+                            });
+                            local_exp_types.splice(pos, 1);
+                            populateSelector();
+                        }
+                    }).catch();
                 }
                 else{
-                    if(confirm(`Esta seguro que desea eliminar "${desc.trim()}"?`)){
-                        local_exp_codes.forEach(exp_code => {
-                            if(exp_code.code_id == id){
-                                pos = i;
-                            }
-                            else{
-                                ++i;
-                            }
-                        });
-                        local_exp_codes.splice(pos, 1);
-                    }
+                    dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar", "Cancelar"],
+                    defaultId: 1,
+                    title: "Eliminar Tipo",
+                    message: `Esta seguro que desea eliminar "${desc.trim()}"?`,
+                    cancelId: 1
+                    }).then(index => {
+                        if(index.response == 0){
+                            local_exp_codes.forEach(exp_code => {
+                                if(exp_code.code_id == id){
+                                    pos = i;
+                                }
+                                else{
+                                    ++i;
+                                }
+                            });
+                            local_exp_codes.splice(pos, 1);
+                        }
+                    }).catch();
                 }
-
                 displayExpenses();
             }
         }
