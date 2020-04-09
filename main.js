@@ -443,7 +443,7 @@ ipcMain.on('production:create', e => {
 		{
 			mainwc.send('prodTypes:info', res1.rows)
 			console.log("Envio de tabla:")
-			console.log(res1.rowss)
+			//console.log(res1.rowss)
 		}
 	})
 })
