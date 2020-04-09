@@ -58,22 +58,15 @@
     <button id="save_production">Registrar Produccion</button>
     <p id="msg"></p>
 
-    <img
-        id = "loading"
-        src="../images/load.gif"
-        alt="loading..."
-        style="visibility: hidden; height: 50px; width: 50px;"
-    />
-
     <script>
         //Import electron to the html
         const {ipcRenderer} = require('electron');
 
         //Declaring the DOM elements for the html Production
             //Production date
-        const pro_date = document.querySelector('#production_date');
+        const date = document.querySelector('#production_date');
             //Production type    
-        const pro_type = document.querySelector('#production_product');
+        const type = document.querySelector('#production_type');
             //Product code    
         const pro_code = document.querySelector('#product_code');
             //Product name       
@@ -104,16 +97,31 @@
                 day = `0${day}`;
             }
             //Date format (Month)
+            var month = today.getMonth()+1
+            month = month.toString();
+            if(month.length < 2){
+                month = `0${month}`
+            }
+            //Date is filled automatically in the correspondent space of production_date
             var auto_date = today.getFullYear()+'-'+month+'-'+day;
             date.value = auto_date;
             //Ready msg for the main window
-            ipcRenderer.send('production:ready');
+            ipcRenderer.send('production:create');
         })
 
         //Variable initiation for the production details based on the db
-        let pro_prod;
-        ipcRenderer.on('production:info',(e, res) => {
-
+        ipcRenderer.on('prodTypes:info', (e, arr) => {
+            //Se alimentan la lista de seleccion del formulario con los tipos de produccion.
+            let option;
+            console.log(arr);
+            arr.forEach(produc_type => {
+                option = document.createElement('option');
+                option.value = produc_type.prodType_id;
+                option.textContent = produc_type.prodType_description;
+                console.log(option.textContent);
+                type.appendChild(option);
+            });
+            console.log(type.appendChild(option))
         })
     </script>
 </body>

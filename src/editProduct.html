@@ -13,6 +13,9 @@
 
         <label for="name_prod">Nombre del Producto:</label><br>
         <input type="text" id="name_prod" name="name_prod"><br>
+        
+        <label for="production_type">Tipo de Produccion:</label><br>
+        <input type="text" id="production_type" name="production_type" disabled><br>
 
         <label for="val_prod">Valor del Producto (COP):</label><br>
         <input type="integer" id="val_prod" name="val_prod"><br>
@@ -31,7 +34,7 @@
         const form = document.querySelector('form');
         const cancelButton = document.querySelector('#cancel');
         const errormsg = document.querySelector('p');
-
+        const type = document.querySelector('#production_type');
         const code_prod = document.querySelector('#code_prod');
         const name_prod = document.querySelector('#name_prod');
         const val_prod = document.querySelector('#val_prod');
@@ -40,13 +43,15 @@
         const btn_status = document.querySelector('#btn_status');
 
         let product_id;
-
+        
         ipcRenderer.on('prodEdit:prodInfo', (e, dataObject) => 
         {
+            console.log(dataObject);
             code_prod.value = dataObject.prodInfo.code_prod.trim();
             name_prod.value = dataObject.prodInfo.name_prod.trim();
             val_prod.value = dataObject.prodInfo.val_prod.trim();
             descp_prod.value = dataObject.prodInfo.descp_prod.trim();
+            type.value= dataObject.prodInfo.productype.trim();
 
             productid = dataObject.prodInfo.product_id;
 
