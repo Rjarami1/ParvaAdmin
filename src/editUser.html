@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Editar Usuario</title>
@@ -11,33 +12,43 @@
 
 <body>
 
-    <div class="encabezadoPrinSup">
-    <h3>Editar Usuario:</h3><br>
-    </div>
+    <h3>Editar Usuario:</h3>
+
+    <br>
 
     <div class='central'>
-    <form>
-        <label for="name">Nombre:</label><br>
-        <input type="text" name="name" id="name"><br>
+        <form>
+            <label for="name">Nombre:</label><br>
+            <input type="text" name="name" id="name"><br>
 
-        <label for="position">Cargo:</label><br>
-        <input type="text" name="position" id="position"><br>
+            <label for="position">Cargo:</label><br>
+            <input type="text" name="position" id="position"><br>
 
-        <button id="reset_pswd">Reestablecer Contraseña</button><br>
-        <button id="btn_status"></button><br>
 
-        <p id="error"></p>
-        
-        <h3>Editar Accesos:</h3><br>
+            <div class="row justify-content">
+                <div class="col-12 buttonResetPswd">
+                    <button id="reset_pswd">Reestablecer Contraseña</button>
+                </div>
+                <div class="col-12 buttonResetPswd">
+                    <button id="btn_status"></button>
+                </div>
+            </div>
 
-        <table id="modules_table"></table>
 
-        <button type="submit" id="submit">Guardar</button> &nbsp;&nbsp;<button id="cancel">Cancelar</button>
-    </form>
+            <p id="error"></p> <br>
+
+            <h3>Editar Accesos:</h3>
+
+            <br>
+
+            <table id="modules_table"></table>
+
+            <button type="submit" id="submit">Guardar</button> &nbsp;&nbsp;<button id="cancel">Cancelar</button>
+        </form>
     </div>
 
     <script>
-        const {ipcRenderer} = require('electron');
+        const { ipcRenderer } = require('electron');
 
         const table = document.querySelector('#modules_table');
         const name = document.querySelector('#name');
@@ -57,17 +68,17 @@
         ipcRenderer.on('usrEdit:userInfo', (e, dataObject) => {
             name.value = dataObject.userInfo.name.trim();
             position.value = dataObject.userInfo.position.trim();
-            
+
             userid = dataObject.userInfo.user_id;
 
             dataObject.userModules.forEach(module => {
                 user_modules.push(module.module_id);
             });
 
-            if(dataObject.userInfo.active){
+            if (dataObject.userInfo.active) {
                 btn_status.textContent = "Desactivar";
             }
-            else{
+            else {
                 btn_status.textContent = "Activar";
             }
 
@@ -84,7 +95,7 @@
             let column = 1;
 
             modules.forEach(module => {
-                if(column > 3){
+                if (column > 3) {
                     table.appendChild(tr);
                     tr = null;
                     tr = document.createElement('tr');
@@ -99,9 +110,9 @@
                 checkbox.id = `module_${module.module_id}`;
                 checkbox.className = "modules";
                 checkbox.value = module.module_id;
-                
+
                 userModules.forEach(userModule => {
-                    if(module.module_id == userModule.module_id){
+                    if (module.module_id == userModule.module_id) {
                         checkbox.checked = true;
                     }
                 });
@@ -142,22 +153,22 @@
             let allModules = document.querySelectorAll('.modules');
 
             allModules.forEach(module => {
-                if(module.checked){
-                    if(!user_modules.includes(parseInt(module.value))){
+                if (module.checked) {
+                    if (!user_modules.includes(parseInt(module.value))) {
                         addModules.push(module.value);
                     }
                 }
-                else{
+                else {
                     removeModules.push(module.value);
                 }
             });
 
-            if(name.value == '' || position.value == ''){
+            if (name.value == '' || position.value == '') {
                 errormsg.textContent = 'No deje ningún campo vacío.'
                 errormsg.style.color = 'red';
-            }else{
+            } else {
                 errormsg.textContent = '';
-                
+
                 let sendObject = {
                     user_id: userid,
                     userName: name.value,
@@ -165,15 +176,16 @@
                     addedModules: addModules,
                     removedModules: removeModules
                 }
-                
+
                 ipcRenderer.send('usrEdit:update', sendObject);
             }
 
         })
-        </script>
+    </script>
 
     <!-- jQuery library -->
     <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
 
 </body>
+
 </html>

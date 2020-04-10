@@ -25,7 +25,8 @@
     <h2>Crear Tipo:</h2><br>
     <label for="newType">Descripción:</label>&nbsp;&nbsp;
     <input type="text" name="newType" id="newType">&nbsp;&nbsp;
-    <button id="createType">Crear</button>
+    <button id="createType">Crear</button><br>
+    <p id="msg_type" style="color: red"></p>
 
     <h2>Tipos y Códigos Existentes:</h2><br>
 
@@ -44,25 +45,36 @@
     <input type="text" name="newCodeCode" id="newCodeCode">&nbsp;&nbsp;
     <label for="newCodeDesc">Descripción</label>&nbsp;&nbsp;
     <input type="text" name="newCodeDesc" id="newCodeDesc">&nbsp;&nbsp;
-    <button id="addCode">Agregar</button>
+    <button id="addCode">Agregar</button><br>
+    <p id="msg_code" style="color: red"></p>
 
     <br>
     <br>
     <button id="saveAll">Guardar Cambios</button>&nbsp;&nbsp;
-    <button id="cancel">Cancelar</button>
+    <button id="cancel">Cancelar</button><br>
+
+    <img
+        id="loading"
+        src="../imagenes/load.gif"
+        alt="loading..."
+        style="height: 50px; width: 50px;"
+    />
+    <p id="msg_done"></p>
 
     <script>
 
-        //Se importan los modulos de jquery y electron
+        //Se importan los modulos de jquery, electron y dialog que es un módulo de electron
+        //para ventanas emergentes.
         window.$ = window.jQuery = require('jquery');
         const {ipcRenderer} = require('electron');
+        const {dialog} = require('electron').remote
+        const {_} = require('lodash');
 
         //Cuando la página esté lista se le avisa al main.js que mandé la info de la base de datos
         $(document).ready(function (){
+            $('#loading').hide();
             ipcRenderer.send('expenseManager:ready');
         })
-
-        //Procedimiento de recepción de datos y preparación de la página
 
         //Variables globales de arreglo de tipos y códigos existentes en BD.
         let exp_types;
@@ -96,22 +108,65 @@
             populateSelector();
 
             $('#cancel').click(cancelChanges());
+
+            $('#saveAll').click(() => {
+                dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar", "Cancelar"],
+                    defaultId: 1,
+                    title: "Guardar Cambios",
+                    message: "¿Guardar todos los cambios?",
+                    cancelId: 1
+                }).then(index => {
+                    if(index.response == 0){
+                         //Llama la función findDifference() para encontrar las diferencias entre los tipos y
+                         //códigos de gastos originalmente traídos de la base de datos y los locales con las modificaciones
+                         //hechas por los usuarios.
+                        findDifference();
+
+                        ipcRenderer.send('expenseManager:save', [added_types, added_codes, deleted_types, deleted_codes]);
+                        $('#loading').show();
+                    }
+                }).catch();
+            })
+        })
+
+        ipcRenderer.on('expenseManager:done', (e) => {
+            $('#loading').hide();
+            $('#msg_done').css('color','green');
+            $('#msg_done').text('¡Cambios guardados con éxito!');
+        })
+
+        ipcRenderer.on('expenseManager:error', (e) => {
+            $('#loading').hide();
+            $('#msg_done').css('color','red');
+            $('#msg_done').text('Ha ocurrido un error.');
         })
 
         function cancelChanges(){
             return function(){
-                if(confirm('¿Esta seguro que desa cancelar todos los cambios?')){
-                    local_exp_types = exp_types.slice();
-                    local_exp_codes = exp_codes.slice();
+                dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar", "Cancelar"],
+                    defaultId: 1,
+                    title: "Deshacer Cambios",
+                    message: "¿Está seguro que desea deshacer los cambios?",
+                    cancelId: 1
+                }).then(index => {
+                    if(index.response == 0){
+                        local_exp_types = exp_types.slice();
+                        local_exp_codes = exp_codes.slice();
 
-                    added_types = [];
-                    added_codes = [];
-                    deleted_types = [];
-                    deleted_codes = [];
+                        added_types = [];
+                        added_codes = [];
+                        deleted_types = [];
+                        deleted_codes = [];
+                        local_code_id = 0;
 
-                    displayExpenses();
-                    populateSelector();
-                }
+                        displayExpenses();
+                        populateSelector();
+                    }
+                }).catch();
             }
         }
 
@@ -133,36 +188,55 @@
                 let i = 0;
 
                 if(isType){
-                    if(confirm(`Esta seguro que desea eliminar "${desc.trim()}" y todos sus códigos asociados?`)){
-                        local_exp_types.forEach(exp_type => {
-                            if(exp_type.type_id == id){
-                                pos = i;
-                            }
-                            else{
-                                ++i;
-                            }
-                        });
-                        local_exp_types.splice(pos, 1);
-                        deleted_types.push(id);
-                        populateSelector();
-                    }
+                    dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar", "Cancelar"],
+                    defaultId: 1,
+                    title: "Eliminar Tipo",
+                    message: `¿Esta seguro que desea eliminar "${desc.trim()}" y todos sus códigos asociados?`,
+                    cancelId: 1
+                    }).then(index => {
+                        if(index.response == 0){
+                            local_exp_types.forEach(exp_type => {
+                                if(exp_type.type_id == id){
+                                    pos = i;
+                                }
+                                else{
+                                    ++i;
+                                }
+                            });
+                            _.remove(local_exp_codes, (n) => {
+                                return n.expense_type_id == id;
+                            });
+                            local_exp_types.splice(pos, 1);
+                            populateSelector();
+                            displayExpenses();
+                        }
+                    }).catch();
                 }
                 else{
-                    if(confirm(`Esta seguro que desea eliminar "${desc.trim()}"?`)){
-                        local_exp_codes.forEach(exp_code => {
-                            if(exp_code.code_id == id){
-                                pos = i;
-                            }
-                            else{
-                                ++i;
-                            }
-                        });
-                        local_exp_codes.splice(pos, 1);
-                        deleted_codes.push(id);
-                    }
+                    dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar", "Cancelar"],
+                    defaultId: 1,
+                    title: "Eliminar Tipo",
+                    message: `¿Esta seguro que desea eliminar "${desc.trim()}"?`,
+                    cancelId: 1
+                    }).then(index => {
+                        if(index.response == 0){
+                            local_exp_codes.forEach(exp_code => {
+                                if(exp_code.code_id == id){
+                                    pos = i;
+                                }
+                                else{
+                                    ++i;
+                                }
+                            });
+                            local_exp_codes.splice(pos, 1);
+                            displayExpenses();
+                        }
+                    }).catch();
                 }
-
-                displayExpenses();
             }
         }
 
@@ -220,6 +294,138 @@
                 $(`#${li_id} #delType`).on('click', deleteTypeCode(exp_type.type_description, exp_type.type_id, true));
             });
         }
+
+        function findDifference(){
+            let deletedCodes = [];
+            let deletedTypes = [];
+            let addedCodes = [];
+            let addedTypes = [];
+
+            let exists = false;
+
+            //Loop en busca de tipos eliminados
+            exp_types.forEach(db_type => {
+                local_exp_types.forEach(local_type => {
+                    if(local_type.type_id == db_type.type_id){
+                        exists = true;
+                    }
+                });
+                if(!exists){
+                    deletedTypes.push(db_type.type_id);
+                }
+                else{
+                    exists = false;
+                }
+            });
+
+            //Loop en busca de tipos agregados
+            exists = false;
+            local_exp_types.forEach(local_type => {
+                exp_types.forEach(db_type => {
+                    if(db_type.type_id == local_type.type_id){
+                        exists = true;
+                    }
+                });
+                if(!exists){
+                    addedTypes.push(local_type);
+                }
+                else{
+                    exists = false;
+                }
+            });
+        
+
+            //Loop en busca de códigos eliminados
+            exists = false;
+            exp_codes.forEach(db_code => {
+                local_exp_codes.forEach(local_code => {
+                    if(local_code.code_id == db_code.code_id){
+                        exists = true;
+                    }
+                });
+                if(!exists){
+                    deletedCodes.push(db_code.code_id);
+                }
+                else{
+                    exists = false;
+                }
+            });
+
+            //Loop en busca de códigos agregados
+            exists = false;
+            local_exp_codes.forEach(local_code => {
+                exp_codes.forEach(db_code => {
+                    if(db_code.code_id == local_code.code_id){
+                        exists = true;
+                    }
+                });
+                if(!exists){
+                    addedCodes.push(local_code);
+                }
+                else{
+                    exists = false;
+                }
+            });
+
+            added_types = addedTypes;
+            added_codes = addedCodes;
+
+            deleted_types = deletedTypes;
+            deleted_codes = deletedCodes;
+        }
+
+        let local_code_id = 0;
+        let local_code_object;
+        $('#addCode').click(() => {
+            if($('#expenseType option:selected').val() != ""){
+                if($('#newCodeCode').val().trim() != "" && $('#newCodeDesc').val().trim() != ""){
+                    local_code_object = {
+                        code_description: $('#newCodeDesc').val().trim(),
+                        code_id: `L${local_code_id}`,
+                        expense_code: $('#newCodeCode').val().trim(),
+                        expense_type_id: $('#expenseType option:selected').val()
+                    };
+
+                    local_exp_codes.push(local_code_object);
+                    ++local_code_id;
+
+                    $('#newCodeCode').val('');
+                    $('#newCodeDesc').val('');
+                    $('#msg_code').text('');
+                    
+                    displayExpenses();
+                }
+                else{
+                    $('#msg_code').text('No pueden haber campos vacíos.');
+                }
+            }
+            else{
+                $('#msg_code').text('Debe seleccionar un tipo de gasto.');
+            }
+        })
+
+        let local_type_id = 0;
+        let local_type_object;
+        $('#createType').click(() => {
+            if($('#newType').val().trim() != ""){
+                local_type_object = {
+                    type_description: $('#newType').val().trim(),
+                    type_id: `L${local_type_id}`
+                };
+
+                local_exp_types.push(local_type_object);
+                ++local_type_id;
+
+                $('#newType').val('');
+                $('#msg_type').text('');
+
+                displayExpenses();
+                populateSelector();
+            }
+            else{
+                $('#msg_type').text('No pueden haber campos vacíos.');
+            }
+        })
 
     </script>
 </body>

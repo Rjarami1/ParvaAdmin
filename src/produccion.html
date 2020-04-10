@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Produccion</title>
+</head>
+<body>
+    <h2>Regitro de Produccion</h2><br>
+    <br>
+
+    <form><!-- Falta alinear y recortar las casillas -->
+        <label for="production_date">Fecha: </label>
+        <input type="date" name="production_date" id="production_date">&nbsp;&nbsp;
+
+        <label for="production_type">Tipo de Produccion:</label>
+        <select name="production_type" id="production_type">
+            <option value="" selected></option>
+        </select><br><br>
+
+        <h2>Productos disponibles:</h2><br>
+        <ul id="production_type">
+        </ul>
+
+        <label for="product_code">Código Producto:</label>
+        <input type="text" id="product_code" name="product_code" disabled>&nbsp;&nbsp;
+
+        <label for="product_name">Nombre del Producto: </label>
+        <input type="text" id="product_name" name="product_name" disabled><br><br>
+
+        <label for="product_quantity">Cantidad producida:</label>
+        <input type="number" name="product_quantity" id="product_quantity"><br>
+        <br>
+
+        <button type="submit" id="add_production">Adicionar Produccion</button>
+        <br>
+
+        <p id="error_msg" style="color: red;"></p>
+
+        <h3>Produccion Adicionada:</h3><br>
+        <table id="production_to_register">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Tipo</th>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Valor</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+        <br>
+    </form>
+
+    <button id="save_production">Registrar Produccion</button>
+    <p id="msg"></p>
+
+    <script>
+        //Import electron to the html
+        const {ipcRenderer} = require('electron');
+
+        //Declaring the DOM elements for the html Production
+            //Production date
+        const date = document.querySelector('#production_date');
+            //Production type    
+        const type = document.querySelector('#production_type');
+            //Product code    
+        const pro_code = document.querySelector('#product_code');
+            //Product name       
+        const pro_name = document.querySelector('#product_name');  
+            //Product quantity     
+        const pro_quant = document.querySelector('#product_quantity'); 
+            //Production form 
+        const form = document.querySelector('form');
+            //Production err msg                       
+        const error_msg = document.querySelector('#error_msg');
+            //Prodcution table to register         
+        const pro_table = document.querySelector('#production_to_register');
+            //Production save registers
+        const pro_save = document.querySelector('save_production');
+            //Production msg gif
+        const msg = document.querySelector('#msg');
+            //Production loading gif
+        const loading = document.querySelector('#loading');
+
+        //Event after loading the window and been able to modify
+        document.addEventListener('DOMContentLoaded', (e) => {
+            //Date object been initialized
+            var today = new Date();
+
+            //Date format (Day)
+            var day = today.getDate().toString();
+            if(day.length < 2){
+                day = `0${day}`;
+            }
+            //Date format (Month)
+            var month = today.getMonth()+1
+            month = month.toString();
+            if(month.length < 2){
+                month = `0${month}`
+            }
+            //Date is filled automatically in the correspondent space of production_date
+            var auto_date = today.getFullYear()+'-'+month+'-'+day;
+            date.value = auto_date;
+            //Ready msg for the main window
+            ipcRenderer.send('production:create');
+        })
+
+        //Variable initiation for the production details based on the db
+        ipcRenderer.on('prodTypes:info', (e, arr) => {
+            //Se alimentan la lista de seleccion del formulario con los tipos de produccion.
+            let option;
+            console.log(arr);
+            arr.forEach(produc_type => {
+                option = document.createElement('option');
+                option.value = produc_type.prodType_id;
+                option.textContent = produc_type.prodType_description;
+                console.log(option.textContent);
+                type.appendChild(option);
+            });
+            console.log(type.appendChild(option))
+        })
+    </script>
+</body>
+</html>

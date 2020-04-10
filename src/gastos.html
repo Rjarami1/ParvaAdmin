@@ -1,14 +1,29 @@
-<!DOCTYPE html>
+<!DOCTYPE hml>
 <html lang="en">
+
 <head>
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/stilosDaniel.css" />
+
     <meta charset="UTF-8">
     <title>Registro de Gastos</title>
 </head>
-<body>
-    <h2>Registro de Gastos</h2><br>
-    <br>
 
-    <form>
+<body>
+
+    <div class="encabezadoPrinSup">
+        <h2>
+            <h2>Registro de Gastos</h2>
+        </h2>
+    </div>
+
+    <div class="encabezadoPrinInf">
+        <h2 id="fecha" class="encabezadoPrinInflet"></h2>
+    </div>
+
+    <form class="central">
         <label for="expense_date">Fecha: </label>
         <input type="date" name="expense_date" id="expense_date">&nbsp;&nbsp;
 
@@ -24,7 +39,7 @@
 
         <label for="expense_value">Valor:</label>
         <input type="number" name="expense_value" id="expense_value">&nbsp;&nbsp;
-        
+
         <label for="expense_quantity">Cantidad:</label>
         <input type="number" name="expense_quantity" id="expense_quantity">
         <br><br>
@@ -35,7 +50,7 @@
         <p id="error_msg" style="color: red;"></p>
 
         <h3>Gastos Adicionados:</h3><br>
-        <table id="expenses_to_register">
+        <table id="expenses_to_register" class="table table-striped">
             <thead>
                 <tr>
                     <th>Número</th>
@@ -46,26 +61,27 @@
                 </tr>
             </thead>
             <tbody>
-                
+
             </tbody>
         </table>
         <br>
-        
+
+        <button id="save_expenses">Registrar Gastos</button>
+
+        <p id="msg"></p>
+        <img id="loading" src="../images/load.gif" alt="loading..."
+            style="visibility: hidden; height: 50px; width: 50px;" />
+
     </form>
 
-    <button id="save_expenses">Registrar Gastos</button>
-    <p id="msg"></p>
 
-    <img
-        id = "loading"
-        src="../images/load.gif"
-        alt="loading..."
-        style="visibility: hidden; height: 50px; width: 50px;"
-    />
+    <!-- Importando funciones de utilidades -->
+    <script src="../utilidades.js"></script>
 
     <script>
         //Importando electron
-        const {ipcRenderer} = require('electron');
+        const { ipcRenderer } = require('electron');
+        window.$ = window.jQuery = require('jquery');
 
         //Declarando los elementos del DOM
         const date = document.querySelector('#expense_date');
@@ -82,30 +98,12 @@
 
         //Evento para cuando la página termine de cargar y poder modificarla
         document.addEventListener('DOMContentLoaded', (e) => {
-
-            //Inicializa un objeto de fecha
-            var today = new Date();
-            
-            //Si el día es de un solo dígito se antepone un cero (Para seguir el formato de fecha)
-            var day = today.getDate().toString();
-            if(day.length < 2){
-                day = `0${day}`;
-            }
-
-            //Si el mes es de un solo digito se antepone un cero (Para seguir el formato de fecha)
-            var month = today.getMonth()+1
-            month = month.toString();
-            if(month.length < 2){
-                month = `0${month}`
-            }
-
-            //Se asigna la fecha al campo de fecha en el formulario para generar la fecha
-            //de hoy automáticamente
-            var auto_date = today.getFullYear()+'-'+month+'-'+day;
-            date.value = auto_date;
+            date.value = todayDate()
+            $('#fecha').text(`Fecha: ${todayDate()}`)
 
             //Se le avisa al proceso principal (main) que la página está lista para utilizarse
-            ipcRenderer.send('expense:ready');
+            ipcRenderer.send('expense:ready')
+
         })
 
         //Inicialización de variables que contendrán los tipos de gastos y códigos que hay en la base de datos
@@ -133,7 +131,7 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            if(date.value != "" && type.options[type.selectedIndex].value != "" && code.options[code.selectedIndex].value != "" &&  value.value != "" && quantity.value != ""){
+            if (date.value != "" && type.options[type.selectedIndex].value != "" && code.options[code.selectedIndex].value != "" && value.value != "" && quantity.value != "") {
                 expense_obj = {
                     identifier: identifier,
                     date: date.value,
@@ -142,7 +140,7 @@
                     value: parseInt(value.value),
                     quantity: parseInt(quantity.value)
                 }
-                
+
                 identifier++;
 
                 added_expenses.push(expense_obj);
@@ -153,11 +151,11 @@
 
                 display_added_expenses();
             }
-            else{
+            else {
                 error_msg.textContent = "";
                 error_msg.textContent = 'Debe ingresar todos los campos.\n';
 
-                if(parseInt(quantity.value) <= 0){
+                if (parseInt(quantity.value) <= 0) {
                     error_msg.textContent += 'La cantidad del gasto no puede ser menor o igual a cero.';
                 }
             }
@@ -170,14 +168,14 @@
 
             let option_number = code.childElementCount;
             let child;
-            for(var i = 1;i < option_number;i++){
+            for (var i = 1; i < option_number; i++) {
                 child = code.lastElementChild;
                 code.removeChild(child);
             }
 
             let option;
             exp_codes.forEach(exp_code => {
-                if(exp_code.expense_type_id == type.options[type.selectedIndex].value){
+                if (exp_code.expense_type_id == type.options[type.selectedIndex].value) {
                     option = document.createElement('option');
                     option.value = exp_code.code_id;
                     option.textContent = `${exp_code.expense_code} - ${exp_code.code_description}`;
@@ -191,17 +189,17 @@
         save.addEventListener('click', (e) => {
             e.preventDefault();
 
-            if(added_expenses.length > 0){
+            if (added_expenses.length > 0) {
                 msg.textContent = '';
                 ipcRenderer.send('expense:save', added_expenses);
                 loading.style.visibility = 'visible';
-                save.disabled = true;   
+                save.disabled = true;
             }
-            else{
+            else {
                 msg.style.color = 'red';
                 msg.textContent = 'No se ha agregado ningún gasto.';
             }
-            
+
         })
 
         ipcRenderer.on('expense:error', (e) => {
@@ -211,7 +209,7 @@
             msg.textContent = 'Ha ocurrido un error, no se pudo guardar la información.';
 
             loading.style.visibility = 'hidden';
-            save.disabled = false; 
+            save.disabled = false;
         })
 
         ipcRenderer.on('expense:success', (e) => {
@@ -223,9 +221,9 @@
 
             let children = table.childElementCount;
 
-            if(children > 1){
+            if (children > 1) {
                 let child;
-                while(table.childElementCount > 1){
+                while (table.childElementCount > 1) {
                     child = table.lastElementChild;
                     table.removeChild(child);
                 }
@@ -235,24 +233,24 @@
             save.disabled = false;
         })
 
-        function display_added_expenses(){
+        function display_added_expenses() {
 
             let children = table.childElementCount;
 
-            if(children > 1){
+            if (children > 1) {
                 let child;
-                while(table.childElementCount > 1){
+                while (table.childElementCount > 1) {
                     child = table.lastElementChild;
                     table.removeChild(child);
                 }
-            }   
+            }
 
             let tr;
             let td1, td2, td3, td4, td5
             let itemText1, itemText2, itemText3, itemText4, itemText5;
 
             added_expenses.forEach(expense => {
-                
+
                 tr = document.createElement('tr');
                 tr.className = `tr_${expense.identifier}`;
                 td1 = document.createElement('td');
@@ -287,60 +285,63 @@
             });
         }
 
-        function typeText(idType){
-            
+        function typeText(idType) {
+
             let res = '';
 
             exp_types.forEach(exp_type => {
-                if(exp_type.type_id == idType){
+                if (exp_type.type_id == idType) {
                     res = exp_type.type_description;
                 }
             });
-            
-            if(res != ''){
+
+            if (res != '') {
                 return res;
             }
-            else{
+            else {
                 return 'Not Found';
             }
-            
+
         }
 
-        function codeText(idCode){
+        function codeText(idCode) {
 
             let res = '';
 
             exp_codes.forEach(exp_code => {
-                if(exp_code.code_id == idCode){
+                if (exp_code.code_id == idCode) {
                     res = `${exp_code.expense_code} - ${exp_code.code_description}`;
                 }
             });
-            
-            if(res != ''){
+
+            if (res != '') {
                 return res;
             }
-            else{
+            else {
                 return 'Not Found';
             }
         }
 
-        function deleteExpense(ident){
-            
+        function deleteExpense(ident) {
+
             table.removeChild(document.querySelector(`.tr_${ident}`));
 
             let i = 0;
             let j = 0;
             added_expenses.forEach(expense => {
-                if(expense.identifier == ident){
+                if (expense.identifier == ident) {
                     j = i;
                 }
                 ++i;
             });
 
-            added_expenses.splice(j,1);
+            added_expenses.splice(j, 1);
         }
 
     </script>
 
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
 </body>
+
 </html>
