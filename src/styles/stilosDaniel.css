@@ -123,14 +123,6 @@ body .central .custom-form.p-4 .gifInicio {
 	visibility: hidden;
 }
 
-body .central .custom-form.p-4.visibilidad .visibilidad{
-	visibility: hidden;
-}
-
-body .central .custom-form.p-4.visibilidad .visibilidad2{
-	visibility: visible;
-}
-
 body .central .custom-form.p-4 .form-group:first-child {
 	margin-top: 2rem;
 }

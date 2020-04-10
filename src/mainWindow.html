@@ -19,12 +19,12 @@
 				<label for="nombreUsuario">Usuario</label>
 				<input type="text" class="form-control" id="user" placeholder="Nombre de usuario" />
 			</div>
-			<div class="form-group visibilidad">
-				<label for="contraseñaUsuario">Contraseña</label>
+			<div class="form-group">
+				<label id="bannerPass" for="contraseñaUsuario">Contraseña</label>
 				<input type="password" class="form-control" id="password" placeholder="Contraseña" />
 			</div>
 
-			<button type="submit" class="btn btn-primary visibilidad">Ingresar</button>
+			<button id="buttIni" type="submit" class="btn btn-primary">Ingresar</button>
 			<img class="gifInicio" src="../images/Double Ring-1s-200px.gif" alt="loading..." />
 			<p style="color: red;" id="loginError"></p>
 		</form>
@@ -37,7 +37,9 @@
 		document.querySelector('form').addEventListener('submit', e => {
 			e.preventDefault()
 			document.querySelector('img').style.visibility = 'visible'
-			document.getElementById("form1").classList.add("visibilidad")
+			document.querySelector('#buttIni').style.visibility = 'hidden'
+			document.querySelector('#bannerPass').style.visibility = 'hidden'
+			document.querySelector('#password').style.visibility = 'hidden'
 			document.querySelector('button').disabled = true
 
 			const userLogin = document.querySelector('#user').value
@@ -46,6 +48,9 @@
 			if (userLogin == '' || passLogin == '') {
 				document.querySelector('img').style.visibility = 'hidden'
 				document.querySelector('button').disabled = false
+				document.querySelector('#buttIni').style.visibility = 'visible'
+				document.querySelector('#bannerPass').style.visibility = 'visible'
+				document.querySelector('#password').style.visibility = 'visible'
 				errormsg.textContent = 'Por favor ingresar todos los campos'
 			} else {
 				ipcRenderer.send('login:in', [userLogin, passLogin])
@@ -57,6 +62,9 @@
 			if (val == 1) {
 				document.querySelector('img').style.visibility = 'hidden'
 				document.querySelector('button').disabled = false
+				document.querySelector('#buttIni').style.visibility = 'visible'
+				document.querySelector('#bannerPass').style.visibility = 'visible'
+				document.querySelector('#password').style.visibility = 'visible'
 				errormsg.textContent = 'Usuario o contraseña no válidos'
 			} else {
 				errormsg.textContent = ''

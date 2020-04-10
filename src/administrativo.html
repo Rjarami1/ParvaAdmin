@@ -18,7 +18,7 @@
     </div>
 
     <div class="encabezadoPrinInf">
-        <h2 class="encabezadoPrinInflet">Fecha: Febrero 15 de 2020</h2>
+        <h2 id="fecha" class="encabezadoPrinInflet"></h2>
     </div>
 
     <div class="botonNuevoUsuario">
@@ -46,16 +46,20 @@
         </table>
     </div>
 
+    <script src="../utilidades.js"></script>
+
     <script>
         const { ipcRenderer } = require('electron');
         const tabla = document.querySelector('table');
         const btn_addUser = document.querySelector('#createUser');
+        window.$ = window.jQuery = require('jquery')
 
         let x;
 
         //Informar al Main Renderer que la página está lista.
         document.addEventListener('DOMContentLoaded', (e) => {
             ipcRenderer.send('admin:ready');
+            $('#fecha').text(`Fecha: ${todayDate()}`)
         })
 
         //Recibir la lista de usuarios del Main y desplegarlos

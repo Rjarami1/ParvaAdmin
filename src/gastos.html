@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE hml>
 <html lang="en">
 
 <head>
@@ -18,7 +18,7 @@
 	</div>
 
 	<div class="encabezadoPrinInf">
-		<h2 class="encabezadoPrinInflet">Fecha: Febrero 15 de 2020</h2>
+		<h2 id="fecha" class="encabezadoPrinInflet"></h2>
 	</div>
 
 	<form class="central">
@@ -44,7 +44,6 @@
 
 		<button type="submit" id="add_expenses">Adicionar Gasto</button>
 
-		<button id="save_expenses">Registrar Gastos</button>
 		<p id="msg"></p>
 
 		<p id="error_msg" style="color: red;"></p>
@@ -65,17 +64,20 @@
 		</table>
 		<br />
 
+		<button id="save_expenses">Registrar Gastos</button>
+
 
 	</form>
 
 
 
 	<!-- jQuery library -->
-	<script src="../dependencies/jQuery/jquery-3.4.1.js"></script>
+	<script src="../utilidades.js"></script>
 
 	<script>
 		//Importando electron
 		const { ipcRenderer } = require('electron')
+		window.$ = window.jQuery = require('jquery')
 
 		//Declarando los elementos del DOM
 		const date = document.querySelector('#expense_date')
@@ -91,26 +93,8 @@
 
 		//Evento para cuando la página termine de cargar y poder modificarla
 		document.addEventListener('DOMContentLoaded', e => {
-			//Inicializa un objeto de fecha
-			var today = new Date()
-
-			//Si el día es de un solo dígito se antepone un cero (Para seguir el formato de fecha)
-			var day = today.getDate().toString()
-			if (day.length < 2) {
-				day = `0${day}`
-			}
-			// cambiar definición de variables a let
-			//Si el mes es de un solo digito se antepone un cero (Para seguir el formato de fecha)
-			var month = today.getMonth() + 1
-			month = month.toString()
-			if (month.length < 2) {
-				month = `0${month}`
-			}
-
-			//Se asigna la fecha al campo de fecha en el formulario para generar la fecha
-			//de hoy automáticamente
-			var auto_date = today.getFullYear() + '-' + month + '-' + day
-			date.value = auto_date
+			date.value = todayDate()
+			$('#fecha').text(`Fecha: ${todayDate()}`)
 
 			//Se le avisa al proceso principal (main) que la página está lista para utilizarse
 			ipcRenderer.send('expense:ready')
