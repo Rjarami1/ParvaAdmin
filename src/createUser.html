@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <!-- Bootstrap 4 CSS -->
@@ -9,46 +10,45 @@
     <meta charset="UTF-8">
     <title>Crear Usuario</title>
 </head>
+
 <body>
 
-    <div class="encabezadoPrinSup">
-        <h2>Crear Usuario</h2>
-    </div>
+    <h2>Crear Usuario</h2>
 
-    <div class= "central">
-    <form class='custom-form formulario'>
-        <label for="cedula">Cédula</label><br>
-        <input type="text" id="cedula" name="cedula"><br>
+    <div class="central">
+        <form class='custom-form formulario'>
+            <label for="cedula">Cédula</label><br>
+            <input type="text" id="cedula" name="cedula"><br>
 
-        <label for="pass">Contraseña</label><br>
-        <input type="password" name="pass" id="pass"><br>
+            <label for="pass">Contraseña</label><br>
+            <input type="password" name="pass" id="pass"><br>
 
-        <label for="confirm">Confirmar Contraseña</label><br>
-        <input type="password" name="confirm" id="confirm"><br>
-        <p id="msg-confirm"></p><br>
+            <label for="confirm">Confirmar Contraseña</label><br>
+            <input type="password" name="confirm" id="confirm"><br>
+            <p id="msg-confirm"></p><br>
 
-        <label for="name">Nombres</label><br>
-        <input type="text" name="name" id="name"><br>
+            <label for="name">Nombres</label><br>
+            <input type="text" name="name" id="name"><br>
 
-        <label for="position">Cargo</label><br>
-        <input type="text" name="position" id="position"><br>
-        <p id="msg-error" style="color: red;"></p><br>
+            <label for="position">Cargo</label><br>
+            <input type="text" name="position" id="position"><br>
+            <p id="msg-error" style="color: red;"></p><br>
 
-        
-        <div class="row justify-content-between">
-            <div class="col-6">
-                <input type="submit" value="Crear"><br>
+
+            <div class="row justify-content-between">
+                <div class="col-6">
+                    <input type="submit" value="Crear"><br>
+                </div>
+                <div class="col-6">
+                    <input type="button" value="Cancelar" id="cancel"><br>
+                </div>
             </div>
-            <div class="col-6">
-                <input type="button" value="Cancelar" id="cancel"><br>
-            </div>
-        </div>
 
-    </form>
+        </form>
     </div>
 
     <script>
-        const {ipcRenderer} = require('electron');
+        const { ipcRenderer } = require('electron');
 
         const form = document.querySelector('form');
         const cancelButton = document.querySelector('#cancel');
@@ -64,11 +64,11 @@
         let allDone = true;
 
         confirm.addEventListener('blur', (e) => {
-            if(password.value != confirm.value){
+            if (password.value != confirm.value) {
                 msgConfirm.style.color = 'red';
                 msgConfirm.textContent = 'Las contraseñas no coinciden';
                 allDone = false;
-            }else{
+            } else {
                 msgConfirm.style.color = 'green';
                 msgConfirm.textContent = 'Las contraseñas coinciden!';
                 allDone = true;
@@ -78,19 +78,18 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            if(allDone){
-                if(cedula.value == '' || password.value == '' || confirm.value == ''
-                || name.value == '' || position.value == '')
-                {
+            if (allDone) {
+                if (cedula.value == '' || password.value == '' || confirm.value == ''
+                    || name.value == '' || position.value == '') {
                     msgError.textContent = 'Por favor ingrese todos los campos';
                     allDone = false;
-                }else{
+                } else {
                     msgError.textContent = '';
                     allDone = true;
                 }
             }
 
-            if(allDone){
+            if (allDone) {
                 let userInfo = {
                     cedula: cedula.value,
                     password: password.value,
@@ -113,4 +112,5 @@
     <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
 
 </body>
+
 </html>

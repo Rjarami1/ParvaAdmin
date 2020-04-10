@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/stilosDaniel.css" />
+
+    <meta charset="UTF-8" />
     <title>Inscribir Producto</title>
 </head>
+
 <body>
     <h3> Inscribir Producto</h3>
 
@@ -30,11 +36,11 @@
     </form>
 
     <script>
-        const {ipcRenderer} = require('electron');
+        const { ipcRenderer } = require('electron');
 
         const form = document.querySelector('form');
         const cancelButton = document.querySelector('#cancel');
-        
+
         const type = document.querySelector('#production_type');
         const code_prod = document.querySelector('#code_prod');
         const name_prod = document.querySelector('#name_prod');
@@ -68,20 +74,16 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            if(allDone)
-            {
-                if(code_prod.value == '' || type.options[type.selectedIndex].value == '' || name_prod.value == '' || val_prod.value == '' || descp_prod.value == '')
-                {
+            if (allDone) {
+                if (code_prod.value == '' || type.options[type.selectedIndex].value == '' || name_prod.value == '' || val_prod.value == '' || descp_prod.value == '') {
                     msgError.textContent = ' Por favor ingrese todos los campos';
                     allDone = false;
                 }
-                }else
-                {
-                    msgError.textContent = '';
-                    allDone = true;
-                }
-            if(allDone)
-            {
+            } else {
+                msgError.textContent = '';
+                allDone = true;
+            }
+            if (allDone) {
                 let prodInfo = {
                     code_prod: code_prod.value,
                     name_prod: name_prod.value,
@@ -101,4 +103,5 @@
         })
     </script>
 </body>
+
 </html>

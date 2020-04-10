@@ -1,135 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<!-- Bootstrap 4 CSS -->
-		<link
-			rel="stylesheet"
-			href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css"
-		/>
-		<link rel="stylesheet" href="styles/stilosDaniel.css" />
 
-		<meta charset="UTF-8" />
-		<title>Productos de la Panaderia</title>
-	</head>
-	<body>
-		<div class="encabezadoPrinSup">
-			<h2>Productos de la Pandeboneria</h2>
-		</div>
-		<div class="encabezadoPrinInf">
-			<h2 class="encabezadoPrinInflet">Fecha: Febrero 15 de 2020</h2>
-		</div>
+<head>
+	<!-- Bootstrap 4 CSS -->
+	<link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="styles/stilosDaniel.css" />
 
-		<button class="botonCrearProducto" id="createProduct">
-			Agregar Producto
-		</button>
+	<meta charset="UTF-8" />
+	<title>Productos de la Panaderia</title>
+</head>
 
-		<p>Lista de Productos Terminados:</p>
-		<ul id="productList"></ul>
+<body>
+	<div class="encabezadoPrinSup">
+		<h2>Productos de la Pandeboneria</h2>
+	</div>
+	<div class="encabezadoPrinInf">
+		<h2 class="encabezadoPrinInflet">Fecha: Febrero 15 de 2020</h2>
+	</div>
 
-		<div class="tablaProductos">
-			<table class="table table-striped" style="width: 85%;">
-				<tr>
-					<th>ID Producto</th>
-					<th>Codigo Producto</th>
-					<th>Nombre del Producto</th>
-					<th>Valor (Cop)</th>
-					<th>Descripcion</th>
-					<th>Estado</th>
-					<th>Tipo de Produccion</th>
-				</tr>
-			</table>
-		</div>
+	<button class="botonCrearProducto" id="createProduct">
+		Agregar Producto
+	</button>
 
-		<script>
-			const { ipcRenderer } = require('electron')
-			const tablaProd = document.querySelector('table')
-			const btn_addProduct = document.querySelector('#createProduct')
+	<p>Lista de Productos Terminados:</p>
+	<ul id="productList"></ul>
 
-			//let x;
+	<div class="tablaProductos">
+		<table class="table table-striped" style="width: 85%;">
+			<tr>
+				<th>ID Producto</th>
+				<th>Codigo Producto</th>
+				<th>Nombre del Producto</th>
+				<th>Valor (Cop)</th>
+				<th>Descripcion</th>
+				<th>Estado</th>
+				<th>Tipo de Produccion</th>
+			</tr>
+		</table>
+	</div>
 
-			//Informar a render producto que la pagina esta lista.
-			document.addEventListener('DOMContentLoaded', e => {
-				ipcRenderer.send('prod:ready')
-				console.log('Se actualizo la tabla para visualizacion')
-			})
+	<script>
+		const { ipcRenderer } = require('electron')
+		const tablaProd = document.querySelector('table')
+		const btn_addProduct = document.querySelector('#createProduct')
 
-			//Recibir la lista de los prodcutos del Main y desplegarslos.
-			ipcRenderer.on('products:info', (e, listProducts) => {
-				cleanList()
+		//let x;
 
-				let pr
-				let pd1, pd2, pd3, pd4, pd5, pd6, pd7
-				let prodText1, prodText2, prodText3, prodText4, prodText5, prodText6
-				console.log('Se crearon las variables')
+		//Informar a render producto que la pagina esta lista.
+		document.addEventListener('DOMContentLoaded', e => {
+			ipcRenderer.send('prod:ready')
+			console.log('Se actualizo la tabla para visualizacion')
+		})
 
-				listProducts.forEach(product => {
-					pr = document.createElement('tr')
-					pd1 = document.createElement('td')
-					pd2 = document.createElement('td')
-					pd3 = document.createElement('td')
-					pd4 = document.createElement('td')
-					pd5 = document.createElement('td')
-					pd6 = document.createElement('td')
-					pd7 = document.createElement('td')
+		//Recibir la lista de los prodcutos del Main y desplegarslos.
+		ipcRenderer.on('products:info', (e, listProducts) => {
+			cleanList()
 
-					pr.addEventListener('click', e => {
-						e.preventDefault()
-						ipcRenderer.send('prodCreate:edit', product.product_id)
-					})
+			let pr
+			let pd1, pd2, pd3, pd4, pd5, pd6, pd7
+			let prodText1, prodText2, prodText3, prodText4, prodText5, prodText6
+			console.log('Se crearon las variables')
 
-					prodText1 = document.createTextNode(product.product_id)
-					prodText2 = document.createTextNode(product.code_prod)
-					prodText3 = document.createTextNode(product.name_prod)
-					prodText4 = document.createTextNode(product.val_prod)
-					prodText5 = document.createTextNode(product.descp_prod)
-					prodText7 = document.createTextNode(product.productype)
+			listProducts.forEach(product => {
+				pr = document.createElement('tr')
+				pd1 = document.createElement('td')
+				pd2 = document.createElement('td')
+				pd3 = document.createElement('td')
+				pd4 = document.createElement('td')
+				pd5 = document.createElement('td')
+				pd6 = document.createElement('td')
+				pd7 = document.createElement('td')
 
-					if (product.status_prod) {
-						prodText6 = document.createTextNode('Activo')
-					} else {
-						prodText6 = document.createTextNode('Inactivo')
-					}
-
-					pd1.appendChild(prodText1)
-					pd2.appendChild(prodText2)
-					pd3.appendChild(prodText3)
-					pd4.appendChild(prodText4)
-					pd5.appendChild(prodText5)
-					pd6.appendChild(prodText6)
-					pd7.appendChild(prodText7)
-
-					pr.appendChild(pd1)
-					pr.appendChild(pd2)
-					pr.appendChild(pd3)
-					pr.appendChild(pd4)
-					pr.appendChild(pd5)
-					pr.appendChild(pd6)
-					pr.appendChild(pd7)
-
-					tablaProd.appendChild(pr)
+				pr.addEventListener('click', e => {
+					e.preventDefault()
+					ipcRenderer.send('prodCreate:edit', product.product_id)
 				})
+
+				prodText1 = document.createTextNode(product.product_id)
+				prodText2 = document.createTextNode(product.code_prod)
+				prodText3 = document.createTextNode(product.name_prod)
+				prodText4 = document.createTextNode(product.val_prod)
+				prodText5 = document.createTextNode(product.descp_prod)
+				prodText7 = document.createTextNode(product.productype)
+
+				if (product.status_prod) {
+					prodText6 = document.createTextNode('Activo')
+				} else {
+					prodText6 = document.createTextNode('Inactivo')
+				}
+
+				pd1.appendChild(prodText1)
+				pd2.appendChild(prodText2)
+				pd3.appendChild(prodText3)
+				pd4.appendChild(prodText4)
+				pd5.appendChild(prodText5)
+				pd6.appendChild(prodText6)
+				pd7.appendChild(prodText7)
+
+				pr.appendChild(pd1)
+				pr.appendChild(pd2)
+				pr.appendChild(pd3)
+				pr.appendChild(pd4)
+				pr.appendChild(pd5)
+				pr.appendChild(pd6)
+				pr.appendChild(pd7)
+
+				tablaProd.appendChild(pr)
 			})
 
-			btn_addProduct.addEventListener('click', e => {
-				e.preventDefault()
-				ipcRenderer.send('prod:create')
-			})
+			prodText1 = document.createTextNode(product.product_id)
+			prodText2 = document.createTextNode(product.code_prod)
+			prodText3 = document.createTextNode(product.name_prod)
+			prodText4 = document.createTextNode(product.val_prod)
+			prodText5 = document.createTextNode(product.descp_prod)
 
-			function cleanList() {
-				let table = document.querySelector('table')
-				let children = table.childElementCount
+			if (product.status_prod) {
+				prodText6 = document.createTextNode('Activo')
+			} else {
+				prodText6 = document.createTextNode('Inactivo')
+			}
 
-				if (children > 1) {
-					let child
-					while (table.childElementCount > 1) {
-						child = table.lastElementChild
-						table.removeChild(child)
-					}
+			pd1.appendChild(prodText1)
+			pd2.appendChild(prodText2)
+			pd3.appendChild(prodText3)
+			pd4.appendChild(prodText4)
+			pd5.appendChild(prodText5)
+			pd6.appendChild(prodText6)
+
+			pr.appendChild(pd1)
+			pr.appendChild(pd2)
+			pr.appendChild(pd3)
+			pr.appendChild(pd4)
+			pr.appendChild(pd5)
+			pr.appendChild(pd6)
+
+			tablaProd.appendChild(pr)
+			console.log('Magia variables')
+			console.log('Se estan las variables')
+		})
+
+		btn_addProduct.addEventListener('click', e => {
+			e.preventDefault()
+			ipcRenderer.send('prod:create')
+		})
+
+		function cleanList() {
+			let table = document.querySelector('table')
+			let children = table.childElementCount
+
+			if (children > 1) {
+				let child
+				while (table.childElementCount > 1) {
+					child = table.lastElementChild
+					table.removeChild(child)
 				}
 			}
-		</script>
+		}
+	</script>
 
-		<!-- jQuery library -->
-		<script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
-	</body>
+	<!-- jQuery library -->
+	<script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+</body>
+
 </html>
