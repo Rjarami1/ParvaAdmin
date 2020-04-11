@@ -4,10 +4,121 @@
     <meta charset="UTF-8">
     <title>Ventas</title>
 </head>
+
+<style>
+
+button.numpad {
+    width: 100px;
+    height: 100px;
+    font-size: 32px;
+    margin: 5px;
+}
+
+input#dateTime{
+    width: 180px;
+}
+
+button.limpiar {
+    font-size: 26px;
+}
+
+</style>
+
 <body>
     <h1>Ventas</h1><br>
 
     <h3>Módulo de registro de ventas</h3>
+
+    <form id="form1">
+        <label for="dateTime">Fecha y Hora: </label>
+        <input type="text" name="dateTime" id="dateTime" disabled><br>
+    
+        <label for="productCode">Código del Producto</label><br>
+        <input name="productCode" type="number" id="productCode">&nbsp;&nbsp;
+        <input type="text" id="productDesc" disabled><br>
+
+        <label for="productValue">Valor</label><br>
+        <input type="number" name="productValue" id="productValue" disabled><br>
+
+        <label for="quantity">Cantidad</label><br>
+        <input type="number" name="quantity" id="quantity"><br>
+
+        <label for="total">Total</label><br>
+        <input type="number" name="total" id="total" disabled>
+    </form>
+
+    <button class="numpad" value="1">1</button>
+    <button class="numpad" value="2">2</button>
+    <button class="numpad" value="3">3</button><br>
+    <button class="numpad" value="4">4</button>
+    <button class="numpad" value="5">5</button>
+    <button class="numpad" value="6">6</button><br>
+    <button class="numpad" value="7">7</button>
+    <button class="numpad" value="8">8</button>
+    <button class="numpad" value="9">9</button><br>
+    <button class="numpad" value="0">0</button>
+    <button class="numpad" value="00">00</button>
+    <button class="numpad" value="000">000</button><br>
+    <button class="numpad" value="-1">Enter</button>
+    <button class="numpad limpiar" value="-2">Limpiar</button>
+        
+
+    <script src="../utilidades.js"></script>
+
+    <script>
+        const {ipcRenderer} = require('electron');
+        window.$ = window.jQuery = require('jquery');
+
+        $(document).ready(() => {
+            
+            setAutoTime();
+
+            let currentInput = 'productCode';
+
+            $('#productCode').focus();
+            $('#productCode').focus(setCurrentInput);
+            $('#quantity').focus(setCurrentInput);
+
+            $('.numpad').click(addKey);
+
+            function addKey(){
+                let $this = $(this),
+                    input = $(`#${currentInput}`),
+                    value = input.val();
+
+                if($this.val() == "-1"){
+                    switch(currentInput){
+                        case 'productCode':
+                            $('#quantity').focus();
+                            break;
+
+                        case 'quantity':
+                            $('#productCode').val('');
+                            $('#quantity').val('');
+                            $('#productCode').focus();
+                            break;
+                    }
+                }
+                else if($this.val() == "-2"){
+                    input.val('');
+                }
+                else{
+                    input.val(value + $this.val());
+                }
+            }
+
+            function setCurrentInput(){
+                let $this = $(this);
+                currentInput = $this.attr('id')
+            }
+
+        })
+
+        function setAutoTime(){
+            $('#dateTime').val(dateTimeClock());
+            setTimeout('setAutoTime()',1000);
+        } 
+    </script>
     
 </body>
 </html>
