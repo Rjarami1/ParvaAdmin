@@ -16,35 +16,39 @@
 
     <br>
 
-    <div class='central'>
-        <form>
-            <label for="name">Nombre:</label><br>
-            <input type="text" name="name" id="name"><br>
+    <div class='centralEditUser'>
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <form>
+                    <label for="name">Nombre:</label><br>
+                    <input type="text" name="name" id="name"><br>
 
-            <label for="position">Cargo:</label><br>
-            <input type="text" name="position" id="position"><br>
+                    <label for="position">Cargo:</label><br>
+                    <input type="text" name="position" id="position"><br>
 
 
-            <div class="row justify-content">
-                <div class="col-12 buttonResetPswd">
-                    <button id="reset_pswd">Reestablecer Contraseña</button>
-                </div>
-                <div class="col-12 buttonResetPswd">
-                    <button id="btn_status"></button>
-                </div>
+                    <div class="row justify-content">
+                        <div class="col-12 buttonResetPswd">
+                            <button id="reset_pswd">Reestablecer Contraseña</button>
+                        </div>
+                        <div class="col-12 buttonResetPswd">
+                            <button id="btn_status"></button>
+                        </div>
+                    </div>
+
+
+                    <p id="error"></p> <br>
+
+                    <h3>Editar Accesos:</h3>
+
+                    <br>
+
+                    <ul id="modules_table"></ul>
+
+                    <button type="submit" id="submit">Guardar</button> &nbsp;&nbsp;<button id="cancel">Cancelar</button>
+                </form>
             </div>
-
-
-            <p id="error"></p> <br>
-
-            <h3>Editar Accesos:</h3>
-
-            <br>
-
-            <table id="modules_table"></table>
-
-            <button type="submit" id="submit">Guardar</button> &nbsp;&nbsp;<button id="cancel">Cancelar</button>
-        </form>
+        </div>
     </div>
 
     <script>
@@ -87,7 +91,7 @@
             //Aca esta el codigo para los checkbox de la edicion de los moudlos por usuario.
             let modules = dataObject.modules;
             let userModules = dataObject.userModules;
-            let tr = document.createElement('tr');
+            let tr = document.createElement('ul');
             let td;
             let text;
             let label;
@@ -98,11 +102,11 @@
                 if (column > 3) {
                     table.appendChild(tr);
                     tr = null;
-                    tr = document.createElement('tr');
+                    tr = document.createElement('ul');
                     column = 1;
                 }
 
-                td = document.createElement('td');
+                td = document.createElement('li');
                 label = document.createElement('label');
                 label.textContent = `${module.module_name} `;
                 checkbox = document.createElement('input');

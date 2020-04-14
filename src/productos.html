@@ -14,13 +14,10 @@
 	<div class="encabezadoPrinSup">
 		<h2>Productos de la Pandeboneria</h2>
 	</div>
-	<div class="encabezadoPrinInf">
-		<h2 class="encabezadoPrinInflet">Fecha: Febrero 15 de 2020</h2>
-	</div>
 
-	<button class="botonCrearProducto" id="createProduct">
-		Agregar Producto
-	</button>
+	<div class="encabezadoPrinInf">
+		<h2 id="fecha" class="encabezadoPrinInflet"></h2>
+	</div>
 
 	<p>Lista de Productos Terminados:</p>
 	<ul id="productList"></ul>
@@ -37,12 +34,20 @@
 				<th>Tipo de Produccion</th>
 			</tr>
 		</table>
+		<button class="botonCrearProducto" id="createProduct">
+			Agregar Producto
+		</button>
 	</div>
+
+	<!-- Importando funciones de utilidades -->
+	<script src="../utilidades.js"></script>
 
 	<script>
 		const { ipcRenderer } = require('electron')
 		const tablaProd = document.querySelector('table')
 		const btn_addProduct = document.querySelector('#createProduct')
+		// Requiriendo jquerry
+		window.$ = window.jQuery = require('jquery')
 
 		//let x;
 
@@ -50,6 +55,9 @@
 		document.addEventListener('DOMContentLoaded', e => {
 			ipcRenderer.send('prod:ready')
 			console.log('Se actualizo la tabla para visualizacion')
+
+			// Generando fecha
+			$('#fecha').text(`Fecha: ${todayDate()}`)
 		})
 
 		//Recibir la lista de los prodcutos del Main y desplegarslos.

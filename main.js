@@ -123,7 +123,7 @@ ipcMain.on('prod:ready', e => {
 ipcMain.on('prod:create', e => {
 	createProdWindow = new BrowserWindow({
 		width: 350,
-		height: 400,
+		height: 500,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -149,8 +149,8 @@ ipcMain.on('prodEdit:cancel', e => {
 ipcMain.on('prodCreate:edit', (e, productid) => {
 	editProdWindow = new BrowserWindow
 		({
-			widt: 400,
-			height: 350,
+			width: 300,
+			height: 550,
 			webPreferences:
 			{
 				nodeIntegration: true
