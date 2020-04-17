@@ -22,6 +22,8 @@ let createwc
 let createprod
 let editwc
 
+let logged_user_id = -1;
+
 function createMainWindow() {
 	mainWindow = new BrowserWindow({
 		width: 800,
@@ -68,6 +70,7 @@ ipcMain.on('login:in', (e, arr) => {
 				mainwc.send('login:info', 1)
 			} else {
 				const values2 = [userInfo.user_id]
+				logged_user_id = userInfo.user_id;
 				db.pool.query(text2, values2, (err, res) => {
 					if (err) {
 						console.log(err.stack)
@@ -604,6 +607,19 @@ ipcMain.on('expenseManager:save', (e, arr) => {
 		})
 })
 
+ipcMain.on('sales:ready', (e) => {
+	const text = 'SELECT * FROM security."listProducts" WHERE status_prod = true;'
+
+	db.pool.query(text, (err, res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			mainwc.send('sales:info', res.rows);
+		}
+	})
+})
+
 const mainMenuTemplate = [
 	{
 		label: 'Archivo',
@@ -640,6 +656,7 @@ const mainMenuTemplate = [
 						mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
 						Menu.setApplicationMenu(mainMenu)
 					}
+					logged_user_id = -1;
 					mainWindow.loadFile('src/mainWindow.html')
 				}
 			}

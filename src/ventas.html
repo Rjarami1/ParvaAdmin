@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+
     <meta charset="UTF-8">
     <title>Ventas</title>
 </head>
 
 <style>
+
+header {
+    margin-bottom: 40px;
+}
 
 button.numpad {
     width: 100px;
@@ -15,7 +22,7 @@ button.numpad {
 }
 
 input#dateTime{
-    width: 180px;
+    width: 230px;
 }
 
 button.limpiar {
@@ -25,48 +32,56 @@ button.limpiar {
 </style>
 
 <body>
-    <h1>Ventas</h1><br>
+    <header>
+        <h1>Ventas</h1><br>
+        <h3>Módulo de registro de ventas</h3>
+    </header>
 
-    <h3>Módulo de registro de ventas</h3>
-
-    <form id="form1">
-        <label for="dateTime">Fecha y Hora: </label>
-        <input type="text" name="dateTime" id="dateTime" disabled><br>
-    
-        <label for="productCode">Código del Producto</label><br>
-        <input name="productCode" type="number" id="productCode">&nbsp;&nbsp;
-        <input type="text" id="productDesc" disabled><br>
-
-        <label for="productValue">Valor</label><br>
-        <input type="number" name="productValue" id="productValue" disabled><br>
-
-        <label for="quantity">Cantidad</label><br>
-        <input type="number" name="quantity" id="quantity"><br>
-
-        <label for="total">Total</label><br>
-        <input type="number" name="total" id="total" disabled>
-    </form>
-
-    <button class="numpad" value="1">1</button>
-    <button class="numpad" value="2">2</button>
-    <button class="numpad" value="3">3</button><br>
-    <button class="numpad" value="4">4</button>
-    <button class="numpad" value="5">5</button>
-    <button class="numpad" value="6">6</button><br>
-    <button class="numpad" value="7">7</button>
-    <button class="numpad" value="8">8</button>
-    <button class="numpad" value="9">9</button><br>
-    <button class="numpad" value="0">0</button>
-    <button class="numpad" value="00">00</button>
-    <button class="numpad" value="000">000</button><br>
-    <button class="numpad" value="-1">Enter</button>
-    <button class="numpad limpiar" value="-2">Limpiar</button>
-        
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form id="form1">
+                    <label for="dateTime">Fecha y Hora: </label>
+                    <input type="text" name="dateTime" id="dateTime" disabled><br>
+                
+                    <label for="productCode">Código del Producto</label><br>
+                    <input name="productCode" type="number" id="productCode">&nbsp;&nbsp;
+                    <input type="text" id="productDesc" disabled><br>
+            
+                    <label for="productValue">Valor</label><br>
+                    <input type="text" name="productValue" id="productValue" disabled><br>
+            
+                    <label for="quantity">Cantidad</label><br>
+                    <input type="number" name="quantity" id="quantity"><br>
+            
+                    <label for="total">Total</label><br>
+                    <input type="number" name="total" id="total" disabled>
+                </form>
+            </div>
+            <div class="col">
+                <button class="numpad" value="1">1</button>
+                <button class="numpad" value="2">2</button>
+                <button class="numpad" value="3">3</button><br>
+                <button class="numpad" value="4">4</button>
+                <button class="numpad" value="5">5</button>
+                <button class="numpad" value="6">6</button><br>
+                <button class="numpad" value="7">7</button>
+                <button class="numpad" value="8">8</button>
+                <button class="numpad" value="9">9</button><br>
+                <button class="numpad" value="0">0</button>
+                <button class="numpad" value="00">00</button>
+                <button class="numpad" value="000">000</button><br>
+                <button class="numpad" value="-1">Enter</button>
+                <button class="numpad limpiar" value="-2">Limpiar</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../utilidades.js"></script>
 
     <script>
         const {ipcRenderer} = require('electron');
+        const {_} = require('lodash');
         window.$ = window.jQuery = require('jquery');
 
         $(document).ready(() => {
@@ -80,6 +95,15 @@ button.limpiar {
             $('#quantity').focus(setCurrentInput);
 
             $('.numpad').click(addKey);
+
+            ipcRenderer.send('sales:ready');
+
+            let products = [];
+            ipcRenderer.on('sales:info', (e,arr) => {
+                products = arr;
+
+                $('#productCode').on('input',compareCode);
+            })
 
             function addKey(){
                 let $this = $(this),
@@ -95,15 +119,24 @@ button.limpiar {
                         case 'quantity':
                             $('#productCode').val('');
                             $('#quantity').val('');
+                            $('#productDesc').val('');
+                            $('#productValue').val('');
                             $('#productCode').focus();
                             break;
                     }
                 }
                 else if($this.val() == "-2"){
                     input.val('');
+                    if(currentInput == 'productCode'){
+                        $('#productDesc').val('');
+                        $('#productValue').val('');
+                    }
                 }
                 else{
                     input.val(value + $this.val());
+                    if(currentInput == 'productCode'){
+                        compareCode();
+                    }
                 }
             }
 
@@ -112,6 +145,22 @@ button.limpiar {
                 currentInput = $this.attr('id')
             }
 
+            function compareCode(){
+                let $this = $('#productCode'),
+                    currentVal = $this.val(),
+                    prodObj = _.find(products, n => {
+                        return n.code_prod == currentVal;
+                    });
+
+                if(prodObj != undefined){
+                    $('#productDesc').val(prodObj.name_prod);
+                    $('#productValue').val(prodObj.val_prod);
+                }
+                else{
+                    $('#productDesc').val('');
+                    $('#productValue').val('');
+                }  
+            }
         })
 
         function setAutoTime(){
@@ -119,6 +168,9 @@ button.limpiar {
             setTimeout('setAutoTime()',1000);
         } 
     </script>
+
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
     
 </body>
 </html>
