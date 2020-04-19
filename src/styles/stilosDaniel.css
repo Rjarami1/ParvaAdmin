@@ -54,8 +54,34 @@ body .centralGestGastos {
 	height: 80%;
 	width: 50%;
 }
+/* 
+body .tablaProd {
+	width: 900px;
+	height: 300px;
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 51%;
+	transform: translate(-50%, -50%);
+} */
 
 body .tablaProd tr:hover {
+	background-color: rgba(0,0,0,.05);
+	cursor: pointer;
+}
+
+/* 
+body .tablaGastos {
+	width: 900px;
+	height: 300px;
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 51%;
+	transform: translate(-50%, -50%);
+} */
+
+body .tablaGastos tr:hover {
 	background-color: rgba(0,0,0,.05);
 	cursor: pointer;
 }
@@ -78,20 +104,22 @@ body .tablaProd tr:hover {
 }
 
 body .botonNuevoUsuario {
-	width: 800px;
+	width: 200px;
 	position: absolute;
 	z-index: 100000;
-	left: 75%;
-	top: 80%;
+	left: 47%;
+	top: 20%;
 	transform: translate(-50%, -50%);
+	margin: 50px;
 }
 
 body .tablaAdmin {
-	width: 800px;
+	width: 900px;
+	height: 300px;
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
-	top: 50%;
+	top: 51%;
 	transform: translate(-50%, -50%);
 }
 
@@ -104,7 +132,8 @@ body .botonCrearProducto {
 	width: 200px;
 	position: absolute;
 	z-index: 100000;
-	left: 40%;
+	left: 45%;
+	top: 20%;
 	transform: translate(-50%, -50%);
 	margin: 50px;
 }

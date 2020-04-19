@@ -13,6 +13,7 @@
 
 <body>
 
+
     <div class="encabezadoPrinSup">
         <h2>Administración de Usuarios</h2>
     </div>
@@ -21,16 +22,19 @@
         <h2 id="fecha" class="encabezadoPrinInflet"></h2>
     </div>
 
-    <div class="botonNuevoUsuario">
-        <button id="createUser">Crear Usuario</button>
-    </div>
 
     <p>Lista de Usuarios:</p>
     <ul id="usersList"></ul>
 
+    <div class="botonNuevoUsuario">
+        <button id="createUser">Crear Usuario</button>
+    </div>
+
     <div class="tablaAdmin">
-        <table class="table table-striped">
-            <thead>
+
+
+        <div class="row">
+            <table class="table table-striped" style="width: 100%;">
                 <tr>
                     <th>ID</th>
                     <th>Login</th>
@@ -39,11 +43,11 @@
                     <th>Último Ingreso</th>
                     <th>Cargo</th>
                 </tr>
-            </thead>
-            <tbody>
+                <tbody>
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Importando funciones de utilidades -->
