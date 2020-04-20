@@ -11,14 +11,15 @@
 <style>
 
 header {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+    padding-left: 20px;
 }
 
 button.numpad {
-    width: 100px;
-    height: 100px;
-    font-size: 32px;
-    margin: 5px;
+    width: 80px;
+    height: 80px;
+    font-size: 30px;
+    margin: 4px;
 }
 
 input#dateTime{
@@ -26,7 +27,26 @@ input#dateTime{
 }
 
 button.limpiar {
-    font-size: 26px;
+    font-size: 20px;
+}
+
+.foot {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.endButton {
+    width: 300px;
+    height: 50px;
+    font-weight: bold;
+}
+
+.endButton#complete {
+    background-color: lightblue;
+}
+
+.endButton#register {
+    background-color: lightgreen;
 }
 
 </style>
@@ -41,12 +61,13 @@ button.limpiar {
         <div class="row">
             <div class="col">
                 <form id="form1">
-                    <label for="dateTime">Fecha y Hora: </label>
+                    <label for="dateTime">Fecha y Hora: </label><br>
                     <input type="text" name="dateTime" id="dateTime" disabled><br>
                 
                     <label for="productCode">Código del Producto</label><br>
                     <input name="productCode" type="number" id="productCode">&nbsp;&nbsp;
                     <input type="text" id="productDesc" disabled><br>
+                    <input type="hidden" name="hiddenId" id="hiddenId">
             
                     <label for="productValue">Valor</label><br>
                     <input type="text" name="productValue" id="productValue" disabled><br>
@@ -55,7 +76,13 @@ button.limpiar {
                     <input type="number" name="quantity" id="quantity"><br>
             
                     <label for="total">Total</label><br>
-                    <input type="number" name="total" id="total" disabled>
+                    <input type="text" name="total" id="total" disabled><br>
+
+                    <label for="paysWith">Paga con:</label><br>
+                    <input type="number" name="paysWith" id="paysWith"><br>
+
+                    <label for="change">Devuelta:</label><br>
+                    <input type="text" name="change" id="change" disabled><br>
                 </form>
             </div>
             <div class="col">
@@ -74,6 +101,19 @@ button.limpiar {
                 <button class="numpad" value="-1">Enter</button>
                 <button class="numpad limpiar" value="-2">Limpiar</button>
             </div>
+            <div class="col">
+                <button id="deleteProd">Eliminar Producto</button><br>
+                <select id="regProducts" name="regProducts" size="5">
+                </select>
+            </div>
+        </div>
+        <div class="row foot">
+            <div class="col">
+                <button class="endButton" id="complete">Completar Venta</button>
+            </div>
+            <div class="col">
+                <button class="endButton" id="register">Registrar Venta</button>
+            </div>
         </div>
     </div>
 
@@ -90,11 +130,13 @@ button.limpiar {
 
             let currentInput = 'productCode';
 
-            $('#productCode').focus();
             $('#productCode').focus(setCurrentInput);
             $('#quantity').focus(setCurrentInput);
+            $('#paysWith').focus(setCurrentInput);
 
             $('.numpad').click(addKey);
+            $('#deleteProd').click(removeProduct);
+            $('#complete').click(completeSale);
 
             ipcRenderer.send('sales:ready');
 
@@ -105,6 +147,9 @@ button.limpiar {
                 $('#productCode').on('input',compareCode);
             })
 
+            let regId = 0;
+            let productSaleList = [];
+            let total = 0;
             function addKey(){
                 let $this = $(this),
                     input = $(`#${currentInput}`),
@@ -117,10 +162,30 @@ button.limpiar {
                             break;
 
                         case 'quantity':
+                            if($('#productDesc').val() != "" && $('#quantity').val() != ""){
+                                
+                                $('#regProducts').append(`<option id="${regId}">${$('#quantity').val()}  |  ${$('#productDesc').val()}  |  ${$('#productValue').val()}</option>`);
+                                productSaleList.push({
+                                    local_id: regId,
+                                    prod_id: $('hiddenId').val(),
+                                    quantity: parseInt($('#quantity').val()),
+                                    value: parseInt($('#productValue').val().replace(',','').slice(1))
+                                });
+                                regId++;
+                                total += parseInt($('#productValue').val().replace(',','').slice(1)) * parseInt($('#quantity').val());
+                            }
+                            $('#total').val(formatCurrency(total));
                             $('#productCode').val('');
                             $('#quantity').val('');
                             $('#productDesc').val('');
                             $('#productValue').val('');
+                            $('#paysWith').val('');
+                            $('#change').val('');
+                            $('#productCode').focus();
+                            break;
+
+                        case 'paysWith':
+                            $('#change').val(formatCurrency(parseInt($('#paysWith').val()) - total));
                             $('#productCode').focus();
                             break;
                     }
@@ -155,11 +220,33 @@ button.limpiar {
                 if(prodObj != undefined){
                     $('#productDesc').val(prodObj.name_prod);
                     $('#productValue').val(prodObj.val_prod);
+                    $('#hiddenId').val(prodObj.product_id);
                 }
                 else{
                     $('#productDesc').val('');
                     $('#productValue').val('');
                 }  
+            }
+
+            function removeProduct(){
+                let id = $('#regProducts option:selected').attr('id');
+                let obj;
+                if(id != undefined){
+                    $(`#regProducts #${id}`).remove();
+                    obj = _.remove(productSaleList, n => {
+                        return n.local_id == id;
+                    })
+                    
+                    total -= obj[0].value * obj[0].quantity;
+                    $('#total').val(formatCurrency(total));
+                    $('#change').val('');
+                    $('#paysWith').val('');
+                    $('#productCode').focus();
+                }
+            }
+
+            function completeSale(){
+                $('#paysWith').focus();
             }
         })
 
