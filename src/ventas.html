@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Bootstrap 4 CSS -->
     <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
@@ -9,50 +10,48 @@
 </head>
 
 <style>
+    header {
+        margin-bottom: 30px;
+        padding-left: 20px;
+    }
 
-header {
-    margin-bottom: 30px;
-    padding-left: 20px;
-}
+    button.numpad {
+        width: 80px;
+        height: 80px;
+        font-size: 30px;
+        margin: 4px;
+    }
 
-button.numpad {
-    width: 80px;
-    height: 80px;
-    font-size: 30px;
-    margin: 4px;
-}
+    input#dateTime {
+        width: 230px;
+    }
 
-input#dateTime{
-    width: 230px;
-}
+    button.limpiar {
+        font-size: 20px;
+    }
 
-button.limpiar {
-    font-size: 20px;
-}
+    .foot {
+        margin-top: 30px;
+        margin-bottom: 10px;
+    }
 
-.foot {
-    margin-top: 30px;
-    margin-bottom: 10px;
-}
+    .endButton {
+        width: 300px;
+        height: 50px;
+        font-weight: bold;
+    }
 
-.endButton {
-    width: 300px;
-    height: 50px;
-    font-weight: bold;
-}
+    .endButton#complete {
+        background-color: lightblue;
+    }
 
-.endButton#complete {
-    background-color: lightblue;
-}
+    .endButton#register {
+        background-color: lightgreen;
+    }
 
-.endButton#register {
-    background-color: lightgreen;
-}
-
-div.shiftButtons {
-    text-align: center;
-}
-
+    div.shiftButtons {
+        text-align: center;
+    }
 </style>
 
 <body>
@@ -76,18 +75,18 @@ div.shiftButtons {
                 <form id="form1">
                     <label for="dateTime">Fecha y Hora: </label><br>
                     <input type="text" name="dateTime" id="dateTime" disabled><br>
-                
+
                     <label for="productCode">Código del Producto</label><br>
                     <input name="productCode" type="number" id="productCode">&nbsp;&nbsp;
                     <input type="text" id="productDesc" disabled><br>
                     <input type="hidden" name="hiddenId" id="hiddenId">
-            
+
                     <label for="productValue">Valor</label><br>
                     <input type="text" name="productValue" id="productValue" disabled><br>
-            
+
                     <label for="quantity">Cantidad</label><br>
                     <input type="number" name="quantity" id="quantity"><br>
-            
+
                     <label for="total">Total</label><br>
                     <input type="text" name="total" id="total" disabled><br>
 
@@ -133,12 +132,12 @@ div.shiftButtons {
     <script src="../utilidades.js"></script>
 
     <script>
-        const {ipcRenderer} = require('electron');
-        const {_} = require('lodash');
+        const { ipcRenderer } = require('electron');
+        const { _ } = require('lodash');
         window.$ = window.jQuery = require('jquery');
 
         $(document).ready(() => {
-            
+
             setAutoTime();
 
             $('.chart').hide();
@@ -161,20 +160,20 @@ div.shiftButtons {
             ipcRenderer.send('sales:ready');
 
             let products = [];
-            ipcRenderer.on('sales:info', (e,arr) => {
+            ipcRenderer.on('sales:info', (e, arr) => {
                 products = arr[0];
-                if(arr[1]){
+                if (arr[1]) {
                     $('.chart').show();
                     $('#endShift').show();
                     $('#startShift').hide();
                 }
-                else{
+                else {
                     $('#startShift').show();
                     $('.chart').hide();
                     $('#endShift').hide();
                 }
 
-                $('#productCode').on('input',compareCode);
+                $('#productCode').on('input', compareCode);
             });
 
             ipcRenderer.on('sales:started', e => {
@@ -194,29 +193,29 @@ div.shiftButtons {
             let regId = 0;
             let productSaleList = [];
             let total = 0;
-            function addKey(){
+            function addKey() {
                 let $this = $(this),
                     input = $(`#${currentInput}`),
                     value = input.val();
 
-                if($this.val() == "-1"){
-                    switch(currentInput){
+                if ($this.val() == "-1") {
+                    switch (currentInput) {
                         case 'productCode':
                             $('#quantity').focus();
                             break;
 
                         case 'quantity':
-                            if($('#productDesc').val() != "" && $('#quantity').val() != ""){
-                                
+                            if ($('#productDesc').val() != "" && $('#quantity').val() != "") {
+
                                 $('#regProducts').append(`<option id="${regId}">${$('#quantity').val()}  |  ${$('#productDesc').val()}  |  ${$('#productValue').val()}</option>`);
                                 productSaleList.push({
                                     local_id: regId,
                                     prod_id: $('hiddenId').val(),
                                     quantity: parseInt($('#quantity').val()),
-                                    value: parseInt($('#productValue').val().replace(',','').slice(1))
+                                    value: parseInt($('#productValue').val().replace(',', '').slice(1))
                                 });
                                 regId++;
-                                total += parseInt($('#productValue').val().replace(',','').slice(1)) * parseInt($('#quantity').val());
+                                total += parseInt($('#productValue').val().replace(',', '').slice(1)) * parseInt($('#quantity').val());
                             }
                             $('#total').val(formatCurrency(total));
                             $('#productCode').val('');
@@ -234,53 +233,53 @@ div.shiftButtons {
                             break;
                     }
                 }
-                else if($this.val() == "-2"){
+                else if ($this.val() == "-2") {
                     input.val('');
-                    if(currentInput == 'productCode'){
+                    if (currentInput == 'productCode') {
                         $('#productDesc').val('');
                         $('#productValue').val('');
                     }
                 }
-                else{
+                else {
                     input.val(value + $this.val());
-                    if(currentInput == 'productCode'){
+                    if (currentInput == 'productCode') {
                         compareCode();
                     }
                 }
             }
 
-            function setCurrentInput(){
+            function setCurrentInput() {
                 let $this = $(this);
                 currentInput = $this.attr('id')
             }
 
-            function compareCode(){
+            function compareCode() {
                 let $this = $('#productCode'),
                     currentVal = $this.val(),
                     prodObj = _.find(products, n => {
                         return n.code_prod == currentVal;
                     });
 
-                if(prodObj != undefined){
+                if (prodObj != undefined) {
                     $('#productDesc').val(prodObj.name_prod);
                     $('#productValue').val(prodObj.val_prod);
                     $('#hiddenId').val(prodObj.product_id);
                 }
-                else{
+                else {
                     $('#productDesc').val('');
                     $('#productValue').val('');
-                }  
+                }
             }
 
-            function removeProduct(){
+            function removeProduct() {
                 let id = $('#regProducts option:selected').attr('id');
                 let obj;
-                if(id != undefined){
+                if (id != undefined) {
                     $(`#regProducts #${id}`).remove();
                     obj = _.remove(productSaleList, n => {
                         return n.local_id == id;
                     })
-                    
+
                     total -= obj[0].value * obj[0].quantity;
                     $('#total').val(formatCurrency(total));
                     $('#change').val('');
@@ -289,33 +288,34 @@ div.shiftButtons {
                 }
             }
 
-            function completeSale(){
+            function completeSale() {
                 $('#paysWith').focus();
             }
 
-            function registerSale(){
-                if(productSaleList.length > 0){
+            function registerSale() {
+                if (productSaleList.length > 0) {
                     ipcRenderer.send('sales:register', productSaleList);
                 }
             }
 
-            function startShift(){
+            function startShift() {
                 ipcRenderer.send('sales:start');
             }
 
-            function endShift(){
+            function endShift() {
                 ipcRenderer.send('sales:end');
             }
         })
 
-        function setAutoTime(){
+        function setAutoTime() {
             $('#dateTime').val(dateTimeClock());
-            setTimeout('setAutoTime()',1000);
+            setTimeout('setAutoTime()', 1000);
         } 
     </script>
 
     <!-- jQuery library -->
     <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
-    
+
 </body>
+
 </html>
