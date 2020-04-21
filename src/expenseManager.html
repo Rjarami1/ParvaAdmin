@@ -35,41 +35,48 @@
     <div class="encabezadoPrinInf">
         <h2 id="fecha" class="encabezadoPrinInflet"></h2>
     </div>
-
     <div class="centralGestGastos">
-        <h2>Crear Tipo:</h2><br>
-        <label for="newType">Descripción:</label>&nbsp;&nbsp;
-        <input type="text" name="newType" id="newType">&nbsp;&nbsp;
-        <button id="createType">Crear</button><br>
-        <p id="msg_type" style="color: red"></p>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <h2>Crear Tipo:</h2><br>
+                    <label for="newType">Descripción:</label>&nbsp;&nbsp;
+                    <input type="text" name="newType" id="newType">&nbsp;&nbsp;
+                    <button id="createType">Crear</button><br>
+                    <p id="msg_type" style="color: red"></p>
 
-        <h2>Tipos y Códigos Existentes:</h2><br>
+                    <h2>Tipos y Códigos Existentes:</h2><br>
 
-        <ul id="exp_list">
+                    <ul id="exp_list">
 
-        </ul>
+                    </ul>
+                </div>
 
-        <h2>Agregar Código:</h2><br>
+                <div class="col-sm">
+                    <h2>Agregar Código:</h2><br>
 
-        <label for="expenseType">Tipo de Gasto</label>&nbsp;&nbsp;
-        <select name="expenseType" id="expenseType">
+                    <label for="expenseType">Tipo de Gasto</label>&nbsp;&nbsp;
+                    <select name="expenseType" id="expenseType">
 
-        </select><br><br>
+                    </select><br><br>
 
-        <label for="newCodeCode">Código:</label>&nbsp;&nbsp;
-        <input type="text" name="newCodeCode" id="newCodeCode">&nbsp;&nbsp;
-        <label for="newCodeDesc">Descripción</label>&nbsp;&nbsp;
-        <input type="text" name="newCodeDesc" id="newCodeDesc">&nbsp;&nbsp;
-        <button id="addCode">Agregar</button><br>
-        <p id="msg_code" style="color: red"></p>
+                    <label for="newCodeCode">Código:</label>&nbsp;&nbsp;
+                    <input type="text" name="newCodeCode" id="newCodeCode">&nbsp;&nbsp;
+                    <label for="newCodeDesc">Descripción</label>&nbsp;&nbsp;
+                    <input type="text" name="newCodeDesc" id="newCodeDesc">&nbsp;&nbsp;
+                    <button id="addCode">Agregar</button><br>
+                    <p id="msg_code" style="color: red"></p>
 
-        <br>
-        <br>
-        <button id="saveAll">Guardar Cambios</button>&nbsp;&nbsp;
-        <button id="cancel">Cancelar</button><br>
+                    <br>
+                    <br>
+                    <button id="saveAll">Guardar Cambios</button>&nbsp;&nbsp;
+                    <button id="cancel">Cancelar</button><br>
 
-        <img id="loading" src="../imagenes/load.gif" alt="loading..." style="height: 50px; width: 50px;" />
-        <p id="msg_done"></p>
+                    <img id="loading" src="../imagenes/load.gif" alt="loading..." style="height: 50px; width: 50px;" />
+                    <p id="msg_done"></p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Importando funciones de utilidades -->

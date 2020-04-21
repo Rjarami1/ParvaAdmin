@@ -31,7 +31,7 @@ body .centralGastos {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
-	top: 60%;
+	top: 50%;
 	transform: translate(-50%, -50%);
 }
 
@@ -70,16 +70,16 @@ body .tablaProd tr:hover {
 	cursor: pointer;
 }
 
-/* 
+
 body .tablaGastos {
-	width: 900px;
+	width: 500px;
 	height: 300px;
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
-	top: 51%;
+	top: 110%;
 	transform: translate(-50%, -50%);
-} */
+}
 
 body .tablaGastos tr:hover {
 	background-color: rgba(0,0,0,.05);

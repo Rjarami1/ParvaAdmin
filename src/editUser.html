@@ -43,7 +43,7 @@
 
                     <br>
 
-                    <ul id="modules_table"></ul>
+                    <table id="modules_table"></table>
 
                     <button type="submit" id="submit">Guardar</button> &nbsp;&nbsp;<button id="cancel">Cancelar</button>
                 </form>
@@ -91,7 +91,7 @@
             //Aca esta el codigo para los checkbox de la edicion de los moudlos por usuario.
             let modules = dataObject.modules;
             let userModules = dataObject.userModules;
-            let tr = document.createElement('ul');
+            let tr = document.createElement('tr');
             let td;
             let text;
             let label;
@@ -102,11 +102,12 @@
                 if (column > 3) {
                     table.appendChild(tr);
                     tr = null;
-                    tr = document.createElement('ul');
+                    tr = document.createElement('tr');
                     column = 1;
                 }
 
-                td = document.createElement('li');
+                td = document.createElement('td');
+                td.classList.add('col-10')
                 label = document.createElement('label');
                 label.textContent = `${module.module_name} `;
                 checkbox = document.createElement('input');
