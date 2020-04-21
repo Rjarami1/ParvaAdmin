@@ -6,21 +6,120 @@ body .central {
 	transform: translate(-50%, -50%);
 }
 
-body .botonNuevoUsuario {
-	width: 800px;
-	position: absolute;
-	z-index: 100000;
-	left: 75%;
-	top: 80%;
-	transform: translate(-50%, -50%);
-}
-
-body .tablaAdmin {
-	width: 800px;
+body .centralEditUser {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
 	top: 50%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 70%;
+}
+
+body .centralEditUser {
+	position: absolute;
+	margin: 20px;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 70%;
+}
+
+body .centralGastos {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+body .centralProd {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 65%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 50%;
+}
+
+body .centralGestGastos {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 65%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 50%;
+}
+/* 
+body .tablaProd {
+	width: 900px;
+	height: 300px;
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 51%;
+	transform: translate(-50%, -50%);
+} */
+
+body .tablaProd tr:hover {
+	background-color: rgba(0,0,0,.05);
+	cursor: pointer;
+}
+
+
+body .tablaGastos {
+	width: 500px;
+	height: 300px;
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 110%;
+	transform: translate(-50%, -50%);
+}
+
+body .tablaGastos tr:hover {
+	background-color: rgba(0,0,0,.05);
+	cursor: pointer;
+}
+
+.buttonsEditProd{
+	margin-top: 10px;
+}
+
+.buttonResetPswd{
+	margin-top: 10px;
+}
+
+.buttonResetPswd{
+	margin-top: 10px;
+}
+
+
+.buttonResetPswd{
+	margin-top: 10px;
+}
+
+body .botonNuevoUsuario {
+	width: 200px;
+	position: absolute;
+	z-index: 100000;
+	left: 47%;
+	top: 20%;
+	transform: translate(-50%, -50%);
+	margin: 50px;
+}
+
+body .tablaAdmin {
+	width: 900px;
+	height: 300px;
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 51%;
 	transform: translate(-50%, -50%);
 }
 
@@ -33,9 +132,10 @@ body .botonCrearProducto {
 	width: 200px;
 	position: absolute;
 	z-index: 100000;
-	left: 91%;
-	top: 26%;
+	left: 45%;
+	top: 20%;
 	transform: translate(-50%, -50%);
+	margin: 50px;
 }
 
 body .tablaProductos {
@@ -127,9 +227,6 @@ body .central .custom-form.p-4 .form-group:first-child {
 	margin-top: 2rem;
 }
 
-.buttonResetPswd{
-	margin-top: 10px;
-}
 
 body .central .buttonRef{
 	margin: 10px;

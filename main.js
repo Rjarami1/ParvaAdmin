@@ -22,6 +22,8 @@ let createwc
 let createprod
 let editwc
 
+let logged_user_id = -1;
+
 function createMainWindow() {
 	mainWindow = new BrowserWindow({
 		width: 800,
@@ -68,6 +70,7 @@ ipcMain.on('login:in', (e, arr) => {
 				mainwc.send('login:info', 1)
 			} else {
 				const values2 = [userInfo.user_id]
+				logged_user_id = userInfo.user_id;
 				db.pool.query(text2, values2, (err, res) => {
 					if (err) {
 						console.log(err.stack)
@@ -123,7 +126,7 @@ ipcMain.on('prod:ready', e => {
 ipcMain.on('prod:create', e => {
 	createProdWindow = new BrowserWindow({
 		width: 350,
-		height: 400,
+		height: 500,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -149,8 +152,8 @@ ipcMain.on('prodEdit:cancel', e => {
 ipcMain.on('prodCreate:edit', (e, productid) => {
 	editProdWindow = new BrowserWindow
 		({
-			widt: 400,
-			height: 350,
+			width: 300,
+			height: 550,
 			webPreferences:
 			{
 				nodeIntegration: true
@@ -604,6 +607,57 @@ ipcMain.on('expenseManager:save', (e, arr) => {
 		})
 })
 
+ipcMain.on('sales:ready', (e) => {
+	const text = 'SELECT * FROM security."listProducts" WHERE status_prod = true;';
+	const text2 = `SELECT FROM public.shifts WHERE user_id = ${logged_user_id} AND shift_status = true;`;
+	let status = false;
+	db.pool.query(text, (err1, res1) => {
+		if(err1){
+			console.log(err1.stack);
+		}
+		else{
+			db.pool.query(text2, (err2, res2) => {
+				if(err2){
+					console.log(err2.stack);
+				}
+				else{
+					if(res2.rowCount > 0){
+						status = true;
+					}
+					mainwc.send('sales:info', [res1.rows, status]);
+				}
+			});
+		}
+	});
+})
+
+ipcMain.on('sales:start', e => {
+	const text = `INSERT INTO public.shifts (shift_start, shift_status, user_id) VALUES (CURRENT_TIMESTAMP, true, ${logged_user_id});`;
+
+	db.pool.query(text, (err, res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			mainwc.send('sales:started');
+		}
+	})
+})
+
+
+ipcMain.on('sales:end', e => {
+	const text = `UPDATE public.shifts SET shift_status = false, shift_end = CURRENT_TIMESTAMP WHERE user_id = ${logged_user_id} AND shift_status = true;`;
+
+	db.pool.query(text, (err, res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			mainwc.send('sales:ended');
+		}
+	})
+})
+
 const mainMenuTemplate = [
 	{
 		label: 'Archivo',
@@ -640,6 +694,7 @@ const mainMenuTemplate = [
 						mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
 						Menu.setApplicationMenu(mainMenu)
 					}
+					logged_user_id = -1;
 					mainWindow.loadFile('src/mainWindow.html')
 				}
 			}
