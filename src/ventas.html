@@ -49,6 +49,10 @@ button.limpiar {
     background-color: lightgreen;
 }
 
+div.shiftButtons {
+    text-align: center;
+}
+
 </style>
 
 <body>
@@ -58,6 +62,15 @@ button.limpiar {
     </header>
 
     <div class="container">
+        <div class="row shiftButtons">
+            <div class="col">
+                <button id="startShift">Iniciar Turno</button>
+                <button id="endShift">Finalizar Turno</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container chart">
         <div class="row">
             <div class="col">
                 <form id="form1">
@@ -128,6 +141,10 @@ button.limpiar {
             
             setAutoTime();
 
+            $('.chart').hide();
+            $('#startShift').hide();
+            $('#endShift').hide();
+
             let currentInput = 'productCode';
 
             $('#productCode').focus(setCurrentInput);
@@ -137,14 +154,41 @@ button.limpiar {
             $('.numpad').click(addKey);
             $('#deleteProd').click(removeProduct);
             $('#complete').click(completeSale);
+            $('#register').click(registerSale);
+            $('#startShift').click(startShift);
+            $('#endShift').click(endShift);
 
             ipcRenderer.send('sales:ready');
 
             let products = [];
             ipcRenderer.on('sales:info', (e,arr) => {
-                products = arr;
+                products = arr[0];
+                if(arr[1]){
+                    $('.chart').show();
+                    $('#endShift').show();
+                    $('#startShift').hide();
+                }
+                else{
+                    $('#startShift').show();
+                    $('.chart').hide();
+                    $('#endShift').hide();
+                }
 
                 $('#productCode').on('input',compareCode);
+            });
+
+            ipcRenderer.on('sales:started', e => {
+                $('.chart').show();
+                $('#endShift').show();
+                $('#startShift').hide();
+            });
+
+            ipcRenderer.on('sales:ended', e => {
+                $('.chart').hide();
+                $('#endShift').hide();
+                $('#startShift').show();
+
+                console.log('Shift ended');
             })
 
             let regId = 0;
@@ -247,6 +291,20 @@ button.limpiar {
 
             function completeSale(){
                 $('#paysWith').focus();
+            }
+
+            function registerSale(){
+                if(productSaleList.length > 0){
+                    ipcRenderer.send('sales:register', productSaleList);
+                }
+            }
+
+            function startShift(){
+                ipcRenderer.send('sales:start');
+            }
+
+            function endShift(){
+                ipcRenderer.send('sales:end');
             }
         })
 
