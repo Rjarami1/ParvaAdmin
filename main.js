@@ -188,7 +188,6 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 })
 
 ipcMain.on('prodEdit:update', (e, obj) => {
-	//console.log('Entro a prodEdit:update')
 	const prodText = 'UPDATE security."listProducts" SET code_prod=$1, name_prod=$2, val_prod=$3, descp_prod=$4 WHERE product_id=$5;'
 	const valuesP = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.product_id]
 	//console.log(valuesP)
@@ -436,8 +435,55 @@ ipcMain.on('production:create', e => {
 		}
 		else {
 			mainwc.send('prodTypes:info', res1.rows)
-			console.log("Envio de tabla:")
-			//console.log(res1.rowss)
+		}
+	})
+})
+
+ipcMain.on('activeProducts:selected', (e, filter) => {
+	console.log('Llego Filtro')
+	console.log(filter)
+	const text1 = `SELECT product_id, code_prod, name_prod FROM security."listProducts" WHERE productype = '${filter.trim()}' AND status_prod = true`;
+
+	db.pool.query(text1, (err1, res1) => {
+		if (err1)
+		{
+			console.log(err1.stack)
+		}
+		else 
+		{
+			mainwc.send('filteredProdcuts:info', res1.rows)
+			console.log("Envio de respuesta")
+		}
+	})
+})
+
+ipcMain.on('production:save', (e, arr) => 
+{
+	let qry = 'INSERT INTO public.production(produc_date, produc_code, produc_name, produc_quan, produc_type) VALUES ';
+	let pro_value;
+
+	arr.forEach(elm => 
+	{
+		pro_value = `(CURRENT_TIMESTAMP, ${elm.code}, '${elm.name}', ${elm.quantity}, '${elm.type}'),`;
+		qry += pro_value;
+	});
+
+	qry = qry.slice(0, -1);
+	qry += ';'
+	//console.log(qry);
+	db.pool.query(qry, (err, res) => 
+	{
+		if (err)
+		{
+			console.log('Error:');
+			console.log(err.stack);
+			mainwc.send('production:error');
+			console.log('Mando el error a prodcution.html')
+		}
+		else
+		{
+			console.log('Exitoso');
+			mainwc.send('production:success');
 		}
 	})
 })
@@ -462,6 +508,7 @@ ipcMain.on('expense:ready', e => {
 })
 
 ipcMain.on('expense:save', (e, arr) => {
+	console.log(arr)
 	let query = 'INSERT INTO public.expenses(expense_code, expense_type, expense_date, expense_value, expense_quantity) VALUES ';
 	let exp_value;
 
