@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/stilosDaniel.css" />
+
     <meta charset="UTF-8">
     <title>Registro de Produccion</title>
 </head>
-<body>
-    <h2>Regitro de Produccion</h2><br>
-    <br>
 
-    <form><!-- Falta alinear y recortar las casillas -->
+<body>
+
+    <div class="encabezadoPrinSup">
+        <h2>Regitro de Produccion</h2>
+    </div>
+
+    <div class="encabezadoPrinInf">
+        <h2 id="fecha" class="encabezadoPrinInflet"></h2>
+    </div>
+
+    <form class="centralProd">
+        <!-- Falta alinear y recortar las casillas -->
         <label for="production_date">Fecha: </label>
         <input type="date" name="production_date" id="production_date" disabled>&nbsp;&nbsp;
 
@@ -27,9 +40,10 @@
    
         <label for="product_code">Código Producto:</label>
         <input type="text" id="product_code" name="product_code" disabled>&nbsp;&nbsp;
-        
+        <br>
+
         <label for="product_name">Nombre del Producto: </label>
-        <input type="text" id="product_name" name="product_name" disabled><br><br>
+        <input type="text" id="product_name" name="product_name" disabled><br>
 
         <label for="product_quantity">Cantidad producida:</label>
         <input type="number" name="product_quantity" id="product_quantity"><br>
@@ -41,6 +55,7 @@
         <p id="error_msg" style="color: red;"></p>
 
         <h3>Produccion Adicionada:</h3><br>
+        <div class="tablaProd">
         <table id="production_to_register" class="table table-striped">
             <thead>
                 <tr>
@@ -52,11 +67,11 @@
                     <th>Tipo</th>
                 </tr>
             </thead>
-            <tbody>
-                
-            </tbody>
         </table>
+        </div>
         <br>
+        <button class="buttonsEditProd" id="save_production">Registrar Produccion</button>
+        <p id="msg"></p>
     </form>
 
     <button id="save_production">Registrar Produccion</button>
@@ -64,6 +79,9 @@
     <img id="loading" src="../images/load.gif" alt="loading..."
             style="visibility: hidden; height: 50px; width: 50px;" />
 
+    <!-- Importando funciones de utilidades -->
+    <script src="../utilidades.js"></script>
+    
     <script>
         //Se importan los modulos de jquery, electron y dialog que es un módulo de electron
         //para ventanas emergentes.
@@ -76,51 +94,55 @@
         const log = document.getElementById('log');
 
         //Declaring the DOM elements for the html Production
-            //Production date
+        //Production date
         const date = document.querySelector('#production_date');
-            //Production type    
+        //Production type    
         const type = document.querySelector('#production_type');
-            //Products based on Selected type
-        //const type_products = document.querySelector('#products_type');
             //Product Selection
         const choosen_product = document.querySelector('#product_selection');
             //Product code    
         const pro_code = document.querySelector('#product_code');
-            //Product name       
-        const pro_name = document.querySelector('#product_name');  
-            //Product quantity     
-        const pro_quant = document.querySelector('#product_quantity'); 
-            //Production form 
+        //Product name       
+        const pro_name = document.querySelector('#product_name');
+        //Product quantity     
+        const pro_quant = document.querySelector('#product_quantity');
+        //Production form 
         const form = document.querySelector('form');
-            //Production err msg                       
+        //Production err msg                       
         const error_msg = document.querySelector('#error_msg');
-            //Prodcution table to register         
+        //Prodcution table to register         
         const pro_table = document.querySelector('#production_to_register');
             //Production save registers
         const pro_save = document.querySelector('#save_production');
             //Production msg gif
         const msg = document.querySelector('#msg');
-            //Production loading gif
+        //Production loading gif
         const loading = document.querySelector('#loading');
+        // Requiriendo jquerry
+        window.$ = window.jQuery = require('jquery')
+
 
         //Event after loading the window and been able to modify
         document.addEventListener('DOMContentLoaded', (e) => {
             //Date object been initialized
             var today = new Date();
 
+            // Generando fecha
+            $('#fecha').text(`Fecha: ${todayDate()}`)
+
             //Date format (Day)
             var day = today.getDate().toString();
-            if(day.length < 2){
+            if (day.length < 2) {
                 day = `0${day}`;
             }
             //Date format (Month)
-            var month = today.getMonth()+1
+            var month = today.getMonth() + 1
             month = month.toString();
-            if(month.length < 2){
+            if (month.length < 2) {
                 month = `0${month}`
             }
             //Date is filled automatically in the correspondent space of production_date
-            var auto_date = today.getFullYear()+'-'+month+'-'+day;
+            var auto_date = today.getFullYear() + '-' + month + '-' + day;
             date.value = auto_date;
             //Ready msg for the main window
             ipcRenderer.send('production:create');
@@ -405,4 +427,5 @@
 
     </script>
 </body>
+
 </html>
