@@ -13,38 +13,42 @@
 
 <body>
 
-    <h2>Crear Usuario</h2>
 
-    <div class="central">
-        <form class='custom-form formulario'>
-            <label for="cedula">Cédula</label><br>
-            <input type="text" id="cedula" name="cedula"><br>
+    <div class="container">
+        <div class="row">
+            <div class="centralCreatetUser">
+                <div class="col">
+                    <h3>Crear Usuario</h3>
+                    <form class='custom-form formulario'>
+                        <label class="labelsVentas" for="cedula">Cédula</label>
+                        <input type="text" class="form-control" id="cedula" name="cedula">
 
-            <label for="pass">Contraseña</label><br>
-            <input type="password" name="pass" id="pass"><br>
+                        <label class="labelsVentas" for="pass">Contraseña</label>
+                        <input type="password" class="form-control" name="pass" id="pass">
 
-            <label for="confirm">Confirmar Contraseña</label><br>
-            <input type="password" name="confirm" id="confirm"><br>
-            <p id="msg-confirm"></p><br>
+                        <label class="labelsVentas" for="confirm">Confirmar Contraseña</label>
+                        <input type="password" class="form-control" name="confirm" id="confirm">
+                        <p id="msg-confirm"></p>
 
-            <label for="name">Nombres</label><br>
-            <input type="text" name="name" id="name"><br>
+                        <label class="labelsVentas" for="name">Nombres</label>
+                        <input type="text" class="form-control" name="name" id="name">
 
-            <label for="position">Cargo</label><br>
-            <input type="text" name="position" id="position"><br>
-            <p id="msg-error" style="color: red;"></p><br>
+                        <label class="labelsVentas" for="position">Cargo</label>
+                        <input type="text" class="form-control" name="position" id="position">
+                        <p id="msg-error" style="color: red;"></p>
 
-
-            <div class="row justify-content-between">
-                <div class="col-6">
-                    <input type="submit" value="Crear"><br>
-                </div>
-                <div class="col-6">
-                    <input type="button" value="Cancelar" id="cancel"><br>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <input type="submit" class="btn btn-success" value="Crear">
+                            </div>
+                            <div class="col-6">
+                                <input type="button" class="btn btn-danger" value="Cancelar" id="cancel">
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-        </form>
+        </div>
     </div>
 
     <script>

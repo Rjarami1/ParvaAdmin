@@ -98,8 +98,8 @@ ipcMain.on('admin:ready', e => {
 
 ipcMain.on('admin:create', e => {
 	createUserWindow = new BrowserWindow({
-		width: 500,
-		height: 600,
+		width: 400,
+		height: 500,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -126,7 +126,7 @@ ipcMain.on('prod:ready', e => {
 ipcMain.on('prod:create', e => {
 	createProdWindow = new BrowserWindow({
 		width: 350,
-		height: 500,
+		height: 600,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -152,8 +152,8 @@ ipcMain.on('prodEdit:cancel', e => {
 ipcMain.on('prodCreate:edit', (e, productid) => {
 	editProdWindow = new BrowserWindow
 		({
-			width: 300,
-			height: 550,
+			width: 350,
+			height: 600,
 			webPreferences:
 			{
 				nodeIntegration: true
@@ -612,16 +612,16 @@ ipcMain.on('sales:ready', (e) => {
 	const text2 = `SELECT FROM public.shifts WHERE user_id = ${logged_user_id} AND shift_status = true;`;
 	let status = false;
 	db.pool.query(text, (err1, res1) => {
-		if(err1){
+		if (err1) {
 			console.log(err1.stack);
 		}
-		else{
+		else {
 			db.pool.query(text2, (err2, res2) => {
-				if(err2){
+				if (err2) {
 					console.log(err2.stack);
 				}
-				else{
-					if(res2.rowCount > 0){
+				else {
+					if (res2.rowCount > 0) {
 						status = true;
 					}
 					mainwc.send('sales:info', [res1.rows, status]);
@@ -635,10 +635,10 @@ ipcMain.on('sales:start', e => {
 	const text = `INSERT INTO public.shifts (shift_start, shift_status, user_id) VALUES (CURRENT_TIMESTAMP, true, ${logged_user_id});`;
 
 	db.pool.query(text, (err, res) => {
-		if(err){
+		if (err) {
 			console.log(err.stack);
 		}
-		else{
+		else {
 			mainwc.send('sales:started');
 		}
 	})
@@ -649,10 +649,10 @@ ipcMain.on('sales:end', e => {
 	const text = `UPDATE public.shifts SET shift_status = false, shift_end = CURRENT_TIMESTAMP WHERE user_id = ${logged_user_id} AND shift_status = true;`;
 
 	db.pool.query(text, (err, res) => {
-		if(err){
+		if (err) {
 			console.log(err.stack);
 		}
-		else{
+		else {
 			mainwc.send('sales:ended');
 		}
 	})

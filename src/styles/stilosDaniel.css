@@ -6,14 +6,12 @@ body .central {
 	transform: translate(-50%, -50%);
 }
 
-body .centralEditUser {
+body .centralCreatetUser {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	height: 80%;
-	width: 70%;
 }
 
 body .centralEditUser {
@@ -70,24 +68,33 @@ body .tablaProd tr:hover {
 	cursor: pointer;
 }
 
-
-body .tablaGastos {
-	width: 500px;
-	height: 300px;
-	position: absolute;
-	z-index: 100000;
-	left: 50%;
-	top: 110%;
-	transform: translate(-50%, -50%);
-}
-
 body .tablaGastos tr:hover {
 	background-color: rgba(0,0,0,.05);
 	cursor: pointer;
 }
 
-.buttonsEditProd{
-	margin-top: 10px;
+.buttonsEditProdAct{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.buttonsEditProdEst{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 20%;
+}
+
+.buttonsEditProdCancel{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 30%;
 }
 
 .buttonResetPswd{
@@ -240,3 +247,140 @@ body .central .buttonInsProd{
 	margin: 10px;
 }
 
+.numpad {
+	width: 80px;
+	height: 80px;
+	font-size: 30px;
+	margin: 4px;
+}
+
+input#dateTime {
+	width: 230px;
+}
+
+.limpiar {
+	font-size: 20px;
+}
+
+.foot {
+	margin-top: 30px;
+	margin-bottom: 10px;
+}
+
+.endButton {
+	width: 300px;
+	height: 50px;
+	font-weight: bold;
+}
+
+.shiftButtons {
+	text-align: center;
+}
+
+.encabezadoPrinInfVentas{
+	background-color: #b4cbf0;
+	height: 30px;
+	position: relative;
+	margin-bottom: 20px;
+}
+
+body .container .row .col .form-control{
+	width: 200px;
+	height: auto;
+	padding: 2px;
+}
+
+body .container .row .col .labelsVentas{
+	margin-top: 5px;
+	margin-bottom: 2px;
+}
+
+.tableroNumVentas{
+	margin: 20px;
+}
+
+.btnAddGasto{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-bottom: 20px;
+
+}
+
+.btnRegGasto{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.campTipoGasto{
+	margin: 1px;
+}
+
+.campCodGasto{
+	margin: 1px;
+}
+
+.margLeftTitulos{
+	margin-left: 2%;
+}
+
+span:hover {
+	cursor: pointer;
+}
+
+li img {
+	height: 10px;
+	width: 10px;
+}
+
+li img:hover {
+	cursor: pointer;
+}
+
+.filasGastos{
+	margin-top: 2%;
+}
+
+.imgCarga{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.centerFormInsProd{
+	position: absolute;
+	z-index: 100000;
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.centerFormEditProd{
+	position: absolute;
+	z-index: 100000;
+	top: 42%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.btnInsProd{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.btnCanelProd{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 100%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
