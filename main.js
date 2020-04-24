@@ -212,7 +212,7 @@ ipcMain.on('prodCreate:cancel', e => {
 
 ipcMain.on('prodEdit:toggle', (e, id) => {
 	const text = 'SELECT security."prod_toggle_status"($1);'
-
+	console.log(text)
 	db.pool.query(text, [id], (err, res) => {
 		if (err) {
 			console.log(err.stack)
