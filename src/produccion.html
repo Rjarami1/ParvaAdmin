@@ -20,61 +20,114 @@
         <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
     </div>
 
-    <form class="centralProd">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form class="centralProd">
 
-        <label for="production_date">Fecha: </label>
-        <input type="date" class="form-control" name="production_date" id="production_date" disabled>&nbsp;&nbsp;
+                    <div class="row">
+                        <div class="col">
+                            <h3>Productos disponibles de tipo</h3>
+                        </div>
+                        <div class="col selTipoProd">
+                            <h3 id="selected_type"></h3>
+                        </div>
+                    </div>
 
-        <label for="production_type">Tipo de Produccion:</label>
-        <select name="production_type" id="production_type">
-            <option value="" selected>--Seleccione Tipo--</option>
-        </select>&nbsp;&nbsp;
+                    <div class="row">
+                        <div class="col tipoProd">
+                            <label for="production_type">Tipo de Produccion:</label>
+                            <select name="production_type" id="production_type">
+                                <option value="" selected>--Seleccione Tipo--</option>
+                            </select>
+                        </div>
+                    </div>
 
-        <h2>Productos disponibles de tipo</h2>
-        <h2 id="selected_type"></h2><br>
+                    <div class="row">
+                        <div class="col">
+                            <label for="production_date">Fecha: </label>
+                            <input type="date" class="form-control" name="production_date" id="production_date"
+                                disabled>
+                        </div>
+                        <div class="col">
+                            <label for="product_selection">Productos disponibles:</label>
+                            <select name="product_selection" id="product_selection">
+                                <option value="" selected>--Seleccione Producto--</option>
+                            </select>
+                        </div>
+                    </div>
 
-        <label for="product_selection">Productos disponibles:</label>
-        <select name="product_selection" id="product_selection">
-            <option value="" selected>--Seleccione Producto--</option>
-        </select><br><br>
+                    <div class="row">
+                        <div class="col">
+                            <label for="product_code">Código Producto:</label>
+                            <input type="text" class="form-control" id="product_code" name="product_code" disabled>
+                            <!-- <label for="product_code">Código Producto:</label>
+                            <input type="text" class="form-control" id="product_code" name="product_code" disabled> -->
+                        </div>
+                        <div class="col">
+                            <label for="product_name">Nombre del Producto: </label>
+                            <input type="text" class="form-control" id="product_name" name="product_name" disabled>
+                        </div>
+                    </div>
 
-        <label for="product_code">Código Producto:</label>
-        <input type="text" class="form-control" id="product_code" name="product_code" disabled>&nbsp;&nbsp;
-        <br>
+                    <div class="row">
+                        <div class="col">
+                            <label for="product_quantity">Cantidad producida:</label>
+                            <input type="number" class="form-control" name="product_quantity" id="product_quantity">
+                        </div>
+                    </div>
 
-        <label for="product_name">Nombre del Producto: </label>
-        <input type="text" class="form-control" id="product_name" name="product_name" disabled><br>
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn btn btn-primary btnAddProd" id="add_production">Adicionar
+                                Produccion</button>
+                        </div>
+                    </div>
 
-        <label for="product_quantity">Cantidad producida:</label>
-        <input type="number" class="form-control" name="product_quantity" id="product_quantity"><br>
-        <br>
+                    <div class="row">
+                        <div class="col">
+                            <p id="error_msg" style="color: red;"></p>
+                        </div>
+                    </div>
 
-        <button type="submit" class="btn btn btn-primary " id="add_production">Adicionar Produccion</button>
-        <br>
+                    <div class="row">
+                        <div class="col">
+                            <h3>Produccion Adicionada:</h3>
+                            <div class="tablaProd">
+                                <table id="production_to_register" class="table table-striped">
+                                    <tr>
+                                        <th>Numero</th>
+                                        <th>Fecha</th>
+                                        <th>Código</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Tipo</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
-        <p id="error_msg" style="color: red;"></p>
+                    <div class="row">
+                        <div class="col">
+                            <p id="msg"></p>
+                            <img class="imgCargas" id="loading" src="../images/Double Ring-1s-200px.gif"
+                                alt="loading..." style="visibility: hidden; height: 50px; width: 50px;" />
+                        </div>
+                    </div>
 
-        <h3>Produccion Adicionada:</h3><br>
-        <div class="tablaProd">
-            <table id="production_to_register" class="table table-striped">
-                <tr>
-                    <th>Numero</th>
-                    <th>Fecha</th>
-                    <th>Código</th>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Tipo</th>
-                </tr>
-            </table>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btnRegProd btn btn btn-primary" id="save_production">Registrar
+                                Produccion</button>
+                            <p id="msg"></p>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
         </div>
-        <br>
-        <button class="buttonsEditProd btn btn btn-primary" id="save_production">Registrar Produccion</button>
-        <p id="msg"></p>
-
-        <p id="msg"></p>
-        <img id="loading" src="../images/Double Ring-1s-200px.gif" alt="loading..."
-            style="visibility: hidden; height: 50px; width: 50px;" />
-    </form>
+    </div>
 
 
     <!-- Importando funciones de utilidades -->

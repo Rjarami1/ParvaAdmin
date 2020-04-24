@@ -25,13 +25,10 @@ body .centralchangePsw {
 
 body .centralEditUser {
 	position: absolute;
-	margin: 20px;
 	z-index: 100000;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	height: 80%;
-	width: 70%;
 }
 
 body .centralGastos {
@@ -61,16 +58,17 @@ body .centralGestGastos {
 	height: 80%;
 	width: 50%;
 }
-/* 
+
 body .tablaProd {
-	width: 900px;
-	height: 300px;
-	position: absolute;
+	width: 590px;
+	height: 100px;
+	position: relative;
 	z-index: 100000;
 	left: 50%;
-	top: 51%;
+	top: 50%;
 	transform: translate(-50%, -50%);
-} */
+	margin: 2%;
+}
 
 body .tablaProd tr:hover {
 	background-color: rgba(0,0,0,.05);
@@ -365,7 +363,7 @@ li img:hover {
 }
 
 .imgCarga{
-	position: absolute;
+	position: relative;
 	z-index: 100000;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -402,4 +400,81 @@ li img:hover {
 	top: 100%;
 	transform: translate(-50%, -50%);
 	margin-top: 10%;
+}
+
+.btnAddProd{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+}
+
+.btnRegProd{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+}
+
+.tipoProd{
+	position: relative;
+	z-index: 100000;
+	left: 65%;
+	transform: translate(-50%, -50%);
+	margin-top: 4%;
+}
+
+.selTipoProd{
+	position: relative;
+	z-index: 100000;
+	left: 15%;
+	transform: translate(-50%, -50%);
+	margin-top: 8.8%;
+}
+
+.btnsEditUser{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+}
+
+.labelsEdituser{
+	margin-top: 5px;
+	margin-bottom: 2px;
+}
+
+.inputsEditUser{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.tablaEditUser {
+	width: 532px;
+	position: relative;
+	z-index: 100000;
+	left: 56%;
+	top: 45%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+	margin-bottom: 2%;
+	table-layout: fixed;
+}
+
+.posTitEditUsr {
+	position: relative;
+	z-index: 100000;
+	top: -20%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+	margin-bottom: 2%;
 }
