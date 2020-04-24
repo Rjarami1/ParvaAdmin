@@ -14,6 +14,15 @@ body .centralCreatetUser {
 	transform: translate(-50%, -50%);
 }
 
+body .centralchangePsw {
+	width: auto;
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
 body .centralEditUser {
 	position: absolute;
 	margin: 20px;
@@ -73,7 +82,17 @@ body .tablaGastos tr:hover {
 	cursor: pointer;
 }
 
+
+
 .buttonsEditProdAct{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.buttonsSavePsw{
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
