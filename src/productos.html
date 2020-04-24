@@ -12,17 +12,18 @@
 
 <body>
 	<div class="encabezadoPrinSup">
-		<h2>Productos de la Pandeboneria</h2>
+		<h1 class="margLeftTitulos">Productos de la Pandeboneria</h1>
 	</div>
 
 	<div class="encabezadoPrinInf">
-		<h2 id="fecha" class="encabezadoPrinInflet"></h2>
+		<h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
 	</div>
 
-	<p>Lista de Productos Terminados:</p>
+
+	<p class="margLeftTitulos">Lista de Productos Terminados:</p>
 	<ul id="productList"></ul>
 
-	<button class="botonCrearProducto" id="createProduct">
+	<button type="button" class="btn btn btn-primary botonCrearProducto" id="createProduct">
 		Agregar Producto
 	</button>
 
@@ -57,10 +58,13 @@
 		document.addEventListener('DOMContentLoaded', e => {
 			ipcRenderer.send('prod:ready')
 			console.log('Se actualizo la tabla para visualizacion')
-
-			// Generando fecha
-			$('#fecha').text(`Fecha: ${todayDate()}`)
+			setAutoTime();
 		})
+
+		function setAutoTime() {
+			$('#fecha').text(dateTimeClock());
+			setTimeout('setAutoTime()', 1000);
+		}
 
 		//Recibir la lista de los prodcutos del Main y desplegarslos.
 		ipcRenderer.on('products:info', (e, listProducts) => {

@@ -14,65 +14,79 @@
 <body>
 
     <div class="encabezadoPrinSup">
-        <h2>
-            <h2>Registro de Gastos</h2>
-        </h2>
+        <h1 class="margLeftTitulos">Registro de Gastos</h1>
     </div>
 
     <div class="encabezadoPrinInf">
-        <h2 id="fecha" class="encabezadoPrinInflet"></h2>
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
     </div>
 
     <form class="centralGastos">
-        <label for="expense_date">Fecha: </label>
-        <input type="date" name="expense_date" id="expense_date">&nbsp;&nbsp;
 
-        <label for="expense_type">Tipo Gasto:</label>
-        <select name="expense_type" id="expense_type">
-            <option value="" selected></option>
-        </select><br>
+        <div class="container">
+            <div class="row filasGastos">
+                <div class="col">
+                    <label for="expense_date">Fecha: </label>
+                    <input type="date" class="form-control" name="expense_date" id="expense_date">&nbsp;&nbsp;
 
-        <label for="expense_code">Código Gasto</label>
-        <select name="expense_code" id="expense_code">
-            <option value="" selected></option>
-        </select><br>
+                    <div class="campTipoGasto">
+                        <label for="expense_type">Tipo Gasto:</label>
+                        <select name="expense_type" id="expense_type">
+                            <option value="" selected></option>
+                        </select>
+                    </div>
 
-        <label for="expense_value">Valor:</label>
-        <input type="number" name="expense_value" id="expense_value">&nbsp;&nbsp;
+                    <div class="campCodGasto">
+                        <label for="expense_code">Código Gasto</label>
+                        <select name="expense_code" id="expense_code">
+                            <option value="" selected></option>
+                        </select><br>
+                    </div>
+                </div>
 
-        <label for="expense_quantity">Cantidad:</label>
-        <input type="number" name="expense_quantity" id="expense_quantity">
-        <br><br>
+                <div class="col">
+                    <label for="expense_value">Valor:</label>
+                    <input type="number" class="form-control" name="expense_value" id="expense_value">&nbsp;&nbsp;
 
-        <button type="submit" id="add_expenses">Adicionar Gasto</button>
-        <br>
+                    <label for="expense_quantity">Cantidad:</label>
+                    <input type="number" class="form-control" name="expense_quantity" id="expense_quantity">
+                    <br><br>
 
-        <p id="error_msg" style="color: red;"></p>
+                </div>
+            </div>
 
-        <h3>Gastos Adicionados:</h3><br>
+            <div class="row filasGastos">
+                <button class="btn btn btn-primary btnAddGasto" type="submit" id="add_expenses">Adicionar
+                    Gasto</button>
+            </div>
 
-        <div class="tablaGastos">
-            <table id="expenses_to_register" class="table table-striped">
-                <tr>
-                    <th>Número</th>
-                    <th>Tipo</th>
-                    <th>Código</th>
-                    <th>Valor</th>
-                    <th>Cantidad</th>
-                </tr>
-                <tbody>
+            <div class="row filasGastos">
+                <p id="error_msg" style="color: red;"></p>
+            </div>
 
-                </tbody>
-            </table>
-            <button id="save_expenses">Registrar Gastos</button>
+            <div class="row filasGastos">
+                <h3>Gastos Adicionados:</h3>
+                <div class="col tablaGastos">
+                    <table id="expenses_to_register" class="table table-striped">
+                        <tr>
+                            <th>Número</th>
+                            <th>Tipo</th>
+                            <th>Código</th>
+                            <th>Valor</th>
+                            <th>Cantidad</th>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <button class="btn btn btn-primary btnRegGasto" id="save_expenses">Registrar Gastos</button>
+            </div>
         </div>
 
-        <br>
-
-
-
         <p id="msg"></p>
-        <img id="loading" src="../images/Double Ring-1s-200px.gif" alt="loading..."
+        <img id="loading" class="imgCarga" src="../images/Double Ring-1s-200px.gif" alt="loading..."
             style="visibility: hidden; height: 50px; width: 50px;" />
 
     </form>
@@ -87,7 +101,7 @@
         window.$ = window.jQuery = require('jquery');
 
         //Declarando los elementos del DOM
-        const date = document.querySelector('#expense_date');
+        const date1 = document.querySelector('#expense_date');
         const type = document.querySelector('#expense_type');
         const code = document.querySelector('#expense_code');
         const value = document.querySelector('#expense_value');
@@ -101,13 +115,19 @@
 
         //Evento para cuando la página termine de cargar y poder modificarla
         document.addEventListener('DOMContentLoaded', (e) => {
-            date.value = todayDate()
-            $('#fecha').text(`Fecha: ${todayDate()}`)
+            date1.value = todayDate()
+            // $('#fecha').text(`Fecha: ${todayDate()}`)
+            setAutoTime();
 
             //Se le avisa al proceso principal (main) que la página está lista para utilizarse
             ipcRenderer.send('expense:ready')
 
         })
+
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
 
         //Inicialización de variables que contendrán los tipos de gastos y códigos que hay en la base de datos
         let exp_types;
@@ -134,10 +154,10 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            if (date.value != "" && type.options[type.selectedIndex].value != "" && code.options[code.selectedIndex].value != "" && value.value != "" && quantity.value != "") {
+            if (date1.value != "" && type.options[type.selectedIndex].value != "" && code.options[code.selectedIndex].value != "" && value.value != "" && quantity.value != "") {
                 expense_obj = {
                     identifier: identifier,
-                    date: date.value,
+                    date: date1.value,
                     type: type.options[type.selectedIndex].value,
                     code: code.value,
                     value: parseInt(value.value),

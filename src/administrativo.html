@@ -15,19 +15,18 @@
 
 
     <div class="encabezadoPrinSup">
-        <h2>Administración de Usuarios</h2>
+        <h1 class="margLeftTitulos">Administración de Usuarios</h1>
     </div>
 
     <div class="encabezadoPrinInf">
-        <h2 id="fecha" class="encabezadoPrinInflet"></h2>
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
     </div>
 
-
-    <p>Lista de Usuarios:</p>
+    <p class="margLeftTitulos">Lista de Usuarios:</p>
     <ul id="usersList"></ul>
 
     <div class="botonNuevoUsuario">
-        <button id="createUser">Crear Usuario</button>
+        <button type="button" class="btn btn btn-primary" id="createUser">Crear Usuario</button>
     </div>
 
     <div class="tablaAdmin">
@@ -65,11 +64,13 @@
         //Informar al Main Renderer que la página está lista.
         document.addEventListener('DOMContentLoaded', (e) => {
             ipcRenderer.send('admin:ready');
-
-            // Generando fecha
-            $('#fecha').text(`Fecha: ${todayDate()}`)
+            setAutoTime();
         })
 
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
         //Recibir la lista de usuarios del Main y desplegarlos
         ipcRenderer.on('users:info', (e, users) => {
 

@@ -98,8 +98,8 @@ ipcMain.on('admin:ready', e => {
 
 ipcMain.on('admin:create', e => {
 	createUserWindow = new BrowserWindow({
-		width: 500,
-		height: 600,
+		width: 400,
+		height: 500,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -126,7 +126,7 @@ ipcMain.on('prod:ready', e => {
 ipcMain.on('prod:create', e => {
 	createProdWindow = new BrowserWindow({
 		width: 350,
-		height: 500,
+		height: 600,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -152,8 +152,8 @@ ipcMain.on('prodEdit:cancel', e => {
 ipcMain.on('prodCreate:edit', (e, productid) => {
 	editProdWindow = new BrowserWindow
 		({
-			width: 300,
-			height: 550,
+			width: 350,
+			height: 600,
 			webPreferences:
 			{
 				nodeIntegration: true
@@ -191,7 +191,6 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 })
 
 ipcMain.on('prodEdit:update', (e, obj) => {
-	//console.log('Entro a prodEdit:update')
 	const prodText = 'UPDATE security."listProducts" SET code_prod=$1, name_prod=$2, val_prod=$3, descp_prod=$4 WHERE product_id=$5;'
 	const valuesP = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.product_id]
 	//console.log(valuesP)
@@ -439,8 +438,55 @@ ipcMain.on('production:create', e => {
 		}
 		else {
 			mainwc.send('prodTypes:info', res1.rows)
-			console.log("Envio de tabla:")
-			//console.log(res1.rowss)
+		}
+	})
+})
+
+ipcMain.on('activeProducts:selected', (e, filter) => {
+	console.log('Llego Filtro')
+	console.log(filter)
+	const text1 = `SELECT product_id, code_prod, name_prod FROM security."listProducts" WHERE productype = '${filter.trim()}' AND status_prod = true`;
+
+	db.pool.query(text1, (err1, res1) => {
+		if (err1)
+		{
+			console.log(err1.stack)
+		}
+		else 
+		{
+			mainwc.send('filteredProdcuts:info', res1.rows)
+			console.log("Envio de respuesta")
+		}
+	})
+})
+
+ipcMain.on('production:save', (e, arr) => 
+{
+	let qry = 'INSERT INTO public.production(produc_date, produc_code, produc_name, produc_quan, produc_type) VALUES ';
+	let pro_value;
+
+	arr.forEach(elm => 
+	{
+		pro_value = `(CURRENT_TIMESTAMP, ${elm.code}, '${elm.name}', ${elm.quantity}, '${elm.type}'),`;
+		qry += pro_value;
+	});
+
+	qry = qry.slice(0, -1);
+	qry += ';'
+	//console.log(qry);
+	db.pool.query(qry, (err, res) => 
+	{
+		if (err)
+		{
+			console.log('Error:');
+			console.log(err.stack);
+			mainwc.send('production:error');
+			console.log('Mando el error a prodcution.html')
+		}
+		else
+		{
+			console.log('Exitoso');
+			mainwc.send('production:success');
 		}
 	})
 })
@@ -465,6 +511,7 @@ ipcMain.on('expense:ready', e => {
 })
 
 ipcMain.on('expense:save', (e, arr) => {
+	console.log(arr)
 	let query = 'INSERT INTO public.expenses(expense_code, expense_type, expense_date, expense_value, expense_quantity) VALUES ';
 	let exp_value;
 
@@ -612,12 +659,12 @@ ipcMain.on('sales:ready', (e) => {
 	const text2 = `SELECT shift_id FROM public.shifts WHERE user_id = ${logged_user_id} AND shift_status = true;`;
 	let shift = -1;
 	db.pool.query(text, (err1, res1) => {
-		if(err1){
+		if (err1) {
 			console.log(err1.stack);
 		}
-		else{
+		else {
 			db.pool.query(text2, (err2, res2) => {
-				if(err2){
+				if (err2) {
 					console.log(err2.stack);
 				}
 				else{
@@ -638,10 +685,10 @@ ipcMain.on('sales:start', e => {
 	const text = `INSERT INTO public.shifts (shift_start, shift_status, user_id) VALUES (CURRENT_TIMESTAMP, true, ${logged_user_id});`;
 
 	db.pool.query(text, (err, res) => {
-		if(err){
+		if (err) {
 			console.log(err.stack);
 		}
-		else{
+		else {
 			mainwc.send('sales:started');
 		}
 	})
@@ -652,10 +699,10 @@ ipcMain.on('sales:end', e => {
 	const text = `UPDATE public.shifts SET shift_status = false, shift_end = CURRENT_TIMESTAMP WHERE user_id = ${logged_user_id} AND shift_status = true;`;
 
 	db.pool.query(text, (err, res) => {
-		if(err){
+		if (err) {
 			console.log(err.stack);
 		}
-		else{
+		else {
 			mainwc.send('sales:ended');
 		}
 	})
