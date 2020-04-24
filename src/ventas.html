@@ -33,9 +33,6 @@
         <div class="row">
             <div class="col">
                 <form id="form1">
-                    <label for="dateTime" class="labelsVentas">Fecha y Hora: </label>
-                    <input type="text" class="form-control" name="dateTime" id="dateTime" disabled>
-
                     <label for="productCode" class="labelsVentas">Código del Producto</label>
                     <input name="productCode" type="number" class="form-control" id="productCode">&nbsp;&nbsp;
                     <input type="text" class="form-control" id="productDesc" disabled>
@@ -94,9 +91,12 @@
     </div>
 
     <div class="container review">
-        <table id="last-shift">
+        <h2>Resumen de ventas del último turno:</h2>
+        <h3 id="totalReview"></h3>
+        <table id="last-shift" class="table">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Cantidad</th>
                     <th>Producto</th>
                     <th>Valor Unit.</th>
@@ -165,15 +165,24 @@
                 $('.chart').show();
                 $('#endShift').show();
                 $('#startShift').hide();
+                $('.review').hide();
             });
 
-            ipcRenderer.on('sales:ended', e => {
+            ipcRenderer.on('sales:review', (e, arrProducts) => {
                 $('.chart').hide();
                 $('#endShift').hide();
                 $('#startShift').show();
 
-                console.log('Shift ended');
-            })
+                let i = 1;
+                let totalReview = 0;
+                arrProducts.forEach(product => {
+                    $('#last-shift tbody').append(`<tr><th>${i}</th><th>${product.quantity}</th><th>${product.name_prod}</th><th>${formatCurrency(product.value)}</th><th>${parseDbDate(product.sale_date)}</th><th>${product.name}</th></tr>`);
+                    totalReview += product.value * product.quantity;
+                    i++;
+                });
+                $('#totalReview').text(`Total Turno: ${formatCurrency(totalReview)}`);
+                $('.review').show();
+            });
 
             ipcRenderer.on('sales:done', e => {
                 productSaleList = [];
@@ -181,6 +190,7 @@
                 $('#paysWith').val('');
                 $('#change').val('');
                 $('#total').val('');
+                total = 0;
 
                 dialog.showMessageBox({
                     type: "none",
@@ -329,7 +339,6 @@
         })
 
         function setAutoTime() {
-            $('#dateTime').val(dateTimeClock());
             $('#fecha').text(dateTimeClock());
             setTimeout('setAutoTime()', 1000);
         } 

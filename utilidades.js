@@ -91,3 +91,11 @@ function formatCurrency(num){
         }
 
 }
+
+//Función para convertir la fecha proveniente de base de datos a una fecha más común para
+//fácil lectura.
+function parseDbDate(dbdate) {
+        let dateObj = new Date(Date.parse(dbdate));
+
+        return dateObj.toLocaleString();
+}

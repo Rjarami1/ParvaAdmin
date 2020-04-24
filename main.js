@@ -658,6 +658,7 @@ ipcMain.on('sales:ready', (e) => {
 	const text = 'SELECT * FROM security."listProducts" WHERE status_prod = true;';
 	const text2 = `SELECT shift_id FROM public.shifts WHERE user_id = ${logged_user_id} AND shift_status = true;`;
 	let shift = -1;
+	
 	db.pool.query(text, (err1, res1) => {
 		if (err1) {
 			console.log(err1.stack);
@@ -672,7 +673,7 @@ ipcMain.on('sales:ready', (e) => {
 						shift = res2.rows[0].shift_id;
 					}
 					else{
-						/*Insertar query de vista de sales aquí*/
+						sendSalesReview();
 					}
 					mainwc.send('sales:info', [res1.rows, shift]);
 				}
@@ -703,7 +704,7 @@ ipcMain.on('sales:end', e => {
 			console.log(err.stack);
 		}
 		else {
-			mainwc.send('sales:ended');
+			sendSalesReview();
 		}
 	})
 })
@@ -813,8 +814,24 @@ function sendProductsList() {
 		if (err) {
 			console.log(err.stack)
 		} else {
-			products = res.rows
+			products = res.rows;
 			mainwc.send('products:info', products)
+		}
+	})
+}
+
+function sendSalesReview(){
+	const text = `SELECT * FROM public.sales_view WHERE shift_id = COALESCE((SELECT MAX(shift_id) FROM public.shifts WHERE user_id = ${logged_user_id}),-1);`;
+	let products = [];
+
+	db.pool.query(text, (err,res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			products = res.rows;
+
+			mainwc.send('sales:review', products);
 		}
 	})
 }
