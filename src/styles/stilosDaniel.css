@@ -6,25 +6,29 @@ body .central {
 	transform: translate(-50%, -50%);
 }
 
-body .centralEditUser {
+body .centralCreatetUser {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	height: 80%;
-	width: 70%;
+}
+
+body .centralchangePsw {
+	width: auto;
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
 }
 
 body .centralEditUser {
 	position: absolute;
-	margin: 20px;
 	z-index: 100000;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	height: 80%;
-	width: 70%;
 }
 
 body .centralGastos {
@@ -54,31 +58,21 @@ body .centralGestGastos {
 	height: 80%;
 	width: 50%;
 }
-/* 
+
 body .tablaProd {
-	width: 900px;
-	height: 300px;
-	position: absolute;
+	width: 590px;
+	height: 100px;
+	position: relative;
 	z-index: 100000;
 	left: 50%;
-	top: 51%;
+	top: 50%;
 	transform: translate(-50%, -50%);
-} */
+	margin: 2%;
+}
 
 body .tablaProd tr:hover {
 	background-color: rgba(0,0,0,.05);
 	cursor: pointer;
-}
-
-
-body .tablaGastos {
-	width: 500px;
-	height: 300px;
-	position: absolute;
-	z-index: 100000;
-	left: 50%;
-	top: 110%;
-	transform: translate(-50%, -50%);
 }
 
 body .tablaGastos tr:hover {
@@ -86,8 +80,38 @@ body .tablaGastos tr:hover {
 	cursor: pointer;
 }
 
-.buttonsEditProd{
-	margin-top: 10px;
+
+
+.buttonsEditProdAct{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.buttonsSavePsw{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.buttonsEditProdEst{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 20%;
+}
+
+.buttonsEditProdCancel{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 30%;
 }
 
 .buttonResetPswd{
@@ -240,3 +264,217 @@ body .central .buttonInsProd{
 	margin: 10px;
 }
 
+.numpad {
+	width: 80px;
+	height: 80px;
+	font-size: 30px;
+	margin: 4px;
+}
+
+input#dateTime {
+	width: 230px;
+}
+
+.limpiar {
+	font-size: 20px;
+}
+
+.foot {
+	margin-top: 30px;
+	margin-bottom: 10px;
+}
+
+.endButton {
+	width: 300px;
+	height: 50px;
+	font-weight: bold;
+}
+
+.shiftButtons {
+	text-align: center;
+}
+
+.encabezadoPrinInfVentas{
+	background-color: #b4cbf0;
+	height: 30px;
+	position: relative;
+	margin-bottom: 20px;
+}
+
+body .container .row .col .form-control{
+	width: 200px;
+	height: auto;
+	padding: 2px;
+}
+
+body .container .row .col .labelsVentas{
+	margin-top: 5px;
+	margin-bottom: 2px;
+}
+
+.tableroNumVentas{
+	margin: 20px;
+}
+
+.btnAddGasto{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-bottom: 20px;
+
+}
+
+.btnRegGasto{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.campTipoGasto{
+	margin: 1px;
+}
+
+.campCodGasto{
+	margin: 1px;
+}
+
+.margLeftTitulos{
+	margin-left: 2%;
+}
+
+span:hover {
+	cursor: pointer;
+}
+
+li img {
+	height: 10px;
+	width: 10px;
+}
+
+li img:hover {
+	cursor: pointer;
+}
+
+.filasGastos{
+	margin-top: 2%;
+}
+
+.imgCarga{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.centerFormInsProd{
+	position: absolute;
+	z-index: 100000;
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.centerFormEditProd{
+	position: absolute;
+	z-index: 100000;
+	top: 42%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.btnInsProd{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.btnCanelProd{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 100%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.btnAddProd{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+}
+
+.btnRegProd{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+}
+
+.tipoProd{
+	position: relative;
+	z-index: 100000;
+	left: 65%;
+	transform: translate(-50%, -50%);
+	margin-top: 4%;
+}
+
+.selTipoProd{
+	position: relative;
+	z-index: 100000;
+	left: 15%;
+	transform: translate(-50%, -50%);
+	margin-top: 8.8%;
+}
+
+.btnsEditUser{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+}
+
+.labelsEdituser{
+	margin-top: 5px;
+	margin-bottom: 2px;
+}
+
+.inputsEditUser{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.tablaEditUser {
+	width: 532px;
+	position: relative;
+	z-index: 100000;
+	left: 56%;
+	top: 45%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+	margin-bottom: 2%;
+	table-layout: fixed;
+}
+
+.posTitEditUsr {
+	position: relative;
+	z-index: 100000;
+	top: -20%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+	margin-bottom: 2%;
+}

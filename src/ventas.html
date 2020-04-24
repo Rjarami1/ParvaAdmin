@@ -4,67 +4,27 @@
 <head>
     <!-- Bootstrap 4 CSS -->
     <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/stilosDaniel.css">
 
     <meta charset="UTF-8">
     <title>Ventas</title>
 </head>
 
-<style>
-    header {
-        margin-bottom: 30px;
-        padding-left: 20px;
-    }
-
-    button.numpad {
-        width: 80px;
-        height: 80px;
-        font-size: 30px;
-        margin: 4px;
-    }
-
-    input#dateTime {
-        width: 230px;
-    }
-
-    button.limpiar {
-        font-size: 20px;
-    }
-
-    .foot {
-        margin-top: 30px;
-        margin-bottom: 10px;
-    }
-
-    .endButton {
-        width: 300px;
-        height: 50px;
-        font-weight: bold;
-    }
-
-    .endButton#complete {
-        background-color: lightblue;
-    }
-
-    .endButton#register {
-        background-color: lightgreen;
-    }
-
-    div.shiftButtons {
-        text-align: center;
-    }
-</style>
-
 <body>
-    <header>
-        <h1>Ventas</h1><br>
-        <h3>Módulo de registro de ventas</h3>
-    </header>
+
+    <div class="encabezadoPrinSup">
+        <h1 class="margLeftTitulos">Ventas</h1><br>
+        <h2 class="margLeftTitulos">Módulo de registro de ventas</h2>
+    </div>
+
+    <div class="encabezadoPrinInfVentas">
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
+    </div>
 
     <div class="container">
         <div class="row shiftButtons">
             <div class="col">
-                <button id="startShift">Iniciar Turno</button>
-                <button id="endShift">Finalizar Turno</button>
+                <button id="startShift" type="button" class="btn btn-success">Iniciar Turno</button>
             </div>
         </div>
     </div>
@@ -73,60 +33,81 @@
         <div class="row">
             <div class="col">
                 <form id="form1">
-                    <label for="dateTime">Fecha y Hora: </label><br>
-                    <input type="text" name="dateTime" id="dateTime" disabled><br>
-
-                    <label for="productCode">Código del Producto</label><br>
-                    <input name="productCode" type="number" id="productCode">&nbsp;&nbsp;
-                    <input type="text" id="productDesc" disabled><br>
+                    <label for="productCode" class="labelsVentas">Código del Producto</label>
+                    <input name="productCode" type="number" class="form-control" id="productCode">&nbsp;&nbsp;
+                    <input type="text" class="form-control" id="productDesc" disabled>
                     <input type="hidden" name="hiddenId" id="hiddenId">
 
-                    <label for="productValue">Valor</label><br>
-                    <input type="text" name="productValue" id="productValue" disabled><br>
+                    <label for="productValue" class="labelsVentas">Valor</label>
+                    <input type="text" class="form-control" name="productValue" id="productValue" disabled>
 
-                    <label for="quantity">Cantidad</label><br>
-                    <input type="number" name="quantity" id="quantity"><br>
+                    <label for="quantity" class="labelsVentas">Cantidad</label>
+                    <input type="number" class="form-control" name="quantity" id="quantity">
 
-                    <label for="total">Total</label><br>
-                    <input type="text" name="total" id="total" disabled><br>
+                    <label for="total" class="labelsVentas">Total</label>
+                    <input type="text" class="form-control" name="total" id="total" disabled>
 
-                    <label for="paysWith">Paga con:</label><br>
-                    <input type="number" name="paysWith" id="paysWith"><br>
+                    <label for="paysWith" class="labelsVentas">Paga con:</label>
+                    <input type="number" class="form-control" name="paysWith" id="paysWith">
 
-                    <label for="change">Devuelta:</label><br>
-                    <input type="text" name="change" id="change" disabled><br>
+                    <label for="change" class="labelsVentas">Devuelta:</label>
+                    <input type="text" class="form-control" name="change" id="change" disabled>
                 </form>
             </div>
-            <div class="col">
-                <button class="numpad" value="1">1</button>
-                <button class="numpad" value="2">2</button>
-                <button class="numpad" value="3">3</button><br>
-                <button class="numpad" value="4">4</button>
-                <button class="numpad" value="5">5</button>
-                <button class="numpad" value="6">6</button><br>
-                <button class="numpad" value="7">7</button>
-                <button class="numpad" value="8">8</button>
-                <button class="numpad" value="9">9</button><br>
-                <button class="numpad" value="0">0</button>
-                <button class="numpad" value="00">00</button>
-                <button class="numpad" value="000">000</button><br>
-                <button class="numpad" value="-1">Enter</button>
-                <button class="numpad limpiar" value="-2">Limpiar</button>
+            <div class="tableroNumVentas col">
+                <button class="numpad btn btn-light" value="1">1</button>
+                <button class="numpad btn btn-light" value="2">2</button>
+                <button class="numpad btn btn-light" value="3">3</button><br>
+                <button class="numpad btn btn-light" value="4">4</button>
+                <button class="numpad btn btn-light" value="5">5</button>
+                <button class="numpad btn btn-light" value="6">6</button><br>
+                <button class="numpad btn btn-light" value="7">7</button>
+                <button class="numpad btn btn-light" value="8">8</button>
+                <button class="numpad btn btn-light" value="9">9</button><br>
+                <button class="numpad btn btn-light" value="0">0</button>
+                <button class="numpad btn btn-light" value="00">00</button>
+                <button class="numpad btn btn-light" value="000">000</button><br>
+                <button class="numpad btn btn-light" value="-1">Enter</button>
+                <button class="numpad btn btn-light limpiar" value="-2">Limpiar</button>
             </div>
-            <div class="col">
-                <button id="deleteProd">Eliminar Producto</button><br>
-                <select id="regProducts" name="regProducts" size="5">
+            <div class="col-2">
+                <button type="button" class="btn btn-secondary" id="deleteProd">Eliminar Producto</button><br>
+                <select class="list-group" id="regProducts" name="regProducts" size="5">
                 </select>
             </div>
+
         </div>
         <div class="row foot">
-            <div class="col">
-                <button class="endButton" id="complete">Completar Venta</button>
+            <div class="col-5">
+                <button type="button" class="btn btn-info" id="complete">Completar Venta</button>
+            </div>
+            <div class="col-5">
+                <button type="button" class="btn btn-success" id="register">Registrar Venta</button>
             </div>
             <div class="col">
-                <button class="endButton" id="register">Registrar Venta</button>
+                <button type="button" class="btn btn-danger" id="endShift">Finalizar Turno</button>
             </div>
         </div>
+    </div>
+
+    <div class="container review">
+        <h2>Resumen de ventas del último turno:</h2>
+        <h3 id="totalReview"></h3>
+        <table id="last-shift" class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Cantidad</th>
+                    <th>Producto</th>
+                    <th>Valor Unit.</th>
+                    <th>Fecha y Hora</th>
+                    <th>Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
     </div>
 
     <script src="../utilidades.js"></script>
@@ -134,6 +115,7 @@
     <script>
         const { ipcRenderer } = require('electron');
         const { _ } = require('lodash');
+        const { dialog } = require('electron').remote;
         window.$ = window.jQuery = require('jquery');
 
         $(document).ready(() => {
@@ -143,6 +125,7 @@
             $('.chart').hide();
             $('#startShift').hide();
             $('#endShift').hide();
+            $('.review').hide();
 
             let currentInput = 'productCode';
 
@@ -160,9 +143,11 @@
             ipcRenderer.send('sales:ready');
 
             let products = [];
+            let currentShift;
             ipcRenderer.on('sales:info', (e, arr) => {
                 products = arr[0];
-                if (arr[1]) {
+                currentShift = arr[1];
+                if (currentShift != -1) {
                     $('.chart').show();
                     $('#endShift').show();
                     $('#startShift').hide();
@@ -180,14 +165,40 @@
                 $('.chart').show();
                 $('#endShift').show();
                 $('#startShift').hide();
+                $('.review').hide();
             });
 
-            ipcRenderer.on('sales:ended', e => {
+            ipcRenderer.on('sales:review', (e, arrProducts) => {
                 $('.chart').hide();
                 $('#endShift').hide();
                 $('#startShift').show();
 
-                console.log('Shift ended');
+                let i = 1;
+                let totalReview = 0;
+                arrProducts.forEach(product => {
+                    $('#last-shift tbody').append(`<tr><th>${i}</th><th>${product.quantity}</th><th>${product.name_prod}</th><th>${formatCurrency(product.value)}</th><th>${parseDbDate(product.sale_date)}</th><th>${product.name}</th></tr>`);
+                    totalReview += product.value * product.quantity;
+                    i++;
+                });
+                $('#totalReview').text(`Total Turno: ${formatCurrency(totalReview)}`);
+                $('.review').show();
+            });
+
+            ipcRenderer.on('sales:done', e => {
+                productSaleList = [];
+                $('#regProducts').empty();
+                $('#paysWith').val('');
+                $('#change').val('');
+                $('#total').val('');
+                total = 0;
+
+                dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar"],
+                    defaultId: 1,
+                    title: "Aviso",
+                    message: "¡Venta Registrada!"
+                }).then().catch();
             })
 
             let regId = 0;
@@ -210,7 +221,7 @@
                                 $('#regProducts').append(`<option id="${regId}">${$('#quantity').val()}  |  ${$('#productDesc').val()}  |  ${$('#productValue').val()}</option>`);
                                 productSaleList.push({
                                     local_id: regId,
-                                    prod_id: $('hiddenId').val(),
+                                    prod_id: $('#hiddenId').val(),
                                     quantity: parseInt($('#quantity').val()),
                                     value: parseInt($('#productValue').val().replace(',', '').slice(1))
                                 });
@@ -293,9 +304,29 @@
             }
 
             function registerSale() {
-                if (productSaleList.length > 0) {
-                    ipcRenderer.send('sales:register', productSaleList);
-                }
+                dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar", "Cancelar"],
+                    defaultId: 1,
+                    title: "Registrar Venta",
+                    message: "¿Registrar venta actual?",
+                    cancelId: 1
+                }).then(index =>{
+                    if (index.response == 0) {
+                        if (productSaleList.length > 0) {
+                            ipcRenderer.send('sales:register', [productSaleList, currentShift]);
+                        }
+                        else{
+                            dialog.showMessageBox({
+                                type: "none",
+                                buttons: ["Aceptar"],
+                                defaultId: 1,
+                                title: "Aviso",
+                                message: "No hay productos a registrar"
+                            }).then().catch();
+                        }
+                    }
+                }).catch();
             }
 
             function startShift() {
@@ -308,7 +339,7 @@
         })
 
         function setAutoTime() {
-            $('#dateTime').val(dateTimeClock());
+            $('#fecha').text(dateTimeClock());
             setTimeout('setAutoTime()', 1000);
         } 
     </script>
