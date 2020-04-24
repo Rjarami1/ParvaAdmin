@@ -146,7 +146,7 @@
 
         //Declaring the DOM elements for the html Production
         //Production date
-        const date = document.querySelector('#production_date');
+        const date1 = document.querySelector('#production_date');
         //Production type    
         const type = document.querySelector('#production_type');
         //Product Selection
@@ -175,32 +175,20 @@
 
         //Event after loading the window and been able to modify
         document.addEventListener('DOMContentLoaded', (e) => {
-            //Date object been initialized
-            var today = new Date();
 
             // Generando fecha
-            $('#fecha').text(`Fecha: ${todayDate()}`)
+            setAutoTime();
 
-            //Date format (Day)
-            var day = today.getDate().toString();
-            if (day.length < 2) {
-                day = `0${day}`;
-            }
-            //Date format (Month)
-            var month = today.getMonth() + 1
-            month = month.toString();
-            if (month.length < 2) {
-                month = `0${month}`
-            }
-            //Date is filled automatically in the correspondent space of production_date
-            var auto_date = today.getFullYear() + '-' + month + '-' + day;
-            date.value = auto_date;
+            date1.value = todayDate();
             //Ready msg for the main window
             ipcRenderer.send('production:create');
 
         })
 
-
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
 
         //Variable initiation for the production details based on the db
         let prod_types;
@@ -300,7 +288,7 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            if (date.value != "" && selected.textContent != "" && pro_code.value != "" && pro_name.value != "" && pro_quant.value != "") {
+            if (date1.value != "" && selected.textContent != "" && pro_code.value != "" && pro_name.value != "" && pro_quant.value != "") {
                 //console.log(date.value);
                 //console.log(selected.textContent);
                 //console.log(pro_code.value);
@@ -310,7 +298,7 @@
                 prod_obj =
                 {
                     identifier: identifier,
-                    date: date.value,
+                    date: date1.value,
                     type: selected.textContent.trim(),
                     code: pro_code.value,
                     name: pro_name.value.trim(),
