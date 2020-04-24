@@ -601,16 +601,16 @@ ipcMain.on('expenseManager:save', (e, arr) => {
 		mainwc.send('expenseManager:done');
 	}
 	)
-		.catch(err => {
-			console.log(err.stack);
-			mainwc.send('expenseManager:error');
-		})
+	.catch(err => {
+		console.log(err.stack);
+		mainwc.send('expenseManager:error');
+	})
 })
 
 ipcMain.on('sales:ready', (e) => {
 	const text = 'SELECT * FROM security."listProducts" WHERE status_prod = true;';
-	const text2 = `SELECT FROM public.shifts WHERE user_id = ${logged_user_id} AND shift_status = true;`;
-	let status = false;
+	const text2 = `SELECT shift_id FROM public.shifts WHERE user_id = ${logged_user_id} AND shift_status = true;`;
+	let shift = -1;
 	db.pool.query(text, (err1, res1) => {
 		if(err1){
 			console.log(err1.stack);
@@ -622,9 +622,12 @@ ipcMain.on('sales:ready', (e) => {
 				}
 				else{
 					if(res2.rowCount > 0){
-						status = true;
+						shift = res2.rows[0].shift_id;
 					}
-					mainwc.send('sales:info', [res1.rows, status]);
+					else{
+						/*Insertar query de vista de sales aquí*/
+					}
+					mainwc.send('sales:info', [res1.rows, shift]);
 				}
 			});
 		}
@@ -654,6 +657,27 @@ ipcMain.on('sales:end', e => {
 		}
 		else{
 			mainwc.send('sales:ended');
+		}
+	})
+})
+
+ipcMain.on('sales:register', (e, arr) => {
+	let text = 'INSERT INTO public.sales(product_id, quantity, value, sale_date, shift_id) VALUES ';
+	let regProducts = arr[0];
+	let shift = arr[1];
+
+	regProducts.forEach(product => {
+		text += `(${product.prod_id},${product.quantity},${product.value},CURRENT_TIMESTAMP,${shift}),`;
+	})
+
+	text = text.slice(0,-1);
+
+	db.pool.query(text, (err, res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			mainwc.send('sales:done');
 		}
 	})
 })

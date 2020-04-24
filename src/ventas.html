@@ -129,11 +129,29 @@
         </div>
     </div>
 
+    <div class="container review">
+        <table id="last-shift">
+            <thead>
+                <tr>
+                    <th>Cantidad</th>
+                    <th>Producto</th>
+                    <th>Valor Unit.</th>
+                    <th>Fecha y Hora</th>
+                    <th>Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
     <script src="../utilidades.js"></script>
 
     <script>
         const { ipcRenderer } = require('electron');
         const { _ } = require('lodash');
+        const { dialog } = require('electron').remote;
         window.$ = window.jQuery = require('jquery');
 
         $(document).ready(() => {
@@ -143,6 +161,7 @@
             $('.chart').hide();
             $('#startShift').hide();
             $('#endShift').hide();
+            $('.review').hide();
 
             let currentInput = 'productCode';
 
@@ -160,9 +179,11 @@
             ipcRenderer.send('sales:ready');
 
             let products = [];
+            let currentShift;
             ipcRenderer.on('sales:info', (e, arr) => {
                 products = arr[0];
-                if (arr[1]) {
+                currentShift = arr[1];
+                if (currentShift != -1) {
                     $('.chart').show();
                     $('#endShift').show();
                     $('#startShift').hide();
@@ -190,6 +211,22 @@
                 console.log('Shift ended');
             })
 
+            ipcRenderer.on('sales:done', e => {
+                productSaleList = [];
+                $('#regProducts').empty();
+                $('#paysWith').val('');
+                $('#change').val('');
+                $('#total').val('');
+
+                dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar"],
+                    defaultId: 1,
+                    title: "Aviso",
+                    message: "¡Venta Registrada!"
+                }).then().catch();
+            })
+
             let regId = 0;
             let productSaleList = [];
             let total = 0;
@@ -210,7 +247,7 @@
                                 $('#regProducts').append(`<option id="${regId}">${$('#quantity').val()}  |  ${$('#productDesc').val()}  |  ${$('#productValue').val()}</option>`);
                                 productSaleList.push({
                                     local_id: regId,
-                                    prod_id: $('hiddenId').val(),
+                                    prod_id: $('#hiddenId').val(),
                                     quantity: parseInt($('#quantity').val()),
                                     value: parseInt($('#productValue').val().replace(',', '').slice(1))
                                 });
@@ -293,9 +330,29 @@
             }
 
             function registerSale() {
-                if (productSaleList.length > 0) {
-                    ipcRenderer.send('sales:register', productSaleList);
-                }
+                dialog.showMessageBox({
+                    type: "none",
+                    buttons: ["Aceptar", "Cancelar"],
+                    defaultId: 1,
+                    title: "Registrar Venta",
+                    message: "¿Registrar venta actual?",
+                    cancelId: 1
+                }).then(index =>{
+                    if (index.response == 0) {
+                        if (productSaleList.length > 0) {
+                            ipcRenderer.send('sales:register', [productSaleList, currentShift]);
+                        }
+                        else{
+                            dialog.showMessageBox({
+                                type: "none",
+                                buttons: ["Aceptar"],
+                                defaultId: 1,
+                                title: "Aviso",
+                                message: "No hay productos a registrar"
+                            }).then().catch();
+                        }
+                    }
+                }).catch();
             }
 
             function startShift() {
