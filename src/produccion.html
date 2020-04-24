@@ -13,94 +13,145 @@
 <body>
 
     <div class="encabezadoPrinSup">
-        <h2>Regitro de Produccion</h2>
+        <h1 class="margLeftTitulos">Registro de Produccion</h1>
     </div>
 
     <div class="encabezadoPrinInf">
-        <h2 id="fecha" class="encabezadoPrinInflet"></h2>
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
     </div>
 
-    <form class="centralProd">
-        <!-- Falta alinear y recortar las casillas -->
-        <label for="production_date">Fecha: </label>
-        <input type="date" name="production_date" id="production_date" disabled>&nbsp;&nbsp;
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form class="centralProd">
 
-        <label for="production_type">Tipo de Produccion:</label>
-        <select name="production_type" id="production_type">
-            <option value=""selected>--Seleccione Tipo--</option>
-        </select>&nbsp;&nbsp;<!--<br><br>-->
+                    <div class="row">
+                        <div class="col">
+                            <h3>Productos disponibles de tipo</h3>
+                        </div>
+                        <div class="col selTipoProd">
+                            <h3 id="selected_type"></h3>
+                        </div>
+                    </div>
 
-        <h2>Productos disponibles de tipo</h2>
-        <h2 id="selected_type"></h2><br>
+                    <div class="row">
+                        <div class="col tipoProd">
+                            <label for="production_type">Tipo de Produccion:</label>
+                            <select name="production_type" id="production_type">
+                                <option value="" selected>--Seleccione Tipo--</option>
+                            </select>
+                        </div>
+                    </div>
 
-        <label for="product_selection">Productos disponibles:</label>
-        <select name="product_selection" id="product_selection">
-            <option value=""selected>--Seleccione Producto--</option>
-        </select><br><br>
-   
-        <label for="product_code">Código Producto:</label>
-        <input type="text" id="product_code" name="product_code" disabled>&nbsp;&nbsp;
-        <br>
+                    <div class="row">
+                        <div class="col">
+                            <label for="production_date">Fecha: </label>
+                            <input type="date" class="form-control" name="production_date" id="production_date"
+                                disabled>
+                        </div>
+                        <div class="col">
+                            <label for="product_selection">Productos disponibles:</label>
+                            <select name="product_selection" id="product_selection">
+                                <option value="" selected>--Seleccione Producto--</option>
+                            </select>
+                        </div>
+                    </div>
 
-        <label for="product_name">Nombre del Producto: </label>
-        <input type="text" id="product_name" name="product_name" disabled><br>
+                    <div class="row">
+                        <div class="col">
+                            <label for="product_code">Código Producto:</label>
+                            <input type="text" class="form-control" id="product_code" name="product_code" disabled>
+                            <!-- <label for="product_code">Código Producto:</label>
+                            <input type="text" class="form-control" id="product_code" name="product_code" disabled> -->
+                        </div>
+                        <div class="col">
+                            <label for="product_name">Nombre del Producto: </label>
+                            <input type="text" class="form-control" id="product_name" name="product_name" disabled>
+                        </div>
+                    </div>
 
-        <label for="product_quantity">Cantidad producida:</label>
-        <input type="number" name="product_quantity" id="product_quantity"><br>
-        <br>
+                    <div class="row">
+                        <div class="col">
+                            <label for="product_quantity">Cantidad producida:</label>
+                            <input type="number" class="form-control" name="product_quantity" id="product_quantity">
+                        </div>
+                    </div>
 
-        <button type="submit" id="add_production">Adicionar Produccion</button>
-        <br>
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn btn btn-primary btnAddProd" id="add_production">Adicionar
+                                Produccion</button>
+                        </div>
+                    </div>
 
-        <p id="error_msg" style="color: red;"></p>
+                    <div class="row">
+                        <div class="col">
+                            <p id="error_msg" style="color: red;"></p>
+                        </div>
+                    </div>
 
-        <h3>Produccion Adicionada:</h3><br>
-        <div class="tablaProd">
-        <table id="production_to_register" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Numero</th>
-                    <th>Fecha</th>
-                    <th>Código</th>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Tipo</th>
-                </tr>
-            </thead>
-        </table>
+                    <div class="row">
+                        <div class="col">
+                            <h3>Produccion Adicionada:</h3>
+                            <div class="tablaProd">
+                                <table id="production_to_register" class="table table-striped">
+                                    <tr>
+                                        <th>Numero</th>
+                                        <th>Fecha</th>
+                                        <th>Código</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Tipo</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <p id="msg"></p>
+                            <img class="imgCargas" id="loading" src="../images/Double Ring-1s-200px.gif"
+                                alt="loading..." style="visibility: hidden; height: 50px; width: 50px;" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <button class="btnRegProd btn btn btn-primary" id="save_production">Registrar
+                                Produccion</button>
+                            <p id="msg"></p>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
         </div>
-        <br>
-        <button class="buttonsEditProd" id="save_production">Registrar Produccion</button>
-        <p id="msg"></p>
-    </form>
+    </div>
 
-    <button id="save_production">Registrar Produccion</button>
-    <p id="msg"></p>
-    <img id="loading" src="../images/load.gif" alt="loading..."
-            style="visibility: hidden; height: 50px; width: 50px;" />
 
     <!-- Importando funciones de utilidades -->
     <script src="../utilidades.js"></script>
-    
+
     <script>
         //Se importan los modulos de jquery, electron y dialog que es un módulo de electron
         //para ventanas emergentes.
         window.$ = window.jQuery = require('jquery');
-        const {ipcRenderer} = require('electron');
-        const {dialog} = require('electron').remote
-        const {_} = require('lodash');
+        const { ipcRenderer } = require('electron');
+        const { dialog } = require('electron').remote
+        const { _ } = require('lodash');
 
         const selected = document.querySelector('#selected_type');
         const log = document.getElementById('log');
 
         //Declaring the DOM elements for the html Production
         //Production date
-        const date = document.querySelector('#production_date');
+        const date1 = document.querySelector('#production_date');
         //Production type    
         const type = document.querySelector('#production_type');
-            //Product Selection
+        //Product Selection
         const choosen_product = document.querySelector('#product_selection');
-            //Product code    
+        //Product code    
         const pro_code = document.querySelector('#product_code');
         //Product name       
         const pro_name = document.querySelector('#product_name');
@@ -112,9 +163,9 @@
         const error_msg = document.querySelector('#error_msg');
         //Prodcution table to register         
         const pro_table = document.querySelector('#production_to_register');
-            //Production save registers
+        //Production save registers
         const pro_save = document.querySelector('#save_production');
-            //Production msg gif
+        //Production msg gif
         const msg = document.querySelector('#msg');
         //Production loading gif
         const loading = document.querySelector('#loading');
@@ -124,29 +175,20 @@
 
         //Event after loading the window and been able to modify
         document.addEventListener('DOMContentLoaded', (e) => {
-            //Date object been initialized
-            var today = new Date();
 
             // Generando fecha
-            $('#fecha').text(`Fecha: ${todayDate()}`)
+            setAutoTime();
 
-            //Date format (Day)
-            var day = today.getDate().toString();
-            if (day.length < 2) {
-                day = `0${day}`;
-            }
-            //Date format (Month)
-            var month = today.getMonth() + 1
-            month = month.toString();
-            if (month.length < 2) {
-                month = `0${month}`
-            }
-            //Date is filled automatically in the correspondent space of production_date
-            var auto_date = today.getFullYear() + '-' + month + '-' + day;
-            date.value = auto_date;
+            date1.value = todayDate();
             //Ready msg for the main window
             ipcRenderer.send('production:create');
+
         })
+
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
 
         //Variable initiation for the production details based on the db
         let prod_types;
@@ -185,8 +227,7 @@
         let temp_nameprod;
         let temp_prod_list;
         let temp_prod_choosen;
-        ipcRenderer.on('filteredProdcuts:info', (e, arr) => 
-        {
+        ipcRenderer.on('filteredProdcuts:info', (e, arr) => {
             cleanDropdownProducts();
             console.log('Volvio a production.html')
             console.log(arr)
@@ -212,9 +253,8 @@
             temp_prod_choosen = choosen_product.value;
             divideProdInfo();
         })
-       
-        ipcRenderer.on('production:error', (e) => 
-        {
+
+        ipcRenderer.on('production:error', (e) => {
             msg.style.color = 'red';
             msg.textContent = 'Ha ocurrido un error, no se pudo guardar la produccion.';
 
@@ -222,8 +262,7 @@
             save.disabled = false;
         })
 
-        ipcRenderer.on('production:success', (e) => 
-        {
+        ipcRenderer.on('production:success', (e) => {
             msg.style.color = 'green';
             msg.textContent = 'La informacion se ha guardado exitosamente';
 
@@ -231,11 +270,9 @@
 
             let children = pro_table.childElementCount;
 
-            if (children > 1)
-            {
+            if (children > 1) {
                 let child;
-                while (pro_table.childElementCount > 1)
-                {
+                while (pro_table.childElementCount > 1) {
                     child = pro_table.lastElementChild;
                     pro_table.removeChild(child);
                 }
@@ -251,18 +288,17 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            if (date.value != "" && selected.textContent != "" && pro_code.value != "" && pro_name.value != "" && pro_quant.value != "")
-            {
+            if (date1.value != "" && selected.textContent != "" && pro_code.value != "" && pro_name.value != "" && pro_quant.value != "") {
                 //console.log(date.value);
                 //console.log(selected.textContent);
                 //console.log(pro_code.value);
                 //console.log(pro_name.value);
                 //console.log(pro_quant.value);
 
-                prod_obj = 
+                prod_obj =
                 {
                     identifier: identifier,
-                    date: date.value,
+                    date: date1.value,
                     type: selected.textContent.trim(),
                     code: pro_code.value,
                     name: pro_name.value.trim(),
@@ -282,13 +318,11 @@
 
                 display_added_prods();
             }
-            else
-            {
+            else {
                 error_msg.textContent = "";
                 error_msg.textContent = 'Debe ingresar todos los campos. \n';
 
-                if (parseInt(pro_quant.value) <= 0)
-                {
+                if (parseInt(pro_quant.value) <= 0) {
                     error_msg.textContent += 'La cantidad no puede ser menor o igual a cero.';
                 }
             }
@@ -296,20 +330,18 @@
 
         console.log('Afuera pro_save click')
         console.log(added_prod);
-        pro_save.addEventListener('click', (e) =>{
+        pro_save.addEventListener('click', (e) => {
             e.preventDefault();
             console.log('Adentro pro_save click')
 
-            if (added_prod.length > 0)
-            {
+            if (added_prod.length > 0) {
                 console.log(added_prod);
                 msg.textContent = '';
                 ipcRenderer.send('production:save', added_prod);
                 //loading.style.visibility = 'visible';
                 pro_save.disabled = true;
             }
-            else
-            {
+            else {
                 msg.style.color = 'red';
                 msg.textContent = 'No se ha agregado ninguna produccion.';
             }
@@ -318,12 +350,11 @@
         //FUNCTIONS:
         //function that updates the selected value from the dropdown
         function updateValue(e) {
-           selected.textContent = type.options[type.selectedIndex].textContent;
-           temp_sel_type = selected.textContent.trim(); 
+            selected.textContent = type.options[type.selectedIndex].textContent;
+            temp_sel_type = selected.textContent.trim();
         }
 
-        function cleanDropdownProducts(e)
-        {
+        function cleanDropdownProducts(e) {
             let option_number = choosen_product.childElementCount;
             let child;
             for (var i = 1; i < option_number; i++) {
@@ -332,12 +363,10 @@
             }
         }
 
-        function divideProdInfo(e)
-        {
+        function divideProdInfo(e) {
             let option
             temp_prod_list.forEach(temp_prod => {
-                if (temp_prod.product_id == temp_prod_choosen)
-                {
+                if (temp_prod.product_id == temp_prod_choosen) {
                     console.log('Hay vinculo')
                     pro_name.value = temp_prod.name_prod;
                     pro_code.value = temp_prod.code_prod;
@@ -345,14 +374,11 @@
             })
         }
 
-        function display_added_prods()
-        {
+        function display_added_prods() {
             let children = pro_table.childElementCount;
-            if (children > 1)
-            {
+            if (children > 1) {
                 let child;
-                while (pro_table.childElementCount > 1)
-                {
+                while (pro_table.childElementCount > 1) {
                     child = pro_table.lastElementChild;
                     pro_table.removeChild(child);
                 }
@@ -362,8 +388,7 @@
             let td1, td2, td3, td4, td5, td6;
             let prodText1, prodText2, prodText3, prodText4, prodText5;
 
-            added_prod.forEach(product => 
-            {
+            added_prod.forEach(product => {
                 tr = document.createElement('tr');
                 tr.className = `tr_${product.identifier}`;
                 td1 = document.createElement('td');
@@ -373,8 +398,7 @@
                 td5 = document.createElement('td');
                 td6 = document.createElement('td');
 
-                tr.addEventListener('dblclick', (e) => 
-                {
+                tr.addEventListener('dblclick', (e) => {
                     deleteProduct(product.identifier);
                 })
 
@@ -405,18 +429,15 @@
             });
         }
 
-        function deleteProduct(ident)
-        {
+        function deleteProduct(ident) {
             let temp_child = document.querySelector(`.tr_${ident}`);
             pro_table.removeChild(temp_child);
 
             let i = 0;
             let j = 0;
 
-            added_prod.forEach(product => 
-            {
-                if (product.identifier == ident)
-                {
+            added_prod.forEach(product => {
+                if (product.identifier == ident) {
                     j = i;
                 }
                 ++i;
