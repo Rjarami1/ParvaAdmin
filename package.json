@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Rjarami1/ParvaAdmin#readme",
   "dependencies": {
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "lodash": "^4.17.15",
     "pg": "^7.17.1"
   },
