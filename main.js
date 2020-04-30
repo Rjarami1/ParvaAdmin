@@ -683,14 +683,16 @@ ipcMain.on('sales:ready', (e) => {
 })
 
 ipcMain.on('sales:start', e => {
-	const text = `INSERT INTO public.shifts (shift_start, shift_status, user_id) VALUES (CURRENT_TIMESTAMP, true, ${logged_user_id});`;
+	const text = `INSERT INTO public.shifts (shift_start, shift_status, user_id) VALUES (CURRENT_TIMESTAMP, true, ${logged_user_id}) RETURNING shift_id;`;
+	let shift;
 
 	db.pool.query(text, (err, res) => {
 		if (err) {
 			console.log(err.stack);
 		}
 		else {
-			mainwc.send('sales:started');
+			shift = res.rows[0].shift_id;
+			mainwc.send('sales:started', shift);
 		}
 	})
 })
@@ -713,6 +715,7 @@ ipcMain.on('sales:register', (e, arr) => {
 	let text = 'INSERT INTO public.sales(product_id, quantity, value, sale_date, shift_id) VALUES ';
 	let regProducts = arr[0];
 	let shift = arr[1];
+	console.log(shift);
 
 	regProducts.forEach(product => {
 		text += `(${product.prod_id},${product.quantity},${product.value},CURRENT_TIMESTAMP,${shift}),`;

@@ -161,7 +161,8 @@
                 $('#productCode').on('input', compareCode);
             });
 
-            ipcRenderer.on('sales:started', e => {
+            ipcRenderer.on('sales:started', (e, shift) => {
+                currentShift = shift;
                 $('.chart').show();
                 $('#endShift').show();
                 $('#startShift').hide();
