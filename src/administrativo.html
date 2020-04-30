@@ -22,35 +22,49 @@
         <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
     </div>
 
-    <p class="margLeftTitulos">Lista de Usuarios:</p>
-    <ul id="usersList"></ul>
-
-    <div class="botonNuevoUsuario">
-        <button type="button" class="btn btn btn-primary" id="createUser">Crear Usuario</button>
-    </div>
-
-    <div class="tablaAdmin">
+    <div class="container">
 
 
         <div class="row">
-            <table class="table table-striped" style="width: 100%;">
-                <tr>
-                    <th>ID</th>
-                    <th>Login</th>
-                    <th>Nombres</th>
-                    <th>Fecha de Creación</th>
-                    <th>Último Ingreso</th>
-                    <th>Cargo</th>
-                </tr>
-                <tbody>
-
-                </tbody>
-            </table>
+            <div class="col-xl">
+                <p class="margLeftTitulos">Lista de Usuarios:</p>
+                <ul id="usersList"></ul>
+            </div>
         </div>
+
+        <div class="row">
+            <div class="col-xl">
+                <div class="botonNuevoUsuario">
+                    <button type="button" class="btn btn btn-primary" id="createUser">Crear Usuario</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl">
+                <div class="tablaAdmin">
+
+                    <table class="table table-striped">
+                        <tr>
+                            <th>ID</th>
+                            <th>Login</th>
+                            <th>Nombres</th>
+                            <th>Fecha de Creación</th>
+                            <th>Último Ingreso</th>
+                            <th>Cargo</th>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
     <!-- Importando funciones de utilidades -->
-    <script src="../utilidades.js"></script>
+    <script src=" ../utilidades.js">
+    </script>
 
     <script>
         const { ipcRenderer } = require('electron');

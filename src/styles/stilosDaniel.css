@@ -129,21 +129,21 @@ body .tablaGastos tr:hover {
 
 body .botonNuevoUsuario {
 	width: 200px;
-	position: absolute;
+	position: relative;
 	z-index: 100000;
-	left: 47%;
-	top: 20%;
+	left: 50%;
+	top: 50%;
 	transform: translate(-50%, -50%);
-	margin: 50px;
+	margin-bottom: 4%;
 }
 
 body .tablaAdmin {
-	width: 900px;
+	width: 720px;
 	height: 300px;
-	position: absolute;
+	position: relative;
 	z-index: 100000;
 	left: 50%;
-	top: 51%;
+	top: 50%;
 	transform: translate(-50%, -50%);
 }
 
