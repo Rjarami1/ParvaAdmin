@@ -16,21 +16,21 @@
 
         <div class="row">
             <div class='centralEditUser'>
-                <div class="col">
+                <div class="col-xl">
                     <form>
 
                         <div class="row">
-                            <div class="col">
+                            <div class="col-xl">
                                 <h3 class="posTitEditUsr">Editar Usuario:</h3>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="inputsEditUser">
-                                <div class="col">
+                                <div class="col-xl">
                                     <label class="labelsEdituser" for="name">Nombre:</label>
                                 </div>
-                                <div class="col">
+                                <div class="col-xl">
                                     <input class="form-control" type="text" name="name" id="name">
                                 </div>
                             </div>
@@ -38,17 +38,17 @@
 
                         <div class="row">
                             <div class="inputsEditUser">
-                                <div class="col">
+                                <div class="col-xl">
                                     <label class="labelsEdituser" for="position">Cargo:</label>
                                 </div>
-                                <div class="col">
+                                <div class="col-xl">
                                     <input class="form-control" type="text" name="position" id="position">
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col buttonResetPswd">
+                            <div class="col-xl buttonResetPswd">
                                 <button type="button" class="btnsEditUser btn btn btn-primary"
                                     id="reset_pswd">Reestablecer
                                     Contraseña</button>
@@ -56,7 +56,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col buttonResetPswd">
+                            <div class="col-xl buttonResetPswd">
                                 <button type="button" class="btnsEditUser btn btn btn-secondary"
                                     id="btn_status"></button>
                             </div>
@@ -68,17 +68,17 @@
                         <h3>Editar Accesos:</h3>
 
                         <div class="row">
-                            <div class="col">
+                            <div class="col-xl">
                                 <table class="tablaEditUser" id="modules_table"></table>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col">
+                            <div class="col-xl">
                                 <button type="submit" class="btnsEditUser btn btn btn-success"
                                     id="submit">Guardar</button>
                             </div>
-                            <div class="col">
+                            <div class="col-xl">
                                 <button type="button" class="btnsEditUser btn btn btn-danger"
                                     id="cancel">Cancelar</button>
                             </div>
@@ -146,7 +146,7 @@
                 }
 
                 td = document.createElement('td');
-                td.classList.add('col')
+                td.classList.add('col-xl')
                 label = document.createElement('label');
                 label.textContent = `${module.module_name} `;
                 checkbox = document.createElement('input');
