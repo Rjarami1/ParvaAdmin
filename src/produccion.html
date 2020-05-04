@@ -26,16 +26,16 @@
                 <form class="centralProd">
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col-xl">
                             <h3>Productos disponibles de tipo</h3>
                         </div>
-                        <div class="col selTipoProd">
+                        <div class="col-xl selTipoProd">
                             <h3 id="selected_type"></h3>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col tipoProd">
+                        <div class="col-xl tipoProd">
                             <label for="production_type">Tipo de Produccion:</label>
                             <select name="production_type" id="production_type">
                                 <option value="" selected>--Seleccione Tipo--</option>
@@ -44,12 +44,12 @@
                     </div>
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col-xl">
                             <label for="production_date">Fecha: </label>
                             <input type="date" class="form-control" name="production_date" id="production_date"
                                 disabled>
                         </div>
-                        <div class="col">
+                        <div class="col-xl">
                             <label for="product_selection">Productos disponibles:</label>
                             <select name="product_selection" id="product_selection">
                                 <option value="" selected>--Seleccione Producto--</option>
@@ -58,40 +58,40 @@
                     </div>
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col-xl">
                             <label for="product_code">Código Producto:</label>
                             <input type="text" class="form-control" id="product_code" name="product_code" disabled>
                             <!-- <label for="product_code">Código Producto:</label>
                             <input type="text" class="form-control" id="product_code" name="product_code" disabled> -->
                         </div>
-                        <div class="col">
+                        <div class="col-xl">
                             <label for="product_name">Nombre del Producto: </label>
                             <input type="text" class="form-control" id="product_name" name="product_name" disabled>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col-xl">
                             <label for="product_quantity">Cantidad producida:</label>
                             <input type="number" class="form-control" name="product_quantity" id="product_quantity">
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col-xl">
                             <button type="submit" class="btn btn btn-primary btnAddProd" id="add_production">Adicionar
                                 Produccion</button>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col-xl">
                             <p id="error_msg" style="color: red;"></p>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col-xl">
                             <h3>Produccion Adicionada:</h3>
                             <div class="tablaProd">
                                 <table id="production_to_register" class="table table-striped">
@@ -109,7 +109,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col-xl">
                             <p id="msg"></p>
                             <img class="imgCargas" id="loading" src="../images/Double Ring-1s-200px.gif"
                                 alt="loading..." style="visibility: hidden; height: 50px; width: 50px;" />
@@ -117,7 +117,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col">
+                        <div class="col-xl">
                             <button class="btnRegProd btn btn btn-primary" id="save_production">Registrar
                                 Produccion</button>
                             <p id="msg"></p>

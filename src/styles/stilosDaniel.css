@@ -35,8 +35,10 @@ body .centralGastos {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
-	top: 50%;
+	top: 65%;
 	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 50%;
 }
 
 body .centralProd {
@@ -73,6 +75,17 @@ body .tablaProd {
 body .tablaProd tr:hover {
 	background-color: rgba(0,0,0,.05);
 	cursor: pointer;
+}
+
+body .tablaGastos {
+	width: 590px;
+	height: 100px;
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin: 2%;
 }
 
 body .tablaGastos tr:hover {
@@ -154,20 +167,20 @@ body .tablaAdmin tr:hover {
 
 body .botonCrearProducto {
 	width: 200px;
-	position: absolute;
+	position: relative;
 	z-index: 100000;
-	left: 45%;
-	top: 20%;
+	left: 50%;
+	top: 50%;
 	transform: translate(-50%, -50%);
-	margin: 50px;
+	margin-bottom: 4%;
 }
 
 body .tablaProductos {
-	width: 1000px;
+	width: 850px;
 	height: 300px;
-	position: absolute;
+	position: relative;
 	z-index: 100000;
-	left: 55%;
+	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 }

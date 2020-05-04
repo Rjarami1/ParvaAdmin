@@ -25,7 +25,7 @@
 
         <div class="container">
             <div class="row filasGastos">
-                <div class="col">
+                <div class="col-xl">
                     <label for="expense_date">Fecha: </label>
                     <input type="date" class="form-control" name="expense_date" id="expense_date">&nbsp;&nbsp;
 
@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="col">
+                <div class="col-xl">
                     <label for="expense_value">Valor:</label>
                     <input type="number" class="form-control" name="expense_value" id="expense_value">&nbsp;&nbsp;
 
@@ -56,8 +56,10 @@
             </div>
 
             <div class="row filasGastos">
-                <button class="btn btn btn-primary btnAddGasto" type="submit" id="add_expenses">Adicionar
-                    Gasto</button>
+                <div class="col-xl">
+                    <button class="btn btn btn-primary btnAddGasto" type="submit" id="add_expenses">Adicionar
+                        Gasto</button>
+                </div>
             </div>
 
             <div class="row filasGastos">
@@ -66,17 +68,19 @@
 
             <div class="row filasGastos">
                 <h3>Gastos Adicionados:</h3>
-                <div class="col tablaGastos">
-                    <table id="expenses_to_register" class="table table-striped">
-                        <tr>
-                            <th>Número</th>
-                            <th>Tipo</th>
-                            <th>Código</th>
-                            <th>Valor</th>
-                            <th>Cantidad</th>
-                        </tr>
+                <div class="col-xl">
+                    <div class="tablaGastos">
+                        <table id="expenses_to_register" class="table table-striped">
+                            <tr>
+                                <th>Número</th>
+                                <th>Tipo</th>
+                                <th>Código</th>
+                                <th>Valor</th>
+                                <th>Cantidad</th>
+                            </tr>
 
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
 
