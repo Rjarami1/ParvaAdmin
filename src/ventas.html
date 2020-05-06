@@ -34,7 +34,7 @@
             <div class="col">
                 <form id="form1">
                     <label for="productCode" class="labelsVentas">Código del Producto</label>
-                    <input name="productCode" type="number" class="form-control" id="productCode">&nbsp;&nbsp;
+                    <input name="productCode" type="number" class="form-control" id="productCode" readonly>&nbsp;&nbsp;
                     <input type="text" class="form-control" id="productDesc" disabled>
                     <input type="hidden" name="hiddenId" id="hiddenId">
 
@@ -109,14 +109,19 @@
             <div class="col-xl">
                 <div class="tablaResumVentas">
                     <table id="last-shift" class="table table-striped">
-                        <tr>
-                            <th>#</th>
-                            <th>Cantidad</th>
-                            <th>Producto</th>
-                            <th>Valor Unit.</th>
-                            <th>Fecha y Hora</th>
-                            <th>Usuario</th>
-                        </tr>
+                       <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Cantidad</th>
+                                <th>Producto</th>
+                                <th>Valor Unit.</th>
+                                <th>Fecha y Hora</th>
+                                <th>Usuario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -186,6 +191,7 @@
                 $('.chart').hide();
                 $('#endShift').hide();
                 $('#startShift').show();
+                $('#last-shift tbody').empty();
 
                 let i = 1;
                 let totalReview = 0;
