@@ -332,9 +332,9 @@ body .container .row .col .labelsVentas{
 .btnAddGasto{
 	position: relative;
 	z-index: 100000;
-	left: 50%;
+	left: 51.5%;
 	transform: translate(-50%, -50%);
-	margin-bottom: 20px;
+	margin-bottom: 2%;
 
 }
 
@@ -343,7 +343,7 @@ body .container .row .col .labelsVentas{
 	z-index: 100000;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	margin-top: 10%;
+	margin-top: 5%;
 }
 
 .campTipoGasto{
@@ -431,10 +431,10 @@ li img:hover {
 .btnRegProd{
 	position: relative;
 	z-index: 100000;
-	left: 50%;
+	left: 49%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	margin-top: 2%;
+	margin-top: 5%;
 }
 
 .tipoProd{
@@ -448,9 +448,9 @@ li img:hover {
 .selTipoProd{
 	position: relative;
 	z-index: 100000;
-	left: 15%;
+	left: 17%;
 	transform: translate(-50%, -50%);
-	margin-top: 17%;
+	margin-top: 8.6%;
 }
 
 .btnsEditUser{
