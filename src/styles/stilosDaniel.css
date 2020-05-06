@@ -330,7 +330,7 @@ body .container .row .col .labelsVentas{
 }
 
 .btnAddGasto{
-	position: absolute;
+	position: relative;
 	z-index: 100000;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -339,7 +339,7 @@ body .container .row .col .labelsVentas{
 }
 
 .btnRegGasto{
-	position: absolute;
+	position: relative;
 	z-index: 100000;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -356,6 +356,10 @@ body .container .row .col .labelsVentas{
 
 .margLeftTitulos{
 	margin-left: 2%;
+}
+
+.textColor{
+	text-decoration-color: #6b81a4;
 }
 
 span:hover {
@@ -446,7 +450,7 @@ li img:hover {
 	z-index: 100000;
 	left: 15%;
 	transform: translate(-50%, -50%);
-	margin-top: 8.8%;
+	margin-top: 17%;
 }
 
 .btnsEditUser{
@@ -490,4 +494,23 @@ li img:hover {
 	transform: translate(-50%, -50%);
 	margin-top: 2%;
 	margin-bottom: 2%;
+}
+
+body .tablaResumVentas {
+	width: 1000px;
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin: 2%;
+}
+
+body .tablaResumVentas tr:hover {
+	background-color: rgba(0,0,0,.05);
+	cursor: pointer;
+}
+
+.containerVentasReview{
+	margin-top: 2%;
 }

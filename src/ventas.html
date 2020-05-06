@@ -90,24 +90,37 @@
         </div>
     </div>
 
-    <div class="container review">
-        <h2>Resumen de ventas del último turno:</h2>
-        <h3 id="totalReview"></h3>
-        <table id="last-shift" class="table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Cantidad</th>
-                    <th>Producto</th>
-                    <th>Valor Unit.</th>
-                    <th>Fecha y Hora</th>
-                    <th>Usuario</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="container review containerVentasReview">
 
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-xl">
+                <h2>Resumen de ventas del último turno:</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl">
+                <h3 id="totalReview"></h3>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xl">
+                <div class="tablaResumVentas">
+                    <table id="last-shift" class="table table-striped">
+                        <tr>
+                            <th>#</th>
+                            <th>Cantidad</th>
+                            <th>Producto</th>
+                            <th>Valor Unit.</th>
+                            <th>Fecha y Hora</th>
+                            <th>Usuario</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="../utilidades.js"></script>
@@ -312,12 +325,12 @@
                     title: "Registrar Venta",
                     message: "¿Registrar venta actual?",
                     cancelId: 1
-                }).then(index =>{
+                }).then(index => {
                     if (index.response == 0) {
                         if (productSaleList.length > 0) {
                             ipcRenderer.send('sales:register', [productSaleList, currentShift]);
                         }
-                        else{
+                        else {
                             dialog.showMessageBox({
                                 type: "none",
                                 buttons: ["Aceptar"],

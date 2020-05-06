@@ -31,7 +31,7 @@
 
                     <div class="campTipoGasto">
                         <label for="expense_type">Tipo Gasto:</label>
-                        <select name="expense_type" id="expense_type">
+                        <select class="dropdown-toggle" name="expense_type" id="expense_type">
                             <option value="" selected></option>
                         </select>
                     </div>
@@ -81,12 +81,17 @@
 
                         </table>
                     </div>
+
+
                 </div>
             </div>
 
             <div class="row">
-                <button class="btn btn btn-primary btnRegGasto" id="save_expenses">Registrar Gastos</button>
+                <div class="col-xl">
+                    <button class="btn btn btn-primary btnRegGasto" id="save_expenses">Registrar Gastos</button>
+                </div>
             </div>
+
         </div>
 
         <p id="msg"></p>
