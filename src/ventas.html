@@ -48,7 +48,7 @@
                     <input type="text" class="form-control" name="total" id="total" disabled>
 
                     <label for="paysWith" class="labelsVentas">Paga con:</label>
-                    <input type="number" class="form-control" name="paysWith" id="paysWith">
+                    <input type="text" class="form-control" name="paysWith" id="paysWith">
 
                     <label for="change" class="labelsVentas">Devuelta:</label>
                     <input type="text" class="form-control" name="change" id="change" disabled>
@@ -260,6 +260,7 @@
 
                         case 'paysWith':
                             $('#change').val(formatCurrency(parseInt($('#paysWith').val()) - total));
+                            $('#paysWith').val(formatCurrency(parseInt($('#paysWith').val())));
                             $('#productCode').focus();
                             break;
                     }

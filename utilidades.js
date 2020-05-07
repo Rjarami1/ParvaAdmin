@@ -88,6 +88,11 @@ function formatCurrency(num) {
 
 }
 
+function removeFormatCurrency(value){
+        var strVal = value.toString();
+        return strVal.replace(',', '').slice(1);
+}
+
 //Función para convertir la fecha proveniente de base de datos a una fecha más común para
 //fácil lectura.
 function parseDbDate(dbdate) {
