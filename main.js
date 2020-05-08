@@ -175,7 +175,6 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 		db.pool.query(text1, values)
 			.then(res => {
 				prodInfo = res.rows[0];
-				console.log(prodInfo);
 				let dataObject = {
 					prodInfo: prodInfo
 				};
@@ -193,8 +192,6 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 ipcMain.on('prodEdit:update', (e, obj) => {
 	const prodText = 'UPDATE security."listProducts" SET code_prod=$1, name_prod=$2, val_prod=$3, descp_prod=$4 WHERE product_id=$5;'
 	const valuesP = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.product_id]
-	//console.log(valuesP)
-	//console.log('Antes del enviar el query')
 	db.pool
 		.query(prodText, valuesP)
 		.then(res => {
@@ -212,7 +209,6 @@ ipcMain.on('prodCreate:cancel', e => {
 
 ipcMain.on('prodEdit:toggle', (e, id) => {
 	const text = 'SELECT security."product_toggle_status"($1);'
-	console.log(text)
 	db.pool.query(text, [id], (err, res) => {
 		if (err) {
 			console.log(err.stack)
@@ -225,7 +221,6 @@ ipcMain.on('prodEdit:toggle', (e, id) => {
 
 ipcMain.on('prodCreate:create', (e, obj) => {
 	let values = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.production_type]
-	console.log(obj.production_type);
 	const text =
 		'INSERT INTO security."listProducts"(code_prod, name_prod, val_prod, descp_prod, status_prod, productype) VALUES ($1, $2, $3, $4, true, $5);'
 
@@ -321,7 +316,6 @@ ipcMain.on('usrEdit:cancel', e => {
 })
 
 ipcMain.on('usrEdit:update', (e, obj) => {
-	// console.log(JSON.stringify(obj, null, 2));
 
 	const userText =
 		'UPDATE security.users SET name = $1, position = $2 WHERE user_id = $3;'
@@ -443,8 +437,6 @@ ipcMain.on('production:create', e => {
 })
 
 ipcMain.on('activeProducts:selected', (e, filter) => {
-	console.log('Llego Filtro')
-	console.log(filter)
 	const text1 = `SELECT product_id, code_prod, name_prod FROM security."listProducts" WHERE productype = '${filter.trim()}' AND status_prod = true`;
 
 	db.pool.query(text1, (err1, res1) => {
@@ -455,7 +447,6 @@ ipcMain.on('activeProducts:selected', (e, filter) => {
 		else 
 		{
 			mainwc.send('filteredProdcuts:info', res1.rows)
-			console.log("Envio de respuesta")
 		}
 	})
 })
@@ -473,19 +464,15 @@ ipcMain.on('production:save', (e, arr) =>
 
 	qry = qry.slice(0, -1);
 	qry += ';'
-	//console.log(qry);
 	db.pool.query(qry, (err, res) => 
 	{
 		if (err)
 		{
-			console.log('Error:');
 			console.log(err.stack);
 			mainwc.send('production:error');
-			console.log('Mando el error a prodcution.html')
 		}
 		else
 		{
-			console.log('Exitoso');
 			mainwc.send('production:success');
 		}
 	})
@@ -511,7 +498,6 @@ ipcMain.on('expense:ready', e => {
 })
 
 ipcMain.on('expense:save', (e, arr) => {
-	console.log(arr)
 	let query = 'INSERT INTO public.expenses(expense_code, expense_type, expense_date, expense_value, expense_quantity) VALUES ';
 	let exp_value;
 
@@ -715,7 +701,7 @@ ipcMain.on('sales:register', (e, arr) => {
 	let text = 'INSERT INTO public.sales(product_id, quantity, value, sale_date, shift_id) VALUES ';
 	let regProducts = arr[0];
 	let shift = arr[1];
-	console.log(shift);
+	//console.log(shift);
 
 	regProducts.forEach(product => {
 		text += `(${product.prod_id},${product.quantity},${product.value},CURRENT_TIMESTAMP,${shift}),`;

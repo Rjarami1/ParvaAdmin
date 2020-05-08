@@ -94,8 +94,6 @@
                 errormsg.style.color = 'red';
             }
             else {
-                //errormsg.textContent = ''; REVISAR!
-                //console.log('Se va a crear sendObject!')
                 let sendObject =
                 {
                     code_prod: code_prod.value,
@@ -104,10 +102,7 @@
                     descp_prod: descp_prod.value,
                     product_id: productid
                 }
-                //console.log('Antes del envio del objecto')
                 ipcRenderer.send('prodEdit:update', sendObject);
-                //console.log('Envio del objecto')
-                //console.log(sendObject);
             }
         })
     </script>
