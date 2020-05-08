@@ -46,7 +46,7 @@
 
                 <div class="col-xl">
                     <label for="expense_value">Valor:</label>
-                    <input type="number" class="form-control" name="expense_value" id="expense_value">&nbsp;&nbsp;
+                    <input type="text" class="form-control" name="expense_value" id="expense_value">&nbsp;&nbsp;
 
                     <label for="expense_quantity">Cantidad:</label>
                     <input type="number" class="form-control" name="expense_quantity" id="expense_quantity">
@@ -170,7 +170,7 @@
                     date: date1.value,
                     type: type.options[type.selectedIndex].value,
                     code: code.value,
-                    value: parseInt(value.value),
+                    value: parseInt(removeFormatCurrency(value.value)),
                     quantity: parseInt(quantity.value)
                 }
 
@@ -233,6 +233,10 @@
                 msg.textContent = 'No se ha agregado ningún gasto.';
             }
 
+        })
+
+        value.addEventListener('change', (e) => {
+            value.value = formatCurrency(parseInt(value.value));
         })
 
         ipcRenderer.on('expense:error', (e) => {
@@ -299,7 +303,7 @@
                 itemText1 = document.createTextNode(expense.identifier);
                 itemText2 = document.createTextNode(typeText(expense.type));
                 itemText3 = document.createTextNode(codeText(expense.code));
-                itemText4 = document.createTextNode(expense.value);
+                itemText4 = document.createTextNode(formatCurrency(expense.value));
                 itemText5 = document.createTextNode(expense.quantity);
 
                 td1.appendChild(itemText1);
