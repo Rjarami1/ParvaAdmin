@@ -20,24 +20,25 @@
         <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
     </div>
 
-    <div class="container">
+    <div class="container centralProd">
         <div class="row">
             <div class="col">
-                <form class="centralProd">
 
-                    <div class="row">
-                        <div class="col-xl">
-                            <h3>Productos disponibles de tipo</h3>
-                        </div>
-                        <div class="col-xl selTipoProd">
-                            <h3 id="selected_type"></h3>
-                        </div>
+                <div class="row">
+                    <div class="col-xl">
+                        <h3>Productos disponibles de tipo</h3>
                     </div>
+                    <div class="col-xl selTipoProd">
+                        <h3 id="selected_type"></h3>
+                    </div>
+                </div>
+
+                <form>
 
                     <div class="row">
                         <div class="col-xl tipoProd">
                             <label for="production_type">Tipo de Produccion:</label>
-                            <select name="production_type" id="production_type">
+                            <select class="form-control" name="production_type" id="production_type">
                                 <option value="" selected>--Seleccione Tipo--</option>
                             </select>
                         </div>
@@ -51,7 +52,7 @@
                         </div>
                         <div class="col-xl">
                             <label for="product_selection">Productos disponibles:</label>
-                            <select name="product_selection" id="product_selection">
+                            <select class="form-control" name="product_selection" id="product_selection">
                                 <option value="" selected>--Seleccione Producto--</option>
                             </select>
                         </div>
@@ -89,38 +90,38 @@
                             <p id="error_msg" style="color: red;"></p>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-xl">
-                            <h3>Produccion Adicionada:</h3>
-                            <div class="tablaProd">
-                                <table id="production_to_register" class="table table-striped">
-                                    <tr>
-                                        <th>Numero</th>
-                                        <th>Fecha</th>
-                                        <th>Código</th>
-                                        <th>Producto</th>
-                                        <th>Cantidad</th>
-                                        <th>Tipo</th>
-                                    </tr>
-                                </table>
-
-                                <button class="btnRegProd btn btn btn-primary" id="save_production">Registrar
-                                    Produccion</button>
-                                <p id="msg"></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xl">
-                            <p id="msg"></p>
-                            <img class="imgCargas" id="loading" src="../images/Double Ring-1s-200px.gif"
-                                alt="loading..." style="visibility: hidden; height: 50px; width: 50px;" />
-                        </div>
-                    </div>
-
                 </form>
+
+                <div class="row">
+                    <div class="col-xl">
+                        <h3>Produccion Adicionada:</h3>
+                        <div class="tablaProd">
+                            <table id="production_to_register" class="table table-striped">
+                                <tr>
+                                    <th>Numero</th>
+                                    <th>Fecha</th>
+                                    <th>Código</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Tipo</th>
+                                </tr>
+                            </table>
+
+                            <button class="btnRegProd btn btn btn-primary" id="save_production">Registrar
+                                Produccion</button>
+                            <p id="msg"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl">
+                        <p id="msg"></p>
+                        <img class="imgCargas" id="loading" src="../images/Double Ring-1s-200px.gif" alt="loading..."
+                            style="visibility: hidden; height: 50px; width: 50px;" />
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

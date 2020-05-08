@@ -63,7 +63,7 @@ body .centralGestGastos {
 
 body .tablaProd {
 	width: 590px;
-	height: 100px;
+	height: auto;
 	position: relative;
 	z-index: 100000;
 	left: 50%;
@@ -79,7 +79,7 @@ body .tablaProd tr:hover {
 
 body .tablaGastos {
 	width: 590px;
-	height: 100px;
+	height: auto;
 	position: relative;
 	z-index: 100000;
 	left: 50%;
@@ -152,7 +152,7 @@ body .botonNuevoUsuario {
 
 body .tablaAdmin {
 	width: 720px;
-	height: 300px;
+	height: auto;
 	position: relative;
 	z-index: 100000;
 	left: 50%;
@@ -332,9 +332,10 @@ body .container .row .col .labelsVentas{
 .btnAddGasto{
 	position: relative;
 	z-index: 100000;
-	left: 51.5%;
+	left: 50%;
 	transform: translate(-50%, -50%);
 	margin-bottom: 2%;
+	margin-top: 21%;
 
 }
 
@@ -440,7 +441,7 @@ li img:hover {
 .tipoProd{
 	position: relative;
 	z-index: 100000;
-	left: 65%;
+	left: 75.25%;
 	transform: translate(-50%, -50%);
 	margin-top: 4%;
 }
