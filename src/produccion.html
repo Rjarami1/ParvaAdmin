@@ -197,23 +197,18 @@
         ipcRenderer.on('prodTypes:info', (e, arr) => {
             //Se alimentan la lista de seleccion del formulario con los tipos de produccion.
             let option;
-            console.log(arr);
             arr.forEach(produc_type => {
                 option = document.createElement('option');
                 option.value = produc_type.prodType_id;
                 option.textContent = produc_type.prodType_description;
-                console.log(option.textContent);
                 type.appendChild(option);
             });
-            console.log(type.appendChild(option));
-            //ipcRenderer.send('activeProducts:info');
         })
 
         //Event to update the selection from the dropdown of the type of production
         let temp_sel_type;
         type.addEventListener('change', (e) => {
             updateValue();
-            console.log(temp_sel_type);
             ipcRenderer.send('activeProducts:selected', temp_sel_type);
             //cleanDropdown();
         });
@@ -226,14 +221,8 @@
         let temp_prod_choosen;
         ipcRenderer.on('filteredProdcuts:info', (e, arr) => {
             cleanDropdownProducts();
-            console.log('Volvio a production.html')
-            console.log(arr)
-            console.log('Se envio a la funcion filterProduct')
             temp_prod_list = arr;
             let option;
-            console.log(arr)
-            console.log('Entro al forEach')
-
 
             arr.forEach(filter_product => {
                 option = document.createElement('option');
@@ -243,7 +232,6 @@
                 temp_nameprod = filter_product.name_prod;
                 choosen_product.appendChild(option);
             })
-            console.log('Enter function to die and display selection')
         })
 
         choosen_product.addEventListener('change', (e) => {
@@ -301,8 +289,8 @@
                     name: pro_name.value.trim(),
                     quantity: parseInt(pro_quant.value)
                 }
-                console.log('prod_obj: ')
-                console.log(prod_obj);
+                //console.log('prod_obj: ')
+                //console.log(prod_obj);
                 identifier++;
 
                 added_prod.push(prod_obj);
@@ -310,8 +298,8 @@
                 pro_name.value = '';
                 pro_quant.value = '';
                 error_msg.textContent = "";
-                console.log('added_prod: ')
-                console.log(added_prod);
+                //console.log('added_prod: ')
+                //console.log(added_prod);
 
                 display_added_prods();
             }
@@ -325,14 +313,14 @@
             }
         })
 
-        console.log('Afuera pro_save click')
-        console.log(added_prod);
+        //console.log('Afuera pro_save click')
+        //console.log(added_prod);
         pro_save.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('Adentro pro_save click')
+            //console.log('Adentro pro_save click')
 
             if (added_prod.length > 0) {
-                console.log(added_prod);
+                //console.log(added_prod);
                 msg.textContent = '';
                 ipcRenderer.send('production:save', added_prod);
                 //loading.style.visibility = 'visible';
@@ -364,7 +352,7 @@
             let option
             temp_prod_list.forEach(temp_prod => {
                 if (temp_prod.product_id == temp_prod_choosen) {
-                    console.log('Hay vinculo')
+                    //console.log('Hay vinculo')
                     pro_name.value = temp_prod.name_prod;
                     pro_code.value = temp_prod.code_prod;
                 }

@@ -56,19 +56,15 @@
         const descp_prod = document.querySelector('#descp_prod');
 
         let allDone = true;
-        console.log("Antes del DOM de production:ready")
+
         document.addEventListener('DOMContentLoaded', (e) => {
             //Se le avisa al proceso principal (main) que la página está lista para utilizarse
             ipcRenderer.send('production:ready');
-            console.log("Query exitoso!");
         })
-        console.log("Salio de production:ready");
 
         //Inicialización de variables que contendrán los tipos de produccion
 
         ipcRenderer.on('productionTypes:info', (e, arr) => {
-            //production_types = arr[0];
-            console.log("Entro a productionTypes:info");
             //Se alimentan la lista de seleccion del formulario con los tipos de produccion.
             let option;
             arr.forEach(produc_type => {

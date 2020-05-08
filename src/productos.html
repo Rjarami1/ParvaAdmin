@@ -79,7 +79,7 @@
 		//Informar a render producto que la pagina esta lista.
 		document.addEventListener('DOMContentLoaded', e => {
 			ipcRenderer.send('prod:ready')
-			console.log('Se actualizo la tabla para visualizacion')
+			//console.log('Se actualizo la tabla para visualizacion')
 			setAutoTime();
 		})
 
@@ -95,7 +95,7 @@
 			let pr
 			let pd1, pd2, pd3, pd4, pd5, pd6, pd7
 			let prodText1, prodText2, prodText3, prodText4, prodText5, prodText6
-			console.log('Se crearon las variables')
+			//console.log('Se crearon las variables')
 
 			listProducts.forEach(product => {
 				pr = document.createElement('tr')
@@ -171,8 +171,8 @@
 			pr.appendChild(pd6)
 
 			tablaProd.appendChild(pr)
-			console.log('Magia variables')
-			console.log('Se estan las variables')
+			//console.log('Magia variables')
+			//console.log('Se estan las variables')
 		})
 
 		btn_addProduct.addEventListener('click', e => {
