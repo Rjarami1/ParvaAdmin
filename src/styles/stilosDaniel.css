@@ -191,13 +191,23 @@ body .tablaProductos tr:hover {
 }
 
 body.fondo {
-	background-color: #b4cbf0;
+	background-color: #70B9F4;
+}
+
+body .posTitulo {
+	width: auto;
+	position: absolute;
+	z-index: 100000;
+	left: 48%;
+	top: 7%;
+	transform: translate(-50%, -50%);
+	margin: 2%;
 }
 
 body .central .custom-form.p-4 {
 	width: 350px;
 	padding-top: 2rem;
-	background-color: #b4cbf0;
+	background-color: #FFFFFF;
 	margin: 70px;
 	border: 2.5px solid;
 	border-radius: 20px;
