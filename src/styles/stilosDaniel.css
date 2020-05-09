@@ -195,7 +195,7 @@ body.fondo {
 }
 
 body .posTitulo {
-	width: auto;
+	width: 100%;
 	position: absolute;
 	z-index: 100000;
 	left: 48%;
@@ -213,6 +213,7 @@ body .central .custom-form.p-4 {
 	border-radius: 20px;
 	border-color: #574727;
 	position: relative;
+	margin-top: 20%;
 }
 
 body .encabezado {
