@@ -167,7 +167,7 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 	editwc = editProdWindow.webContents;
 
 	editwc.on('dom-ready', () => {
-		const text1 = 'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod, productype FROM security."listProducts" WHERE product_id = $1;';
+		const text1 = 'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod, productype, cost_prod FROM security."listProducts" WHERE product_id = $1;';
 
 		const values = [productid];
 		let prodInfo;
@@ -190,8 +190,8 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 })
 
 ipcMain.on('prodEdit:update', (e, obj) => {
-	const prodText = 'UPDATE security."listProducts" SET code_prod=$1, name_prod=$2, val_prod=$3, descp_prod=$4 WHERE product_id=$5;'
-	const valuesP = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.product_id]
+	const prodText = 'UPDATE security."listProducts" SET code_prod=$1, name_prod=$2, val_prod=$3, descp_prod=$4, cost_prod=$5 WHERE product_id=$6;'
+	const valuesP = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.cost_prod, obj.product_id]
 	db.pool
 		.query(prodText, valuesP)
 		.then(res => {
@@ -220,9 +220,9 @@ ipcMain.on('prodEdit:toggle', (e, id) => {
 })
 
 ipcMain.on('prodCreate:create', (e, obj) => {
-	let values = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.production_type]
+	let values = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.production_type, obj.prod_cost]
 	const text =
-		'INSERT INTO security."listProducts"(code_prod, name_prod, val_prod, descp_prod, status_prod, productype) VALUES ($1, $2, $3, $4, true, $5);'
+		'INSERT INTO security."listProducts"(code_prod, name_prod, val_prod, descp_prod, status_prod, productype, cost_prod) VALUES ($1, $2, $3, $4, true, $5, $6);'
 
 	db.pool.query(text, values, (err, res) => {
 		if (err) {

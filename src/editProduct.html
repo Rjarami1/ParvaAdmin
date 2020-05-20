@@ -31,6 +31,9 @@
                     <label class="labelsVentas" for="val_prod">Valor del Producto (COP):</label>
                     <input type="integer" class="form-control" id="val_prod" name="val_prod">
 
+                    <label class="labelsVentas" for="cost_prod">Costo de Producción (COP):</label>
+                    <input type="integer" class="form-control" id="cost_prod" name="cost_prod">
+
                     <label class="labelsVentas" for="descp_prod">Descripcion del Producto:</label>
                     <input type="text" class="form-control" id="descp_prod" name="descp_prod">
 
@@ -52,6 +55,7 @@
         const code_prod = document.querySelector('#code_prod');
         const name_prod = document.querySelector('#name_prod');
         const val_prod = document.querySelector('#val_prod');
+        const cost_prod = document.querySelector('#cost_prod');
         const descp_prod = document.querySelector('#descp_prod');
 
         const btn_status = document.querySelector('#btn_status');
@@ -59,12 +63,17 @@
         let product_id;
 
         ipcRenderer.on('prodEdit:prodInfo', (e, dataObject) => {
-            console.log(dataObject);
             code_prod.value = dataObject.prodInfo.code_prod.trim();
             name_prod.value = dataObject.prodInfo.name_prod.trim();
             val_prod.value = dataObject.prodInfo.val_prod.trim();
             descp_prod.value = dataObject.prodInfo.descp_prod.trim();
             type.value = dataObject.prodInfo.productype.trim();
+            if(dataObject.prodInfo.cost_prod == null){
+                cost_prod.value = '';
+            }
+            else{
+                cost_prod.value = dataObject.prodInfo.cost_prod.trim();
+            }
 
             productid = dataObject.prodInfo.product_id;
 
@@ -100,7 +109,8 @@
                     name_prod: name_prod.value,
                     val_prod: val_prod.value,
                     descp_prod: descp_prod.value,
-                    product_id: productid
+                    product_id: productid,
+                    cost_prod: cost_prod.value
                 }
                 ipcRenderer.send('prodEdit:update', sendObject);
             }

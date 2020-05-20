@@ -237,16 +237,17 @@
 
                         case 'quantity':
                             if ($('#productDesc').val() != "" && $('#quantity').val() != "") {
-
+                                console.log('raw_value: ' + $('#productValue').val() + '   raw_qty: ' + $('#quantity').val());
+                                console.log('value: ' + parseInt(removeFormatCurrency($('#productValue').val())) + '   qty: ' + parseInt($('#quantity').val()));
                                 $('#regProducts').append(`<option id="${regId}">${$('#quantity').val()}  |  ${$('#productDesc').val()}  |  ${$('#productValue').val()}</option>`);
                                 productSaleList.push({
                                     local_id: regId,
                                     prod_id: $('#hiddenId').val(),
                                     quantity: parseInt($('#quantity').val()),
-                                    value: parseInt($('#productValue').val().replace(',', '').slice(1))
+                                    value: parseInt(removeFormatCurrency($('#productValue').val()))
                                 });
                                 regId++;
-                                total += parseInt($('#productValue').val().replace(',', '').slice(1)) * parseInt($('#quantity').val());
+                                total += parseInt(removeFormatCurrency($('#productValue').val())) * parseInt($('#quantity').val());
                             }
                             $('#total').val(formatCurrency(total));
                             $('#productCode').val('');

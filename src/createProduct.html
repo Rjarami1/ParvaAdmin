@@ -33,6 +33,9 @@
                     <label class="labelsVentas" for="val_prod">Valor del Producto (COP)</label><br>
                     <input type="integer" class="form-control" id="val_prod" name="val_prod"><br>
 
+                    <label class="labelsVentas" for="cost_prod">Costo de Producción (COP)</label><br>
+                    <input type="integer" class="form-control" id="cost_prod" name="cost_prod"><br>
+
                     <label class="labelsVentas" for="descp_prod">Descripcion del Producto</label><br>
                     <input type="text" class="form-control" id="descp_prod" name="descp_prod"><br>
 
@@ -53,6 +56,7 @@
         const code_prod = document.querySelector('#code_prod');
         const name_prod = document.querySelector('#name_prod');
         const val_prod = document.querySelector('#val_prod');
+        const cost_prod = document.querySelector('#cost_prod');
         const descp_prod = document.querySelector('#descp_prod');
 
         let allDone = true;
@@ -93,7 +97,8 @@
                     name_prod: name_prod.value,
                     val_prod: val_prod.value,
                     descp_prod: descp_prod.value,
-                    production_type: type.options[type.selectedIndex].textContent
+                    production_type: type.options[type.selectedIndex].textContent,
+                    prod_cost: cost_prod.value
                 }
 
                 ipcRenderer.send('prodCreate:create', prodInfo)
