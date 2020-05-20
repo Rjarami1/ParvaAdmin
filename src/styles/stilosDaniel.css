@@ -144,8 +144,8 @@ body .botonNuevoUsuario {
 	width: 200px;
 	position: relative;
 	z-index: 100000;
-	left: 50%;
-	top: 50%;
+	left: 52%;
+	top: 38%;
 	transform: translate(-50%, -50%);
 	margin-bottom: 4%;
 }
