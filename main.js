@@ -256,8 +256,8 @@ ipcMain.on('usrCreate:create', (e, obj) => {
 
 ipcMain.on('usrCreate:edit', (e, userid) => {
 	editUserWindow = new BrowserWindow({
-		width: 600,
-		height: 700,
+		width: 650,
+		height: 750,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -440,39 +440,32 @@ ipcMain.on('activeProducts:selected', (e, filter) => {
 	const text1 = `SELECT product_id, code_prod, name_prod FROM security."listProducts" WHERE productype = '${filter.trim()}' AND status_prod = true`;
 
 	db.pool.query(text1, (err1, res1) => {
-		if (err1)
-		{
+		if (err1) {
 			console.log(err1.stack)
 		}
-		else 
-		{
+		else {
 			mainwc.send('filteredProdcuts:info', res1.rows)
 		}
 	})
 })
 
-ipcMain.on('production:save', (e, arr) => 
-{
+ipcMain.on('production:save', (e, arr) => {
 	let qry = 'INSERT INTO public.production(produc_date, produc_code, produc_name, produc_quan, produc_type) VALUES ';
 	let pro_value;
 
-	arr.forEach(elm => 
-	{
+	arr.forEach(elm => {
 		pro_value = `(CURRENT_TIMESTAMP, ${elm.code}, '${elm.name}', ${elm.quantity}, '${elm.type}'),`;
 		qry += pro_value;
 	});
 
 	qry = qry.slice(0, -1);
 	qry += ';'
-	db.pool.query(qry, (err, res) => 
-	{
-		if (err)
-		{
+	db.pool.query(qry, (err, res) => {
+		if (err) {
 			console.log(err.stack);
 			mainwc.send('production:error');
 		}
-		else
-		{
+		else {
 			mainwc.send('production:success');
 		}
 	})
@@ -634,17 +627,17 @@ ipcMain.on('expenseManager:save', (e, arr) => {
 		mainwc.send('expenseManager:done');
 	}
 	)
-	.catch(err => {
-		console.log(err.stack);
-		mainwc.send('expenseManager:error');
-	})
+		.catch(err => {
+			console.log(err.stack);
+			mainwc.send('expenseManager:error');
+		})
 })
 
 ipcMain.on('sales:ready', (e) => {
 	const text = 'SELECT * FROM security."listProducts" WHERE status_prod = true;';
 	const text2 = `SELECT shift_id FROM public.shifts WHERE user_id = ${logged_user_id} AND shift_status = true;`;
 	let shift = -1;
-	
+
 	db.pool.query(text, (err1, res1) => {
 		if (err1) {
 			console.log(err1.stack);
@@ -654,11 +647,11 @@ ipcMain.on('sales:ready', (e) => {
 				if (err2) {
 					console.log(err2.stack);
 				}
-				else{
-					if(res2.rowCount > 0){
+				else {
+					if (res2.rowCount > 0) {
 						shift = res2.rows[0].shift_id;
 					}
-					else{
+					else {
 						sendSalesReview();
 					}
 					mainwc.send('sales:info', [res1.rows, shift]);
@@ -707,13 +700,13 @@ ipcMain.on('sales:register', (e, arr) => {
 		text += `(${product.prod_id},${product.quantity},${product.value},CURRENT_TIMESTAMP,${shift}),`;
 	})
 
-	text = text.slice(0,-1);
+	text = text.slice(0, -1);
 
 	db.pool.query(text, (err, res) => {
-		if(err){
+		if (err) {
 			console.log(err.stack);
 		}
-		else{
+		else {
 			mainwc.send('sales:done');
 		}
 	})
@@ -809,15 +802,15 @@ function sendProductsList() {
 	})
 }
 
-function sendSalesReview(){
+function sendSalesReview() {
 	const text = `SELECT * FROM public.sales_view WHERE shift_id = COALESCE((SELECT MAX(shift_id) FROM public.shifts WHERE user_id = ${logged_user_id}),-1);`;
 	let products = [];
 
-	db.pool.query(text, (err,res) => {
-		if(err){
+	db.pool.query(text, (err, res) => {
+		if (err) {
 			console.log(err.stack);
 		}
-		else{
+		else {
 			products = res.rows;
 
 			mainwc.send('sales:review', products);

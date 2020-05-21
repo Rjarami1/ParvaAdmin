@@ -44,11 +44,11 @@ body .centralGastos {
 body .centralProd {
 	position: absolute;
 	z-index: 100000;
-	left: 50%;
-	top: 65%;
+	left: 51%;
+	top: 63%;
 	transform: translate(-50%, -50%);
 	height: 80%;
-	width: 50%;
+	width: 55%;
 }
 
 body .centralGestGastos {
@@ -438,12 +438,13 @@ li img:hover {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	margin-top: 2%;
+	margin-bottom: 2%;
 }
 
 .btnRegProd{
 	position: relative;
 	z-index: 100000;
-	left: 49%;
+	left: 48%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 	margin-top: 5%;
@@ -454,15 +455,15 @@ li img:hover {
 	z-index: 100000;
 	left: 75.25%;
 	transform: translate(-50%, -50%);
-	margin-top: 4%;
+	margin-top: 10%;
 }
 
 .selTipoProd{
 	position: relative;
 	z-index: 100000;
-	left: 17%;
+	left: 20%;
 	transform: translate(-50%, -50%);
-	margin-top: 8.6%;
+	margin-top: 2.4%;
 }
 
 .btnsEditUser{
@@ -482,7 +483,9 @@ li img:hover {
 .inputsEditUser{
 	position: relative;
 	z-index: 100000;
+	width: 50%;
 	left: 50%;
+	margin-top: 5%;
 	transform: translate(-50%, -50%);
 }
 
