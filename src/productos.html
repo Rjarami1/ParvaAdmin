@@ -24,7 +24,7 @@
 
 		<div class="row">
 			<div class="col-xl">
-				<p class="margLeftTitulos">Lista de Productos Terminados:</p>
+				<h3 class="margLeftTitulos">Lista de Productos Terminados:</h3>
 				<ul id="productList"></ul>
 			</div>
 		</div>
@@ -120,11 +120,11 @@
 				prodText4 = document.createTextNode(product.val_prod)
 				prodText5 = document.createTextNode(product.descp_prod)
 				prodText7 = document.createTextNode(product.productype)
-				
-				if(product.cost_prod == null){
+
+				if (product.cost_prod == null) {
 					prodText8 = document.createTextNode('-')
 				}
-				else{
+				else {
 					prodText8 = document.createTextNode(product.cost_prod)
 				}
 

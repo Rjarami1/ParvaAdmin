@@ -13,14 +13,13 @@
 
 <body>
 
-    <div class="encabezadoPrinSup">
+    <div class="encabezadoPrinSupGastos">
         <h1 class="margLeftTitulos">Registro de Gastos</h1>
     </div>
 
     <div class="encabezadoPrinInf">
         <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
     </div>
-
 
     <div class="container centralGastos">
         <div class="row filasGastos">
@@ -56,9 +55,7 @@
                         Gasto</button>
                 </div>
 
-                <div class="row filasGastos">
-                    <p id="error_msg" style="color: red;"></p>
-                </div>
+
 
             </div>
         </div>
@@ -74,7 +71,7 @@
 
             <h3>Gastos Adicionados:</h3>
             <div class="col-xl">
-                <div class="tablaGastos">
+                <div class="row tablaGastos">
                     <table id="expenses_to_register" class="table table-striped">
                         <tr>
                             <th>Número</th>
@@ -85,13 +82,23 @@
                         </tr>
 
                     </table>
-
-                    <button class="btn btn btn-primary btnRegGasto" id="save_expenses">Registrar Gastos</button>
                 </div>
-
-
             </div>
         </div>
+
+        <div class="row">
+            <button class="btn btn btn-primary btnRegGasto" id="save_expenses">Registrar Gastos</button>
+            <p id="error_msg" style="color: red;"></p>
+        </div>
+
+        <div class="row">
+            <div class="col-xl">
+                <p id="msg"></p>
+                <img id="loading" class="imgCarga" src="../images/Double Ring-1s-200px.gif" alt="loading..."
+                    style="visibility: hidden; height: 50px; width: 50px;" />
+            </div>
+        </div>
+
 
         <!-- <div class="row">
                 <div class="col-xl">
@@ -100,9 +107,7 @@
 
     </div>
 
-    <p id="msg"></p>
-    <img id="loading" class="imgCarga" src="../images/Double Ring-1s-200px.gif" alt="loading..."
-        style="visibility: hidden; height: 50px; width: 50px;" />
+
 
 
 
