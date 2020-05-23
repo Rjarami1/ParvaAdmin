@@ -13,8 +13,7 @@
 <body>
 
     <div class="encabezadoPrinSup">
-        <h1 class="margLeftTitulos">Ventas</h1><br>
-        <h2 class="margLeftTitulos">Módulo de registro de ventas</h2>
+        <h1 class="margLeftTitulos">Módulo de registro de ventas</h1>
     </div>
 
     <div class="encabezadoPrinInfVentas">
@@ -23,15 +22,15 @@
 
     <div class="container">
         <div class="row shiftButtons">
-            <div class="col">
+            <div class="col-xl">
                 <button id="startShift" type="button" class="btn btn-success">Iniciar Turno</button>
             </div>
         </div>
     </div>
 
-    <div class="container chart">
+    <div class="container chart centralVentas">
         <div class="row">
-            <div class="col">
+            <div class="col-xl-4">
                 <form id="form1">
                     <label for="productCode" class="labelsVentas">Código del Producto</label>
                     <input name="productCode" type="number" class="form-control" id="productCode" readonly>&nbsp;&nbsp;
@@ -54,7 +53,7 @@
                     <input type="text" class="form-control" name="change" id="change" disabled>
                 </form>
             </div>
-            <div class="tableroNumVentas col">
+            <div class="tableroNumVentas col-xl-5">
                 <button class="numpad btn btn-light" value="1">1</button>
                 <button class="numpad btn btn-light" value="2">2</button>
                 <button class="numpad btn btn-light" value="3">3</button><br>
@@ -67,10 +66,10 @@
                 <button class="numpad btn btn-light" value="0">0</button>
                 <button class="numpad btn btn-light" value="00">00</button>
                 <button class="numpad btn btn-light" value="000">000</button><br>
-                <button class="numpad btn btn-light" value="-1">Enter</button>
+                <button class="numpad btn btn-light Enter" value="-1">Enter</button>
                 <button class="numpad btn btn-light limpiar" value="-2">Limpiar</button>
             </div>
-            <div class="col-2">
+            <div class="col-xl-2">
                 <button type="button" class="btn btn-secondary" id="deleteProd">Eliminar Producto</button><br>
                 <select class="list-group" id="regProducts" name="regProducts" size="5">
                 </select>
@@ -109,7 +108,7 @@
             <div class="col-xl">
                 <div class="tablaResumVentas">
                     <table id="last-shift" class="table table-striped">
-                       <thead>
+                        <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Cantidad</th>
@@ -120,7 +119,7 @@
                             </tr>
                         </thead>
                         <tbody>
-        
+
                         </tbody>
                     </table>
                 </div>

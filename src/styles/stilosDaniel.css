@@ -51,8 +51,22 @@ body .centralProd {
 	width: 100%;
 }
 
+body .centralVentas {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 55%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 100%;
+}
+
 .form-control{
 	font-size: 0.9rem;
+}
+
+.sizeEnter{
+	font-size: 0.5rem;
 }
 
 body .centralGestGastos {
@@ -293,10 +307,11 @@ body .central .buttonInsProd{
 }
 
 .numpad {
-	width: 80px;
-	height: 80px;
+	width: 22%;
+	height: 18%;
 	font-size: 30px;
-	margin: 4px;
+	margin: 2%;
+	padding: 0;
 }
 
 input#dateTime {
@@ -304,12 +319,16 @@ input#dateTime {
 }
 
 .limpiar {
-	font-size: 20px;
+	font-size: 17px;
+}
+
+.Enter {
+	font-size: 18px;
 }
 
 .foot {
-	margin-top: 30px;
-	margin-bottom: 10px;
+	margin-top: 5%;
+	margin-bottom: 1%;
 }
 
 .endButton {
@@ -341,7 +360,7 @@ body .container .row .col .labelsVentas{
 }
 
 .tableroNumVentas{
-	margin: 20px;
+	margin: 1%;
 }
 
 .btnAddGasto{
@@ -467,13 +486,13 @@ li img:hover {
 	width: 50%;
 }
 
-.selTipoProd{
+/* .selTipoProd{
 	position: relative;
 	z-index: 100000;
 	left: 20%;
 	transform: translate(-50%, -50%);
 	margin-top: 2.4%;
-}
+} */
 
 .btnsEditUser{
 	position: relative;
