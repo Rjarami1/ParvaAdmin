@@ -22,13 +22,13 @@
 
     <div class="container centralProd">
         <div class="row">
-            <div class="col">
+            <div class="col-xl">
 
                 <div class="row">
                     <div class="col-xl">
-                        <h3>Productos disponibles de tipo</h3>
+                        <h3>Productos disponibles</h3>
                     </div>
-                    <div class="col-xl selTipoProd">
+                    <div class="col-xl">
                         <h3 id="selected_type"></h3>
                     </div>
                 </div>
@@ -36,15 +36,15 @@
                 <form>
 
                     <div class="row">
-                        <div class="col-xl tipoProd">
+                        <div class="tipoProd">
                             <label for="production_type">Tipo de Produccion:</label>
-                            <select class="form-control" name="production_type" id="production_type">
+                            <select class=" form-control" name="production_type" id="production_type">
                                 <option value="" selected>--Seleccione Tipo--</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row filasProd">
                         <div class="col-xl">
                             <label for="production_date">Fecha: </label>
                             <input type="date" class="form-control" name="production_date" id="production_date">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row filasProd">
                         <div class="col-xl">
                             <label for="product_code">Código Producto:</label>
                             <input type="text" class="form-control" id="product_code" name="product_code">
@@ -66,20 +66,20 @@
                         </div>
                         <div class="col-xl">
                             <label for="product_name">Nombre del Producto: </label>
-                            <input type="text" class="form-control" id="product_name" name="product_name" disabled>
+                            <input type="text" class="form-control" id="product_name" name="product_name">
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-xl">
+                        <div class="tipoProd">
                             <label for="product_quantity">Cantidad producida:</label>
                             <input type="number" class="form-control" name="product_quantity" id="product_quantity">
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-xl">
-                            <button type="submit" class="btn btn btn-primary btnAddProd" id="add_production">Adicionar
+                        <div class="btnAddProd">
+                            <button type="submit" class="btn btn btn-primary" id="add_production">Adicionar
                                 Produccion</button>
                         </div>
                     </div>
@@ -90,7 +90,9 @@
                         </div>
                     </div>
                 </form>
+            </div>
 
+            <div class="col-xl">
                 <div class="row">
                     <div class="col-xl">
                         <h3>Produccion Adicionada:</h3>
@@ -116,12 +118,12 @@
                 <div class="row">
                     <div class="col-xl">
                         <p id="msg"></p>
-                        <img class="imgCargas" id="loading" src="../images/Double Ring-1s-200px.gif" alt="loading..."
+                        <img class="imgCarga" id="loading" src="../images/Double Ring-1s-200px.gif" alt="loading..."
                             style="visibility: hidden; height: 50px; width: 50px;" />
                     </div>
                 </div>
-
             </div>
+
         </div>
     </div>
 

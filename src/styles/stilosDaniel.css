@@ -44,11 +44,15 @@ body .centralGastos {
 body .centralProd {
 	position: absolute;
 	z-index: 100000;
-	left: 51%;
-	top: 63%;
+	left: 50%;
+	top: 60%;
 	transform: translate(-50%, -50%);
 	height: 80%;
-	width: 55%;
+	width: 100%;
+}
+
+.form-control{
+	font-size: 0.9rem;
 }
 
 body .centralGestGastos {
@@ -224,7 +228,7 @@ body .encabezado {
 
 body .encabezadoPrinSup {
 	background-color: #6b81a4;
-	height: 130px;
+	height: 2%;
 	position: relative;
 }
 
@@ -391,6 +395,10 @@ li img:hover {
 	margin-top: 2%;
 }
 
+.filasProd{
+	margin-bottom: 2%;
+}
+
 .imgCarga{
 	position: relative;
 	z-index: 100000;
@@ -453,9 +461,10 @@ li img:hover {
 .tipoProd{
 	position: relative;
 	z-index: 100000;
-	left: 75.25%;
+	left: 50%;
 	transform: translate(-50%, -50%);
 	margin-top: 10%;
+	width: 50%;
 }
 
 .selTipoProd{
