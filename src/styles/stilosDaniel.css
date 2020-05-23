@@ -51,6 +51,10 @@ body .centralProd {
 	width: 100%;
 }
 
+.Espacio{
+	visibility: hidden;
+}
+
 body .centralVentas {
 	position: absolute;
 	z-index: 100000;
