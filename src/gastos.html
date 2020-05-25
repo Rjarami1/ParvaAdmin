@@ -23,87 +23,87 @@
 
     <div class="container centralGastos">
         <div class="row filasGastos">
-            <div class="col-xl">
-                <label for="expense_date">Fecha: </label>
-                <input type="date" class="form-control" name="expense_date" id="expense_date">&nbsp;&nbsp;
+
+            <div class="col-xl-5">
 
                 <form>
-                    <div class="campTipoGasto">
-                        <label for="expense_type">Tipo Gasto:</label>
-                        <select class="form-control" name="expense_type" id="expense_type">
-                            <option value="" selected></option>
-                        </select>
+                    <div class="col-xl">
+                        <label for="expense_date">Fecha: </label>
+                        <input type="date" class="form-control" name="expense_date" id="expense_date">&nbsp;&nbsp;
+
+                        <div class="campTipoGasto">
+                            <label for="expense_type">Tipo Gasto:</label>
+                            <select class="form-control" name="expense_type" id="expense_type">
+                                <option value="" selected></option>
+                            </select>
+                        </div>
+
+                        <div class="campCodGasto">
+                            <label for="expense_code">Código Gasto</label>
+                            <select class="form-control" name="expense_code" id="expense_code">
+                                <option value="" selected></option>
+                            </select><br>
+                        </div>
                     </div>
 
-                    <div class="campCodGasto">
-                        <label for="expense_code">Código Gasto</label>
-                        <select class="form-control" name="expense_code" id="expense_code">
-                            <option value="" selected></option>
-                        </select><br>
+                    <div class="col-xl">
+                        <label for="expense_value">Valor:</label>
+                        <input type="text" class="form-control" name="expense_value" id="expense_value">
+
+                        <label for="expense_quantity">Cantidad:</label>
+                        <input type="number" class="form-control" name="expense_quantity" id="expense_quantity">
+
+                        <div>
+                            <button class="btn btn btn-primary btnAddGasto" type="submit" id="add_expenses">Adicionar
+                                Gasto</button>
+                        </div>
                     </div>
+
+                </form>
             </div>
 
-            <div class="col-xl">
-                <label for="expense_value">Valor:</label>
-                <input type="text" class="form-control" name="expense_value" id="expense_value">
 
-                <label for="expense_quantity">Cantidad:</label>
-                <input type="number" class="form-control" name="expense_quantity" id="expense_quantity">
 
-                <div>
-                    <button class="btn btn btn-primary btnAddGasto" type="submit" id="add_expenses">Adicionar
-                        Gasto</button>
+            <div class="col-xl-7">
+
+                <div class="filasGastos">
+
+                    <div class="col-xl">
+
+                        <div class="row">
+                            <h3>Gastos Adicionados:</h3>
+                        </div>
+
+                        <div class="row tablaGastos">
+                            <table id="expenses_to_register" class="table table-striped">
+                                <tr>
+                                    <th>Número</th>
+                                    <th>Tipo</th>
+                                    <th>Código</th>
+                                    <th>Valor</th>
+                                    <th>Cantidad</th>
+                                </tr>
+
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <button class="btn btn btn-primary btnRegGasto" id="save_expenses">Registrar Gastos</button>
+                            <p id="error_msg" style="color: red;"></p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl">
+                                <p id="msg"></p>
+                                <img id="loading" class="imgCarga" src="../images/Double Ring-1s-200px.gif"
+                                    alt="loading..." style="visibility: hidden; height: 50px; width: 50px;" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-
-
-            </div>
-        </div>
-        </form>
-
-        <!-- <div class="row filasGastos">
-                <div class="col-xl">
-                </div>
-            </div> -->
-
-
-        <div class="row filasGastos">
-
-            <h3>Gastos Adicionados:</h3>
-            <div class="col-xl">
-                <div class="row tablaGastos">
-                    <table id="expenses_to_register" class="table table-striped">
-                        <tr>
-                            <th>Número</th>
-                            <th>Tipo</th>
-                            <th>Código</th>
-                            <th>Valor</th>
-                            <th>Cantidad</th>
-                        </tr>
-
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <button class="btn btn btn-primary btnRegGasto" id="save_expenses">Registrar Gastos</button>
-            <p id="error_msg" style="color: red;"></p>
-        </div>
-
-        <div class="row">
-            <div class="col-xl">
-                <p id="msg"></p>
-                <img id="loading" class="imgCarga" src="../images/Double Ring-1s-200px.gif" alt="loading..."
-                    style="visibility: hidden; height: 50px; width: 50px;" />
             </div>
         </div>
 
-
-        <!-- <div class="row">
-                <div class="col-xl">
-                </div>
-            </div> -->
 
     </div>
 

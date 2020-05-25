@@ -38,7 +38,7 @@ body .centralGastos {
 	top: 60%;
 	transform: translate(-50%, -50%);
 	height: 80%;
-	width: 50%;
+	width: 100%%;
 }
 
 body .centralProd {
@@ -49,6 +49,7 @@ body .centralProd {
 	transform: translate(-50%, -50%);
 	height: 80%;
 	width: 100%;
+	font-size: 0.9rem;
 }
 
 .Espacio{
@@ -59,10 +60,11 @@ body .centralVentas {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
-	top: 55%;
+	top: 50%;
 	transform: translate(-50%, -50%);
 	height: 80%;
 	width: 100%;
+	font-size: 0.9rem;
 }
 
 .form-control{
@@ -77,10 +79,11 @@ body .centralGestGastos {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
-	top: 65%;
+	top: 60%;
 	transform: translate(-50%, -50%);
 	height: 80%;
-	width: 50%;
+	width: 100%;
+	font-size: 0.9rem;
 }
 
 body .tablaProd {
@@ -107,7 +110,7 @@ body .tablaGastos {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	margin: 2%;
+	margin-top: 10%;
 }
 
 body .tablaGastos tr:hover {
@@ -180,6 +183,7 @@ body .tablaAdmin {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
+	font-size: 0.9rem;
 }
 
 body .tablaAdmin tr:hover {
@@ -336,9 +340,17 @@ input#dateTime {
 	font-size: 18px;
 }
 
+.centralProductos{
+	font-size: 0.9rem;
+}
+
 .foot {
-	margin-top: 5%;
+	margin-top: 4%;
 	margin-bottom: 1%;
+}
+
+.col1Ventas{
+	margin-top: 2%;
 }
 
 .endButton {
@@ -371,6 +383,7 @@ body .container .row .col .labelsVentas{
 
 .tableroNumVentas{
 	margin: 1%;
+	margin-left: 7.6%;
 }
 
 .btnAddGasto{
