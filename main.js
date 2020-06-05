@@ -712,6 +712,60 @@ ipcMain.on('sales:register', (e, arr) => {
 	})
 })
 
+ipcMain.on('expenseReport:ready', (e) => {
+	
+	const text1 = 'SELECT DISTINCT type_description, type_id FROM public.expenses_view';
+	const text2 = 'SELECT DISTINCT expense_code, code_description, code_type_id FROM public.expenses_view';
+
+	db.pool.query(text1, (err1, res1) => {
+		if(err1){
+			console.log(err1.stack);
+		}
+		else{
+			db.pool.query(text2, (err2, res2) => {
+				if(err2){
+					console.log(err2.stack);
+				}
+				else{
+					mainwc.send('expenseReport:info', [res1.rows, res2.rows]);
+				}
+			})
+		}
+	})
+})
+
+ipcMain.on('expenseReport:search', (e, obj) => {
+	
+	let text = 'SELECT expense_date, type_description, expense_code, code_description, expense_value, expense_quantity, total FROM public.expenses_view WHERE ';
+
+	if(obj.fromDate.length > 0){
+		text += `expense_date >= '${obj.fromDate}' AND `;
+	}
+	if(obj.toDate.length > 0){
+		text += `expense_date <= '${obj.toDate}' AND `;
+	}
+	if(obj.expenseType.length > 0){
+		text += `type_description = '${obj.expenseType}' AND `
+	}
+
+	if(obj.expenseCode.length > 0){
+		text += `expense_code = '${obj.expenseCode}';`;
+	}
+	else{
+		text = text.slice(0,-5) + ';';
+	}
+
+	db.pool.query(text, (err, res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			console.log(res.rows);
+			mainwc.send('expenseReport:result', res.rows);
+		}
+	})
+})
+
 const mainMenuTemplate = [
 	{
 		label: 'Archivo',

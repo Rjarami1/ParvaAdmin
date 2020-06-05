@@ -62,7 +62,7 @@ function formatCurrency(num) {
         if (len > 0) {
                 if (number.length >= 7) {
                         mill = number.slice(0, len - 6);
-                        mill += ','
+                        mill += '.'
                 }
                 if (number.length >= 4) {
                         if (mill.length > 0) {
@@ -71,7 +71,7 @@ function formatCurrency(num) {
                         else {
                                 thous = number.slice(0, len - 3);
                         }
-                        thous += ',';
+                        thous += '.';
                 }
                 if (thous.length > 0) {
                         hundr = number.slice(len - 3);
@@ -80,10 +80,10 @@ function formatCurrency(num) {
                         hundr = number;
                 }
 
-                return '$' + mill + thous + hundr + '.00';
+                return '$' + mill + thous + hundr + ',00';
         }
         else {
-                return '$0.00'
+                return '$0,00'
         }
 
 }

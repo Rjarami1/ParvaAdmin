@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/stilosDaniel.css" />
+
+    <meta charset="UTF-8">
+    <title>Reporte de Gastos</title>
+</head>
+<body>
+    <div class="encabezadoPrinSupGastos">
+        <h1 class="margLeftTitulos">Reporte de Gastos</h1>
+    </div>
+
+    <form id="filters">
+        <label for="fromDate">Desde: </label>
+        <input type="date" class="form-control" name="fromDate" id="fromDate">&nbsp;&nbsp;
+
+        <label for="toDate">Hasta: </label>
+        <input type="date" class="form-control" name="toDate" id="toDate">&nbsp;&nbsp;
+
+        <label for="expenseType">Tipo de Gasto: </label>
+        <select class="form-control" name="expenseType" id="expenseType">
+            <option value="-1">--- Seleccione ---</option>
+        </select>
+
+        <label for="expenseCode">Código de gasto: </label>
+        <select class="form-control" name="expenseCode" id="expenseCode">
+            <option value="-1">--- Seleccione ---</option>
+        </select>
+
+        <button class="btn btn btn-primary" type="submit">Buscar</button>
+    </form>
+    <p id="msg" style="color: red;"></p>
+
+    <table class="table table-striped" id="expenses">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Fecha de Gasto</th>
+                <th>Tipo de Gasto</th>
+                <th>Código de Gasto</th>
+                <th>Descripción</th>
+                <th>Valor</th>
+                <th>Cantidad</th>
+                <th>Total Gasto</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <p id="msg_result"></p>
+
+    <script>
+        window.$ = window.jQuery = require('jquery');
+        const { ipcRenderer } = require('electron');
+        const { _ } = require('lodash');
+
+        $(document).ready(function(){
+
+            ipcRenderer.send('expenseReport:ready');
+
+            let types, codes;
+            ipcRenderer.on('expenseReport:info', (e, arr) => {
+                types = arr[0];
+                codes = arr[1];
+
+                types.forEach(type => {
+                    $('#expenseType').append(`<option value="${type.type_id}">${type.type_description.trim()}</option>`);
+                });
+
+                codes.forEach(code => {
+                    $('#expenseCode').append(`<option value="${code.expense_code.trim()}">${code.expense_code.trim()} - ${code.code_description}</option>`);
+                });
+
+                $('#expenseType').on('change', function(){
+                    return populateCodeSelector($('#expenseType').val());
+                });
+
+                $('#filters').on('submit', function(e){
+                    e.preventDefault();
+                    return searchExpenses();
+                });
+
+            });
+
+            ipcRenderer.on('expenseReport:result', (e, arr) => {
+                if(arr.length > 0){
+
+                    $('#msg_result').text('');
+                    let num = 1;
+                    let expenseDate;
+
+                    arr.forEach(expense => {
+                        expenseDate = new Date(Date.parse(expense.expense_date));
+                        $('#expenses tbody').append(`<tr><td>${num}</td><td>${expenseDate.toLocaleDateString('en-GB')}</td><td>${expense.type_description.trim()}</td><td>${expense.expense_code.trim()}</td><td>${expense.code_description.trim()}</td><td>${expense.expense_value}</td><td>${expense.expense_quantity}</td><td>${expense.total}</td></tr>`);
+                        num++;
+
+                        expenseDate = null;
+                    });
+                }
+                else{
+                    $('#msg_result').text('No se encontraron registron que cumplan con el criterio de búsqueda.');
+                }
+            });
+
+            function populateCodeSelector(idType){
+                $('#expenseCode').empty();
+                $('#expenseCode').append('<option value="-1">--- Seleccione ---</option>');
+
+                if(idType != "-1"){
+                    let newCodes = _.filter(codes, (code) => {
+                    return code.code_type_id == idType;
+                    });
+
+                    newCodes.forEach(code => {
+                        $('#expenseCode').append(`<option value="${code.expense_code.trim()}">${code.expense_code.trim()} - ${code.code_description.trim()}</option>`);
+                    });
+                }
+                else{
+                    codes.forEach(code => {
+                        $('#expenseCode').append(`<option value="${code.expense_code.trim()}">${code.expense_code.trim()} - ${code.code_description.trim()}</option>`);
+                    });
+                }
+            }
+
+            function searchExpenses(){
+                if($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#expenseType').val() != "-1" || $('#expenseCode').val() != "-1"){
+                    
+                    $('#expenses tbody').empty();
+                    $('#msg').text('');
+
+                    let typeText, codeText;
+                    if($('#expenseType').val() == "-1"){
+                        typeText = "";
+                    }
+                    else{
+                        typeText = $('#expenseType option:selected').text();
+                    }
+
+                    if($('#expenseCode').val() == "-1"){
+                        codeText = "";
+                    }
+                    else{
+                        codeText = $('#expenseCode option:selected').val();
+                    }
+
+                    let filterObject = {
+                        fromDate: $('#fromDate').val(),
+                        toDate: $('#toDate').val(),
+                        expenseType: typeText,
+                        expenseCode: codeText
+                    }
+
+                    ipcRenderer.send('expenseReport:search', filterObject);
+                }
+                else{
+                    $('#msg').text('Debe seleccionar por lo menos un filtro.');
+                }
+            }
+
+        })
+    </script>
+</body>
+</html>
