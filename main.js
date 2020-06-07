@@ -760,7 +760,6 @@ ipcMain.on('expenseReport:search', (e, obj) => {
 			console.log(err.stack);
 		}
 		else{
-			console.log(res.rows);
 			mainwc.send('expenseReport:result', res.rows);
 		}
 	})
