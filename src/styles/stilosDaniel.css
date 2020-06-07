@@ -52,6 +52,17 @@ body .centralProd {
 	font-size: 0.9rem;
 }
 
+body .centralRepGastos {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 60%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 100%;
+	font-size: 0.9rem;
+}
+
 .Espacio{
 	visibility: hidden;
 }
@@ -101,6 +112,23 @@ body .tablaProd tr:hover {
 	background-color: rgba(0,0,0,.05);
 	cursor: pointer;
 }
+
+body .tablaRepGastos {
+	
+	height: auto;
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 10%;
+	transform: translate(-50%, -50%);
+	margin: 2%;
+}
+
+body .tablaRepGastos tr:hover {
+	background-color: rgba(0,0,0,.05);
+	cursor: pointer;
+}
+
 
 body .tablaGastos {
 	width: 590px;
@@ -396,12 +424,20 @@ body .container .row .col .labelsVentas{
 
 }
 
+.btnBuscarGasto{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
 .btnRegGasto{
 	position: relative;
 	z-index: 100000;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	margin-top: 5%;
+	margin-top: 20%;
 }
 
 .campTipoGasto{
@@ -410,6 +446,10 @@ body .container .row .col .labelsVentas{
 
 .campCodGasto{
 	margin: 1px;
+}
+
+.formRepGastos{
+	margin-top: 2%;
 }
 
 .margLeftTitulos{

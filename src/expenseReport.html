@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <!-- Bootstrap 4 CSS -->
     <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
@@ -8,55 +9,97 @@
     <meta charset="UTF-8">
     <title>Reporte de Gastos</title>
 </head>
+
 <body>
-    <div class="encabezadoPrinSupGastos">
+
+    <div class="encabezadoPrinSup">
         <h1 class="margLeftTitulos">Reporte de Gastos</h1>
     </div>
 
-    <form id="filters">
-        <label for="fromDate">Desde: </label>
-        <input type="date" class="form-control" name="fromDate" id="fromDate">&nbsp;&nbsp;
+    <div class="encabezadoPrinInf">
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
+    </div>
 
-        <label for="toDate">Hasta: </label>
-        <input type="date" class="form-control" name="toDate" id="toDate">&nbsp;&nbsp;
 
-        <label for="expenseType">Tipo de Gasto: </label>
-        <select class="form-control" name="expenseType" id="expenseType">
-            <option value="-1">--- Seleccione ---</option>
-        </select>
+    <div class="container centralRepGastos">
 
-        <label for="expenseCode">Código de gasto: </label>
-        <select class="form-control" name="expenseCode" id="expenseCode">
-            <option value="-1">--- Seleccione ---</option>
-        </select>
+        <div class="row">
 
-        <button class="btn btn btn-primary" type="submit">Buscar</button>
-    </form>
-    <p id="msg" style="color: red;"></p>
+            <div class="col-xl-3">
 
-    <table class="table table-striped" id="expenses">
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>Fecha de Gasto</th>
-                <th>Tipo de Gasto</th>
-                <th>Código de Gasto</th>
-                <th>Descripción</th>
-                <th>Valor</th>
-                <th>Cantidad</th>
-                <th>Total Gasto</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <p id="msg_result"></p>
+                <form id="filters">
+                    <label class="formRepGastos" for="fromDate">Desde: </label>
+                    <input type="date" class="form-control" name="fromDate" id="fromDate">
+
+                    <label class="formRepGastos" for="toDate">Hasta: </label>
+                    <input type="date" class="form-control" name="toDate" id="toDate">
+
+                    <label class="formRepGastos" for="expenseType">Tipo de Gasto: </label>
+                    <select class="form-control" name="expenseType" id="expenseType">
+                        <option value="-1">--- Seleccione ---</option>
+                    </select>
+
+                    <label class="formRepGastos" for="expenseCode">Código de gasto: </label>
+                    <select class="form-control" name="expenseCode" id="expenseCode">
+                        <option value="-1">--- Seleccione ---</option>
+                    </select>
+
+                    <div class="formRepGastos">
+                        <button class="btnBuscarGasto btn btn btn-primary " type="submit">Buscar</button>
+                    </div>
+
+                    <div class="formRepGastos">
+                        <p id="msg" style="color: red;"></p>
+                    </div>
+                </form>
+
+
+            </div>
+
+            <div class="col-xl">
+
+                <table class="table table-striped tablaRepGastos" id="expenses">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Fecha de Gasto</th>
+                            <th>Tipo de Gasto</th>
+                            <th>Código de Gasto</th>
+                            <th>Descripción</th>
+                            <th>Valor</th>
+                            <th>Cantidad</th>
+                            <th>Total Gasto</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <p id="msg_result"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Importando funciones de utilidades -->
+    <script src=" ../utilidades.js"></script>
 
     <script>
         window.$ = window.jQuery = require('jquery');
         const { ipcRenderer } = require('electron');
         const { _ } = require('lodash');
 
-        $(document).ready(function(){
+        //Informar al Main Renderer que la página está lista para inicializar la función setAutoTime.
+        document.addEventListener('DOMContentLoaded', (e) => {
+            setAutoTime();
+        })
+
+        // Declarando función setAutoTime
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
+
+        $(document).ready(function () {
 
             ipcRenderer.send('expenseReport:ready');
 
@@ -73,11 +116,11 @@
                     $('#expenseCode').append(`<option value="${code.expense_code.trim()}">${code.expense_code.trim()} - ${code.code_description}</option>`);
                 });
 
-                $('#expenseType').on('change', function(){
+                $('#expenseType').on('change', function () {
                     return populateCodeSelector($('#expenseType').val());
                 });
 
-                $('#filters').on('submit', function(e){
+                $('#filters').on('submit', function (e) {
                     e.preventDefault();
                     return searchExpenses();
                 });
@@ -85,7 +128,7 @@
             });
 
             ipcRenderer.on('expenseReport:result', (e, arr) => {
-                if(arr.length > 0){
+                if (arr.length > 0) {
 
                     $('#msg_result').text('');
                     let num = 1;
@@ -99,49 +142,49 @@
                         expenseDate = null;
                     });
                 }
-                else{
+                else {
                     $('#msg_result').text('No se encontraron registron que cumplan con el criterio de búsqueda.');
                 }
             });
 
-            function populateCodeSelector(idType){
+            function populateCodeSelector(idType) {
                 $('#expenseCode').empty();
                 $('#expenseCode').append('<option value="-1">--- Seleccione ---</option>');
 
-                if(idType != "-1"){
+                if (idType != "-1") {
                     let newCodes = _.filter(codes, (code) => {
-                    return code.code_type_id == idType;
+                        return code.code_type_id == idType;
                     });
 
                     newCodes.forEach(code => {
                         $('#expenseCode').append(`<option value="${code.expense_code.trim()}">${code.expense_code.trim()} - ${code.code_description.trim()}</option>`);
                     });
                 }
-                else{
+                else {
                     codes.forEach(code => {
                         $('#expenseCode').append(`<option value="${code.expense_code.trim()}">${code.expense_code.trim()} - ${code.code_description.trim()}</option>`);
                     });
                 }
             }
 
-            function searchExpenses(){
-                if($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#expenseType').val() != "-1" || $('#expenseCode').val() != "-1"){
-                    
+            function searchExpenses() {
+                if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#expenseType').val() != "-1" || $('#expenseCode').val() != "-1") {
+
                     $('#expenses tbody').empty();
                     $('#msg').text('');
 
                     let typeText, codeText;
-                    if($('#expenseType').val() == "-1"){
+                    if ($('#expenseType').val() == "-1") {
                         typeText = "";
                     }
-                    else{
+                    else {
                         typeText = $('#expenseType option:selected').text();
                     }
 
-                    if($('#expenseCode').val() == "-1"){
+                    if ($('#expenseCode').val() == "-1") {
                         codeText = "";
                     }
-                    else{
+                    else {
                         codeText = $('#expenseCode option:selected').val();
                     }
 
@@ -154,12 +197,18 @@
 
                     ipcRenderer.send('expenseReport:search', filterObject);
                 }
-                else{
+                else {
                     $('#msg').text('Debe seleccionar por lo menos un filtro.');
                 }
             }
 
         })
     </script>
+
+    </script>
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
 </body>
+
 </html>
