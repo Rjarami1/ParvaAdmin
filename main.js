@@ -1,5 +1,6 @@
 const electron = require('electron');
 const _ = require('lodash');
+const ObjectsToCsv = require('objects-to-csv');
 
 const db = require('./connection')
 const userMenu = require('./menuModules')
@@ -23,6 +24,7 @@ let createprod
 let editwc
 
 let logged_user_id = -1;
+const relativeCsvlocation = './Reportes';
 
 function createMainWindow() {
 	mainWindow = new BrowserWindow({
@@ -734,8 +736,10 @@ ipcMain.on('expenseReport:ready', (e) => {
 	})
 })
 
-ipcMain.on('expenseReport:search', (e, obj) => {
+ipcMain.on('expenseReport:search', (e, arr) => {
 	
+	let obj = arr[0];
+
 	let text = 'SELECT expense_date, type_description, expense_code, code_description, expense_value, expense_quantity, total FROM public.expenses_view WHERE ';
 
 	if(obj.fromDate.length > 0){
@@ -760,7 +764,15 @@ ipcMain.on('expenseReport:search', (e, obj) => {
 			console.log(err.stack);
 		}
 		else{
-			mainwc.send('expenseReport:result', res.rows);
+			if(arr[1] == 1){
+				mainwc.send('expenseReport:result', res.rows);
+			}
+			else{
+				let today = new Date();
+
+				const csv = new ObjectsToCsv(res.rows);
+				csv.toDisk(`${relativeCsvlocation}/reporte_gastos_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
+			}
 		}
 	})
 })
