@@ -777,6 +777,71 @@ ipcMain.on('expenseReport:search', (e, arr) => {
 	})
 })
 
+ipcMain.on('salesReport:ready', (e) => {
+	
+	const text1 = 'SELECT DISTINCT name_prod, code_prod FROM public.salesreport_view';
+	const text2 = 'SELECT DISTINCT name FROM public.salesreport_view';
+
+	db.pool.query(text1, (err1, res1) => {
+		if(err1){
+			console.log(err1.stack);
+		}
+		else{
+			db.pool.query(text2, (err2, res2) => {
+				if(err2){
+					console.log(err2.stack);
+				}
+				else{
+					mainwc.send('salesReport:info', [res1.rows, res2.rows]);
+				}
+			})
+		}
+	})
+})
+
+ipcMain.on('salesReport:search', (e, arr) => {
+	
+	let obj = arr[0];
+
+	let text = 'SELECT sale_date, code_prod, name_prod, value, quantity, total, shift_id, name FROM public.salesreport_view WHERE ';
+
+	if(obj.fromDate.length > 0){
+		text += `sale_date >= '${obj.fromDate}' AND `;
+	}
+	if(obj.toDate.length > 0){
+		text += `sale_date <= '${obj.toDate}' AND `;
+	}
+	if(obj.product.length > 0){
+		text += `name_prod = '${obj.product}' AND `
+	}
+	if(obj.salesman.length > 0){
+		text += `name = '${obj.salesman}' AND `;
+	}
+	if(obj.shift.length > 0){
+		text += `shift_id = '${obj.shift}';`;
+	}
+	else{
+		text = text.slice(0,-5) + ';';
+	}
+
+	db.pool.query(text, (err, res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			if(arr[1] == 1){
+				mainwc.send('salesReport:result', res.rows);
+			}
+			else{
+				let today = new Date();
+
+				const csv = new ObjectsToCsv(res.rows);
+				csv.toDisk(`${relativeCsvlocation}/reporte_ventas_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
+			}
+		}
+	})
+})
+
 const mainMenuTemplate = [
 	{
 		label: 'Archivo',
