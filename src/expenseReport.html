@@ -49,6 +49,10 @@
                     </div>
 
                     <div class="formRepGastos">
+                        <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
+                    </div>
+
+                    <div class="formRepGastos">
                         <p id="msg" style="color: red;"></p>
                     </div>
                 </form>
@@ -134,8 +138,14 @@
 
                 $('#filters').on('submit', function (e) {
                     e.preventDefault();
-                    return searchExpenses();
+                    return searchExpenses(1);
                 });
+
+                $('.btnGenerarCsv').click(function(e) {
+                    e.preventDefault();
+
+                    return searchExpenses(2);
+                })
 
             });
 
@@ -179,9 +189,18 @@
                 }
             }
 
-            function searchExpenses() {
-                if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#expenseType').val() != "-1" || $('#expenseCode').val() != "-1") {
+            function searchExpenses(option) {
+                let filterObj = buildQueryFilter();
+                
+                if(filterObj != null)
+                    ipcRenderer.send('expenseReport:search', [filterObj, option]);
+            }
 
+            function buildQueryFilter(){          
+                let filterObject = null;
+                
+                if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#expenseType').val() != "-1" || $('#expenseCode').val() != "-1") {
+                    
                     $('#expenses tbody').empty();
                     $('#msg').text('');
 
@@ -200,18 +219,18 @@
                         codeText = $('#expenseCode option:selected').val();
                     }
 
-                    let filterObject = {
+                    filterObject = {
                         fromDate: $('#fromDate').val(),
                         toDate: $('#toDate').val(),
                         expenseType: typeText,
                         expenseCode: codeText
                     }
-
-                    ipcRenderer.send('expenseReport:search', filterObject);
                 }
-                else {
+                else{
                     $('#msg').text('Debe seleccionar por lo menos un filtro.');
                 }
+
+                return filterObject;
             }
 
         })
