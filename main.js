@@ -696,7 +696,6 @@ ipcMain.on('sales:register', (e, arr) => {
 	let text = 'INSERT INTO public.sales(product_id, quantity, value, sale_date, shift_id) VALUES ';
 	let regProducts = arr[0];
 	let shift = arr[1];
-	//console.log(shift);
 
 	regProducts.forEach(product => {
 		text += `(${product.prod_id},${product.quantity},${product.value},CURRENT_TIMESTAMP,${shift}),`;
@@ -710,6 +709,73 @@ ipcMain.on('sales:register', (e, arr) => {
 		}
 		else {
 			mainwc.send('sales:done');
+		}
+	})
+})
+
+////////////
+ipcMain.on('productionReport:ready', e => {
+	const text1 = 'SELECT * FROM public.production_view'
+	const text2 = 'SELECT "prodType_description" FROM security."productionTypes" WHERE NOT "prodType_id" = 4;'
+
+	db.pool.query(text1, (err1, res1) => {
+		if (err1) {
+			console.log(err1.stack)
+		} else {
+			db.pool.query(text2, (err2, res2) => {
+				if (err2) {
+					console.log(err2.stack)
+				} else {
+					mainwc.send('productionReport:info', [res1.rows, res2.rows])
+				}
+			})
+		}
+	})
+})
+
+ipcMain.on('productionReport:search', (e, arr) => {
+
+	let obj = arr[0];
+	let text = 'SELECT "prodType_description", produc_date, produc_code, produc_name, produc_quan, produc_type, name_prod FROM public.production_view WHERE ';
+
+	if (obj.fromDate.length > 0)
+	{
+		text += `produc_date >= '${obj.fromDate}' AND `;
+	}
+	if (obj.toDate.length > 0)
+	{
+		text += `produc_date >= '${obj.toDate}' AND `;
+	}
+	if (obj.producType.length > 0)
+	{
+		text += `produc_type = '${obj.producType}' AND `;
+	}
+	if (obj.producCode.length > 0)
+	{
+		text += `produc_code = '${obj.producCode}';`;
+	}
+	else
+	{
+		text = text.slice(0,-5) + ';';
+	}
+
+	db.pool.query(text, (err, res) => {
+		if (err)
+		{
+			console.log(err.stack);
+		}
+		else
+		{
+			if(arr[1] == 1)
+			{
+				mainwc.send('productionReport:result', res.rows);
+			}
+			else
+			{
+				let today = new Date();
+				const csv = new ObjectsToCsv(res.rows);
+				csv.toDisk(`${relativeCsvlocation}/reporte_produccion_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
+			}
 		}
 	})
 })

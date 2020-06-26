@@ -213,7 +213,6 @@
         type.addEventListener('change', (e) => {
             updateValue();
             ipcRenderer.send('activeProducts:selected', temp_sel_type);
-            //cleanDropdown();
         });
 
         //Dropdown populate with available products based on the filtered product type
@@ -277,11 +276,6 @@
             e.preventDefault();
 
             if (date1.value != "" && selected.textContent != "" && pro_code.value != "" && pro_name.value != "" && pro_quant.value != "") {
-                //console.log(date.value);
-                //console.log(selected.textContent);
-                //console.log(pro_code.value);
-                //console.log(pro_name.value);
-                //console.log(pro_quant.value);
 
                 prod_obj =
                 {
@@ -292,8 +286,6 @@
                     name: pro_name.value.trim(),
                     quantity: parseInt(pro_quant.value)
                 }
-                //console.log('prod_obj: ')
-                //console.log(prod_obj);
                 identifier++;
 
                 added_prod.push(prod_obj);
@@ -301,8 +293,6 @@
                 pro_name.value = '';
                 pro_quant.value = '';
                 error_msg.textContent = "";
-                //console.log('added_prod: ')
-                //console.log(added_prod);
 
                 display_added_prods();
             }
@@ -316,17 +306,12 @@
             }
         })
 
-        //console.log('Afuera pro_save click')
-        //console.log(added_prod);
         pro_save.addEventListener('click', (e) => {
             e.preventDefault();
-            //console.log('Adentro pro_save click')
 
             if (added_prod.length > 0) {
-                //console.log(added_prod);
                 msg.textContent = '';
                 ipcRenderer.send('production:save', added_prod);
-                //loading.style.visibility = 'visible';
                 pro_save.disabled = true;
             }
             else {
@@ -355,7 +340,6 @@
             let option
             temp_prod_list.forEach(temp_prod => {
                 if (temp_prod.product_id == temp_prod_choosen) {
-                    //console.log('Hay vinculo')
                     pro_name.value = temp_prod.name_prod;
                     pro_code.value = temp_prod.code_prod;
                 }
@@ -412,7 +396,6 @@
                 tr.appendChild(td5);
                 tr.appendChild(td6);
 
-                //console.log(tr);
                 pro_table.appendChild(tr);
             });
         }

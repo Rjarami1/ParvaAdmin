@@ -117,7 +117,7 @@
                 });
 
                 codes.forEach(code => {
-                    $('#expenseCode').append(`<option value="${code.expense_code.trim()}">${code.expense_code.trim()} - ${code.code_description}</option>`);
+                    $('#expenseCode').append(`<option value="${code.expense_code.trim()}">${code.expense_code.trim()} - ${code.code_description.trim()}</option>`);
                 });
 
                 $('#expenseType').on('change', function () {
@@ -163,6 +163,7 @@
 
                 if (idType != "-1") {
                     let newCodes = _.filter(codes, (code) => {
+                        console.log(idType);
                         return code.code_type_id == idType;
                     });
 
