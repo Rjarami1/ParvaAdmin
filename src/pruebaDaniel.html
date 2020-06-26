@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+
+    <!-- Datatable Css -->
+    <link rel="stylesheet" type="text/css" href="../dependencies/DataTables/datatables.min.css" />
+
+    <link rel="stylesheet" href="styles/stilosDaniel.css">
+
+    <meta charset="UTF-8">
+    <title>Administración de Usuarios</title>
+</head>
+
+<body>
+
+    <div class="encabezadoPrinSup">
+        <h1 class="margLeftTitulos">Administración de Usuarios</h1>
+    </div>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-xl">
+                <h3 class="margLeftTitulos textColor">Lista de Usuarios:</h3>
+                <ul id="usersList"></ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl">
+                <div class="botonNuevoUsuario">
+                    <button type="button" class="btn btn btn-primary" id="createUser">Crear Usuario</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl">
+                <div class="tablaAdmin">
+                    <table id="tablaAdministrativo" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Login</th>
+                                <th>Nombres</th>
+                                <th>Fecha de Creación</th>
+                                <th>Último Ingreso</th>
+                                <th>Cargo</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>3</td>
+                                <td>8789</td>
+                                <td>Daniel</td>
+                                <td>21/6/2020</td>
+                                <td>21/6/2020</td>
+                                <td>Desarrollador</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>2728</td>
+                                <td>Jorge</td>
+                                <td>19/6/2020</td>
+                                <td>19/6/2020</td>
+                                <td>Lider</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>2321</td>
+                                <td>Rubén</td>
+                                <td>15/6/2020</td>
+                                <td>15/6/2020</td>
+                                <td>Repartidor</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</body>
+
+<!-- jQuery library -->
+<script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
+<!-- Datatable jQuerry -->
+<script type="text/javascript" src="../dependencies/DataTables/datatables.min.js"> </script>
+
+<script>
+    $('#tablaAdministrativo').DataTable();
+</script>
+
+</html>
