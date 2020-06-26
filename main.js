@@ -836,8 +836,73 @@ ipcMain.on('expenseReport:search', (e, arr) => {
 			else{
 				let today = new Date();
 
-				const csv = new ObjectsToCsv(res.rows);
+				const csv = new ObjectsToCsv(formatExpensesCsv(res.rows));
 				csv.toDisk(`${relativeCsvlocation}/reporte_gastos_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
+			}
+		}
+	})
+})
+
+ipcMain.on('salesReport:ready', (e) => {
+	
+	const text1 = 'SELECT DISTINCT name_prod, code_prod FROM public.salesreport_view';
+	const text2 = 'SELECT DISTINCT name FROM public.salesreport_view';
+
+	db.pool.query(text1, (err1, res1) => {
+		if(err1){
+			console.log(err1.stack);
+		}
+		else{
+			db.pool.query(text2, (err2, res2) => {
+				if(err2){
+					console.log(err2.stack);
+				}
+				else{
+					mainwc.send('salesReport:info', [res1.rows, res2.rows]);
+				}
+			})
+		}
+	})
+})
+
+ipcMain.on('salesReport:search', (e, arr) => {
+	
+	let obj = arr[0];
+
+	let text = 'SELECT sale_date, code_prod, name_prod, value, quantity, total, shift_id, name FROM public.salesreport_view WHERE ';
+
+	if(obj.fromDate.length > 0){
+		text += `sale_date >= '${obj.fromDate}' AND `;
+	}
+	if(obj.toDate.length > 0){
+		text += `sale_date <= '${obj.toDate}' AND `;
+	}
+	if(obj.product.length > 0){
+		text += `name_prod = '${obj.product}' AND `
+	}
+	if(obj.salesman.length > 0){
+		text += `name = '${obj.salesman}' AND `;
+	}
+	if(obj.shift.length > 0){
+		text += `shift_id = '${obj.shift}';`;
+	}
+	else{
+		text = text.slice(0,-5) + ';';
+	}
+
+	db.pool.query(text, (err, res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			if(arr[1] == 1){
+				mainwc.send('salesReport:result', res.rows);
+			}
+			else{
+				let today = new Date();
+
+				const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
+				csv.toDisk(`${relativeCsvlocation}/reporte_ventas_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
 			}
 		}
 	})
@@ -947,4 +1012,55 @@ function sendSalesReview() {
 			mainwc.send('sales:review', products);
 		}
 	})
+}
+
+function formatExpensesCsv(collection){
+	var formattedCollection = [];
+	var formattedObject, formattedDate;
+
+	collection.forEach(element => {
+		formattedDate = new Date(Date.parse(element.expense_date));
+		
+		formattedObject = {
+			fecha_gasto: formattedDate.toLocaleDateString('en-GB'),
+			tipo_gasto: element.type_description.trim(),
+			codigo_gasto: element.expense_code.trim(),
+			descripcion_codigo_gasto: element.code_description.trim(),
+			valor_gasto: element.expense_value,
+			cantidad_gasto: element.expense_quantity,
+			total_gasto: element.total
+		};
+
+		formattedCollection.push(formattedObject);
+
+		formattedDate = null;
+	});
+
+	return formattedCollection;
+}
+
+function formatSalesCsv(collection){
+	var formattedCollection = [];
+	var formattedObject, formattedDate;
+
+	collection.forEach(element => {
+		formattedDate = new Date(Date.parse(element.sale_date));
+		
+		formattedObject = {
+			fecha_venta: formattedDate.toLocaleString(),
+			codigo_producto_venta: element.code_prod.trim(),
+			nombre_producto_venta: element.name_prod.trim(),
+			valor_producto_venta: element.value,
+			cantidad_venta: element.quantity,
+			total_productos_venta: element.total,
+			id_turno_venta: element.shift_id,
+			nombre_vendedor_venta: element.name.trim()
+		};
+
+		formattedCollection.push(formattedObject);
+
+		formattedDate = null;
+	});
+
+	return formattedCollection;
 }

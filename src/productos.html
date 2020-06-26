@@ -45,17 +45,23 @@
 
 				<div class="tablaProductos">
 
-					<table class="table table-striped">
-						<tr>
-							<th>ID Producto</th>
-							<th>Codigo Producto</th>
-							<th>Nombre del Producto</th>
-							<th>Valor (Cop)</th>
-							<th>Descripcion</th>
-							<th>Estado</th>
-							<th>Tipo de Produccion</th>
-							<th>Costo de Producción (Cop)</th>
-						</tr>
+					<table id="tablaDeProductos" class="table table-striped">
+						<thead>
+							<tr>
+								<th>ID Producto</th>
+								<th>Codigo Producto</th>
+								<th>Nombre del Producto</th>
+								<th>Valor (Cop)</th>
+								<th>Descripcion</th>
+								<th>Estado</th>
+								<th>Tipo de Produccion</th>
+								<th>Costo de Producción (Cop)</th>
+							</tr>
+						</thead>
+
+						<tbody id="body">
+
+						</tbody>
 					</table>
 
 				</div>
@@ -70,7 +76,7 @@
 
 	<script>
 		const { ipcRenderer } = require('electron')
-		const tablaProd = document.querySelector('table')
+		const tablaProd = document.querySelector('#body')
 		const btn_addProduct = document.querySelector('#createProduct')
 		// Requiriendo jquerry
 		window.$ = window.jQuery = require('jquery')
@@ -161,7 +167,7 @@
 		})
 
 		function cleanList() {
-			let table = document.querySelector('table')
+			let table = document.querySelector('#body')
 			let children = table.childElementCount
 
 			if (children > 1) {
@@ -174,8 +180,19 @@
 		}
 	</script>
 
+
 	<!-- jQuery library -->
 	<script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
+	<!-- Datatable jQuerry -->
+	<script type="text/javascript" src="../dependencies/DataTables/datatables.min.js"> </script>
+
+	<script>
+		function createDatatable() {
+			$('#tablaDeProductos').DataTable();
+		}
+	</script>
+
 </body>
 
 </html>
