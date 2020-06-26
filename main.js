@@ -770,7 +770,7 @@ ipcMain.on('expenseReport:search', (e, arr) => {
 			else{
 				let today = new Date();
 
-				const csv = new ObjectsToCsv(res.rows);
+				const csv = new ObjectsToCsv(formatExpensesCsv(res.rows));
 				csv.toDisk(`${relativeCsvlocation}/reporte_gastos_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
 			}
 		}
@@ -835,7 +835,7 @@ ipcMain.on('salesReport:search', (e, arr) => {
 			else{
 				let today = new Date();
 
-				const csv = new ObjectsToCsv(res.rows);
+				const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
 				csv.toDisk(`${relativeCsvlocation}/reporte_ventas_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
 			}
 		}
@@ -946,4 +946,55 @@ function sendSalesReview() {
 			mainwc.send('sales:review', products);
 		}
 	})
+}
+
+function formatExpensesCsv(collection){
+	var formattedCollection = [];
+	var formattedObject, formattedDate;
+
+	collection.forEach(element => {
+		formattedDate = new Date(Date.parse(element.expense_date));
+		
+		formattedObject = {
+			fecha_gasto: formattedDate.toLocaleDateString('en-GB'),
+			tipo_gasto: element.type_description.trim(),
+			codigo_gasto: element.expense_code.trim(),
+			descripcion_codigo_gasto: element.code_description.trim(),
+			valor_gasto: element.expense_value,
+			cantidad_gasto: element.expense_quantity,
+			total_gasto: element.total
+		};
+
+		formattedCollection.push(formattedObject);
+
+		formattedDate = null;
+	});
+
+	return formattedCollection;
+}
+
+function formatSalesCsv(collection){
+	var formattedCollection = [];
+	var formattedObject, formattedDate;
+
+	collection.forEach(element => {
+		formattedDate = new Date(Date.parse(element.sale_date));
+		
+		formattedObject = {
+			fecha_venta: formattedDate.toLocaleString(),
+			codigo_producto_venta: element.code_prod.trim(),
+			nombre_producto_venta: element.name_prod.trim(),
+			valor_producto_venta: element.value,
+			cantidad_venta: element.quantity,
+			total_productos_venta: element.total,
+			id_turno_venta: element.shift_id,
+			nombre_vendedor_venta: element.name.trim()
+		};
+
+		formattedCollection.push(formattedObject);
+
+		formattedDate = null;
+	});
+
+	return formattedCollection;
 }
