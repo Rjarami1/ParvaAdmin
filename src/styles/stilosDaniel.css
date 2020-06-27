@@ -204,7 +204,7 @@ body .botonNuevoUsuario {
 }
 
 body .tablaAdmin {
-	width: 720px;
+	width: 80%;
 	height: auto;
 	position: relative;
 	z-index: 100000;
