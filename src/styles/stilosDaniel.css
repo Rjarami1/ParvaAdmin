@@ -230,8 +230,8 @@ body .botonCrearProducto {
 }
 
 body .tablaProductos {
-	width: 80%;
-	height: 300px;
+	width: 90%;
+	height: auto;
 	position: relative;
 	z-index: 100000;
 	left: 50%;
