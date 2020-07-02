@@ -837,7 +837,7 @@ ipcMain.on('expenseReport:search', (e, arr) => {
 				let today = new Date();
 
 				const csv = new ObjectsToCsv(formatExpensesCsv(res.rows));
-				csv.toDisk(`${relativeCsvlocation}/reporte_gastos_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
+				csv.toDisk(`${relativeCsvlocation}/reporte_gastos_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
 			}
 		}
 	})
@@ -902,7 +902,7 @@ ipcMain.on('salesReport:search', (e, arr) => {
 				let today = new Date();
 
 				const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
-				csv.toDisk(`${relativeCsvlocation}/reporte_ventas_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
+				csv.toDisk(`${relativeCsvlocation}/reporte_ventas_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
 			}
 		}
 	})
@@ -1047,7 +1047,7 @@ function formatSalesCsv(collection){
 		formattedDate = new Date(Date.parse(element.sale_date));
 		
 		formattedObject = {
-			fecha_venta: formattedDate.toLocaleString(),
+			fecha_venta: formattedDate.toLocaleString().replace(',',' '),
 			codigo_producto_venta: element.code_prod.trim(),
 			nombre_producto_venta: element.name_prod.trim(),
 			valor_producto_venta: element.value,

@@ -239,17 +239,19 @@
 
                         case 'quantity':
                             if ($('#productDesc').val() != "" && $('#quantity').val() != "") {
-                                console.log('raw_value: ' + $('#productValue').val() + '   raw_qty: ' + $('#quantity').val());
-                                console.log('value: ' + parseInt(removeFormatCurrency($('#productValue').val())) + '   qty: ' + parseInt($('#quantity').val()));
                                 $('#regProducts').append(`<option id="${regId}">${$('#quantity').val()}  |  ${$('#productDesc').val()}  |  ${$('#productValue').val()}</option>`);
                                 productSaleList.push({
                                     local_id: regId,
                                     prod_id: $('#hiddenId').val(),
                                     quantity: parseInt($('#quantity').val()),
-                                    value: parseInt(removeFormatCurrency($('#productValue').val()))
+                                    value: parseInt(removeFormatCurrency(formatoDesJodeCurrency($('#productValue').val())))
+                                    //value: parseInt(removeFormatCurrency($('#productValue').val())) --> Restaurar si se vuelve a joder el valor.
                                 });
                                 regId++;
-                                total += parseInt(removeFormatCurrency($('#productValue').val())) * parseInt($('#quantity').val());
+                                
+                                //total += parseInt(removeFormatCurrency($('#productValue').val())) * parseInt($('#quantity').val()); --> Restaurar si se vuelve a joder el total.
+
+                                total += parseInt(removeFormatCurrency(formatoDesJodeCurrency($('#productValue').val()))) * parseInt($('#quantity').val());
                             }
                             $('#total').val(formatCurrency(total));
                             $('#productCode').val('');
@@ -359,6 +361,11 @@
 
             function endShift() {
                 ipcRenderer.send('sales:end');
+            }
+
+            function formatoDesJodeCurrency(val){
+                let temp_val = val.replace(',','');
+                return temp_val.replace('.',',');
             }
         })
 
