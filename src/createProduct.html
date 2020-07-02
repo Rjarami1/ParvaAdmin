@@ -11,29 +11,40 @@
 </head>
 
 <body>
-    <h3> Inscribir Producto</h3>
 
-    <form>
-        <label for="code_prod">Codigo del Producto</label><br>
-        <input type="text" id="code_prod" name="code_prod">
+    <div class="container">
+        <div class="row">
+            <form class="centerFormInsProd">
+                <div class="col">
 
-        <label for="production_type">Tipo de Produccion:</label>
-        <select name="production_type" id="production_type">
-            <option value="" selected></option>
-        </select><br>
+                    <h3> Inscribir Producto</h3>
 
-        <label for="name_prod">Nombre del Producto</label><br>
-        <input type="text" id="name_prod" name="name_prod"><br>
+                    <label class="labelsVentas" for="code_prod">Codigo del Producto</label><br>
+                    <input type="text" class="form-control" id="code_prod" name="code_prod">
 
-        <label for="val_prod">Valor del Producto (COP)</label><br>
-        <input type="integer" id="val_prod" name="val_prod"><br>
+                    <label fclass="labelsVentas" or="production_type">Tipo de Produccion:</label>
+                    <select class="form-control" name="production_type" id="production_type">
+                        <option value="" selected></option>
+                    </select><br>
 
-        <label for="descp_prod">Descripcion del Producto</label><br>
-        <input type="text" id="descp_prod" name="descp_prod"><br>
+                    <label class="labelsVentas" for="name_prod">Nombre del Producto</label><br>
+                    <input type="text" class="form-control" id="name_prod" name="name_prod"><br>
 
-        <input type="submit" value="Inscribir Producto"><br>
-        <input type="button" value="Cancelar" id="cancel"><br>
-    </form>
+                    <label class="labelsVentas" for="val_prod">Valor del Producto (COP)</label><br>
+                    <input type="integer" class="form-control" id="val_prod" name="val_prod"><br>
+
+                    <label class="labelsVentas" for="cost_prod">Costo de Producción (COP)</label><br>
+                    <input type="integer" class="form-control" id="cost_prod" name="cost_prod"><br>
+
+                    <label class="labelsVentas" for="descp_prod">Descripcion del Producto</label><br>
+                    <input type="text" class="form-control" id="descp_prod" name="descp_prod"><br>
+
+                    <input type="submit" class="btn btn-success btnInsProd" value="Inscribir Producto"><br>
+                    <input type="button" class="btn btn-danger btnCanelProd" value="Cancelar" id="cancel"><br>
+            </form>
+        </div>
+    </div>
+    </div>
 
     <script>
         const { ipcRenderer } = require('electron');
@@ -45,22 +56,19 @@
         const code_prod = document.querySelector('#code_prod');
         const name_prod = document.querySelector('#name_prod');
         const val_prod = document.querySelector('#val_prod');
+        const cost_prod = document.querySelector('#cost_prod');
         const descp_prod = document.querySelector('#descp_prod');
 
         let allDone = true;
-        console.log("Antes del DOM de production:ready")
+
         document.addEventListener('DOMContentLoaded', (e) => {
             //Se le avisa al proceso principal (main) que la página está lista para utilizarse
             ipcRenderer.send('production:ready');
-            console.log("Query exitoso!");
         })
-        console.log("Salio de production:ready");
 
         //Inicialización de variables que contendrán los tipos de produccion
 
         ipcRenderer.on('productionTypes:info', (e, arr) => {
-            //production_types = arr[0];
-            console.log("Entro a productionTypes:info");
             //Se alimentan la lista de seleccion del formulario con los tipos de produccion.
             let option;
             arr.forEach(produc_type => {
@@ -89,7 +97,8 @@
                     name_prod: name_prod.value,
                     val_prod: val_prod.value,
                     descp_prod: descp_prod.value,
-                    production_type: type.options[type.selectedIndex].textContent
+                    production_type: type.options[type.selectedIndex].textContent,
+                    prod_cost: cost_prod.value
                 }
 
                 ipcRenderer.send('prodCreate:create', prodInfo)

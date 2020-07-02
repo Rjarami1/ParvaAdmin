@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/stilosDaniel.css" />
+
+    <meta charset="UTF-8">
+    <title>Reporte de Ventas</title>
+</head>
+
+<body>
+
+    <div class="encabezadoPrinSup">
+        <h1 class="margLeftTitulos">Reporte de Ventas</h1>
+    </div>
+
+    <div class="encabezadoPrinInf">
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
+    </div>
+
+
+    <div class="container centralRepGastos">
+
+        <div class="row">
+
+            <div class="col-xl-3">
+
+                <form id="filters">
+                    <label class="formRepGastos" for="fromDate">Desde: </label>
+                    <input type="date" class="form-control" name="fromDate" id="fromDate">
+
+                    <label class="formRepGastos" for="toDate">Hasta: </label>
+                    <input type="date" class="form-control" name="toDate" id="toDate">
+
+                    <label class="formRepGastos" for="product">Producto: </label>
+                    <select class="form-control" name="product" id="product">
+                        <option value="-1">--- Seleccione ---</option>
+                    </select>
+
+                    <label class="formRepGastos" for="salesman">Vendedor: </label>
+                    <select class="form-control" name="salesman" id="salesman">
+                        <option value="-1">--- Seleccione ---</option>
+                    </select>
+
+                    <label class="formRepGastos" for="shiftID">ID Turno:</label>
+                    <input type="number" class="form-control" name="shiftID" id="shiftID">
+
+                    <div class="formRepGastos">
+                        <button class="btnBuscarGasto btn btn btn-primary " type="submit">Buscar</button>
+                    </div>
+
+                    <div class="formRepGastos">
+                        <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
+                    </div>
+
+                    <div class="formRepGastos">
+                        <p id="msg" style="color: red;"></p>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="col-xl">
+
+                <table class="table table-striped tablaRepGastos" id="sales">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Fecha y Hora de Venta</th>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Valor</th>
+                            <th>Cantidad</th>
+                            <th>Total Productos</th>
+                            <th>ID Turno</th>
+                            <th>Vendedor</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <p id="msg_result"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Importando funciones de utilidades -->
+    <script src=" ../utilidades.js"></script>
+
+    <script>
+        window.$ = window.jQuery = require('jquery');
+        const { ipcRenderer } = require('electron');
+        const { _ } = require('lodash');
+
+        //Informar al Main Renderer que la página está lista para inicializar la función setAutoTime.
+        document.addEventListener('DOMContentLoaded', (e) => {
+            setAutoTime();
+        })
+
+        // Declarando función setAutoTime
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
+
+        $(document).ready(function () {
+
+            ipcRenderer.send('salesReport:ready');
+
+            let products, salesmen;
+            ipcRenderer.on('salesReport:info', (e, arr) => {
+                products = arr[0];
+                salesmen = arr[1];
+
+                products.forEach(product => {
+                    $('#product').append(`<option value="${product.name_prod.trim()}">${product.code_prod} - ${product.name_prod.trim()}</option>`);
+                });
+
+                salesmen.forEach(salesman => {
+                    $('#salesman').append(`<option value="${salesman.name.trim()}">${salesman.name.trim()}</option>`);
+                });
+
+                $('#filters').on('submit', function (e) {
+                    e.preventDefault();
+                    return searchSales(1);
+                });
+
+                $('.btnGenerarCsv').click(function(e) {
+                    e.preventDefault();
+
+                    return searchSales(2);
+                })
+
+            });
+
+            ipcRenderer.on('salesReport:result', (e, arr) => {
+                if (arr.length > 0) {
+
+                    $('#msg_result').text('');
+                    let num = 1;
+                    let saleDate;
+
+                    arr.forEach(sale => {
+                        saleDate = new Date(Date.parse(sale.sale_date));
+                        $('#sales tbody').append(`<tr><td>${num}</td><td>${saleDate.toLocaleDateString('en-GB')}</td><td>${sale.code_prod.trim()}</td><td>${sale.name_prod.trim()}</td><td>${formatCurrency(sale.value)}</td><td>${sale.quantity}</td><td>${formatCurrency(sale.total)}</td><td>${sale.shift_id}</td><td>${sale.name}</td></tr>`);
+                        num++;
+
+                        saleDate = null;
+                    });
+                }
+                else {
+                    $('#msg_result').text('No se encontraron registron que cumplan con el criterio de búsqueda.');
+                }
+            });
+
+            function searchSales(option) {
+                let filterObj = buildQueryFilter();
+                
+                if(filterObj != null)
+                    ipcRenderer.send('salesReport:search', [filterObj, option]);
+            }
+
+            function buildQueryFilter(){          
+                let filterObject = null;
+                
+                if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#product').val() != "-1" || $('#salesman').val() != "-1" || $('#shiftID').val() != "") {
+                    
+                    $('#sales tbody').empty();
+                    $('#msg').text('');
+
+                    let productText, salesmanText;
+                    if ($('#product').val() == "-1") {
+                        productText = "";
+                    }
+                    else {
+                        productText = $('#product option:selected').val();
+                    }
+
+                    if ($('#salesman').val() == "-1") {
+                        salesmanText = "";
+                    }
+                    else {
+                        salesmanText = $('#salesman option:selected').val();
+                    }
+
+                    filterObject = {
+                        fromDate: $('#fromDate').val(),
+                        toDate: $('#toDate').val(),
+                        shift: $('#shiftID').val(),
+                        product: productText,
+                        salesman: salesmanText
+                    };
+                }
+                else{
+                    $('#msg').text('Debe seleccionar por lo menos un filtro.');
+                }
+
+                return filterObject;
+            }
+
+        })
+    </script>
+
+    </script>
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
+</body>
+
+</html>

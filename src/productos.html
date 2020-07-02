@@ -12,33 +12,58 @@
 
 <body>
 	<div class="encabezadoPrinSup">
-		<h2>Productos de la Pandeboneria</h2>
+		<h1 class="margLeftTitulos">Productos de la Pandeboneria</h1>
 	</div>
 
 	<div class="encabezadoPrinInf">
-		<h2 id="fecha" class="encabezadoPrinInflet"></h2>
+		<h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
 	</div>
 
-	<p>Lista de Productos Terminados:</p>
-	<ul id="productList"></ul>
 
-	<button class="botonCrearProducto" id="createProduct">
-		Agregar Producto
-	</button>
+	<div class="container centralProductos">
 
-	<div class="tablaProductos">
+		<div class="row">
+			<div class="col-xl">
+				<h3 class="margLeftTitulos">Lista de Productos Terminados:</h3>
+				<ul id="productList"></ul>
+			</div>
+		</div>
 
-		<table class="table table-striped" style="width: 85%;">
-			<tr>
-				<th>ID Producto</th>
-				<th>Codigo Producto</th>
-				<th>Nombre del Producto</th>
-				<th>Valor (Cop)</th>
-				<th>Descripcion</th>
-				<th>Estado</th>
-				<th>Tipo de Produccion</th>
-			</tr>
-		</table>
+		<div class="row">
+			<div class="col-xl">
+				<div class="botonCrearProducto">
+					<button type="button" class="btn btn btn-primary" id="createProduct"> Agregar
+						Producto</button>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="row">
+			<div class="col-xl">
+				<div class="tablaProductos">
+					<table id="tablaDeProductos" class="table table-striped">
+						<thead>
+							<tr>
+								<th>ID Producto</th>
+								<th>Codigo Producto</th>
+								<th>Nombre del Producto</th>
+								<th>Valor (Cop)</th>
+								<th>Descripcion</th>
+								<th>Estado</th>
+								<th>Tipo de Produccion</th>
+								<th>Costo de Producción (Cop)</th>
+							</tr>
+						</thead>
+
+						<tbody id="bodyProductos">
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 	<!-- Importando funciones de utilidades -->
@@ -46,7 +71,7 @@
 
 	<script>
 		const { ipcRenderer } = require('electron')
-		const tablaProd = document.querySelector('table')
+		const bodyProd = document.querySelector('#bodyProductos')
 		const btn_addProduct = document.querySelector('#createProduct')
 		// Requiriendo jquerry
 		window.$ = window.jQuery = require('jquery')
@@ -56,20 +81,22 @@
 		//Informar a render producto que la pagina esta lista.
 		document.addEventListener('DOMContentLoaded', e => {
 			ipcRenderer.send('prod:ready')
-			console.log('Se actualizo la tabla para visualizacion')
-
-			// Generando fecha
-			$('#fecha').text(`Fecha: ${todayDate()}`)
+			//console.log('Se actualizo la tabla para visualizacion')
+			setAutoTime();
 		})
+
+		function setAutoTime() {
+			$('#fecha').text(dateTimeClock());
+			setTimeout('setAutoTime()', 1000);
+		}
 
 		//Recibir la lista de los prodcutos del Main y desplegarslos.
 		ipcRenderer.on('products:info', (e, listProducts) => {
 			cleanList()
 
 			let pr
-			let pd1, pd2, pd3, pd4, pd5, pd6, pd7
-			let prodText1, prodText2, prodText3, prodText4, prodText5, prodText6
-			console.log('Se crearon las variables')
+			let pd1, pd2, pd3, pd4, pd5, pd6, pd7, pd8
+			let prodText1, prodText2, prodText3, prodText4, prodText5, prodText6, prodText7, prodText8
 
 			listProducts.forEach(product => {
 				pr = document.createElement('tr')
@@ -80,6 +107,7 @@
 				pd5 = document.createElement('td')
 				pd6 = document.createElement('td')
 				pd7 = document.createElement('td')
+				pd8 = document.createElement('td')
 
 				pr.addEventListener('click', e => {
 					e.preventDefault()
@@ -92,6 +120,13 @@
 				prodText4 = document.createTextNode(product.val_prod)
 				prodText5 = document.createTextNode(product.descp_prod)
 				prodText7 = document.createTextNode(product.productype)
+
+				if (product.cost_prod == null) {
+					prodText8 = document.createTextNode('-')
+				}
+				else {
+					prodText8 = document.createTextNode(product.cost_prod)
+				}
 
 				if (product.status_prod) {
 					prodText6 = document.createTextNode('Activo')
@@ -106,6 +141,7 @@
 				pd5.appendChild(prodText5)
 				pd6.appendChild(prodText6)
 				pd7.appendChild(prodText7)
+				pd8.appendChild(prodText8)
 
 				pr.appendChild(pd1)
 				pr.appendChild(pd2)
@@ -114,39 +150,12 @@
 				pr.appendChild(pd5)
 				pr.appendChild(pd6)
 				pr.appendChild(pd7)
+				pr.appendChild(pd8)
 
-				tablaProd.appendChild(pr)
+				bodyProd.appendChild(pr)
 			})
 
-			prodText1 = document.createTextNode(product.product_id)
-			prodText2 = document.createTextNode(product.code_prod)
-			prodText3 = document.createTextNode(product.name_prod)
-			prodText4 = document.createTextNode(product.val_prod)
-			prodText5 = document.createTextNode(product.descp_prod)
-
-			if (product.status_prod) {
-				prodText6 = document.createTextNode('Activo')
-			} else {
-				prodText6 = document.createTextNode('Inactivo')
-			}
-
-			pd1.appendChild(prodText1)
-			pd2.appendChild(prodText2)
-			pd3.appendChild(prodText3)
-			pd4.appendChild(prodText4)
-			pd5.appendChild(prodText5)
-			pd6.appendChild(prodText6)
-
-			pr.appendChild(pd1)
-			pr.appendChild(pd2)
-			pr.appendChild(pd3)
-			pr.appendChild(pd4)
-			pr.appendChild(pd5)
-			pr.appendChild(pd6)
-
-			tablaProd.appendChild(pr)
-			console.log('Magia variables')
-			console.log('Se estan las variables')
+			createDatatable()
 		})
 
 		btn_addProduct.addEventListener('click', e => {
@@ -155,21 +164,32 @@
 		})
 
 		function cleanList() {
-			let table = document.querySelector('table')
-			let children = table.childElementCount
+			let body = document.querySelector('#bodyProductos')
+			let children = body.childElementCount
 
 			if (children > 1) {
 				let child
-				while (table.childElementCount > 1) {
-					child = table.lastElementChild
-					table.removeChild(child)
+				while (body.childElementCount > 1) {
+					child = body.lastElementChild
+					body.removeChild(child)
 				}
 			}
 		}
 	</script>
 
+
 	<!-- jQuery library -->
 	<script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
+	<!-- Datatable jQuerry -->
+	<script type="text/javascript" src="../dependencies/DataTables/datatables.min.js"> </script>
+
+	<script>
+		function createDatatable() {
+			$('#tablaDeProductos').DataTable();
+		}
+	</script>
+
 </body>
 
 </html>

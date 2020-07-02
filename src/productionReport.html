@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/stilosDaniel.css" />
+
+    <meta charset="UTF-8">
+    <title>Reporte de Produccion</title>
+</head>
+
+<body>
+
+    <div class="encabezadoPrinSup">
+        <h1 class="margLeftTitulos">Reporte de Produccion</h1>
+    </div>
+
+    <div class="encabezadoPrinInf">
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
+    </div>
+
+
+    <div class="container centralRepProd">
+
+        <div class="row">
+
+            <div class="col-xl-3">
+
+                <form id="filters">
+                    <label class="formRepProd" for="fromDate">Desde: </label>
+                    <input type="date" class="form-control" name="fromDate" id="fromDate">
+
+                    <label class="formRepProd" for="toDate">Hasta: </label>
+                    <input type="date" class="form-control" name="toDate" id="toDate">
+
+                    <label class="formRepProd" for="producType">Tipo de Producto: </label>
+                    <select class="form-control" name="producType" id="producType">
+                        <option value="-1">--- Seleccione ---</option>
+                    </select>
+
+                    <label class="formRepProd" for="producCode">Nombre de Producto: </label>
+                    <select class="form-control" name="producCode" id="producCode">
+                        <option value="-1">--- Seleccione ---</option>
+                    </select>
+
+                    <div class="formRepProd">
+                        <button class="btnBuscarProd btn btn btn-primary " type="submit">Buscar</button>
+                    </div>
+
+                    <div class="formRepProd">
+                        <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
+                    </div>
+
+                    <div class="formRepProd">
+                        <p id="msg" style="color: red;"></p>
+                    </div>
+                </form>
+
+
+            </div>
+
+            <div class="col-xl">
+
+                <table class="table table-striped tablaRepProduction" id="production">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Fecha de Produccion</th>
+                            <th>Tipo de Producto</th>
+                            <th>Codigo del Producto</th>
+                            <th>Nombre de Producto</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <p id="msg_result"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Importando funciones de utilidades -->
+    <script src=" ../utilidades.js"></script>
+
+    <script>
+        window.$ = window.jQuery = require('jquery');
+        const { ipcRenderer } = require('electron');
+        const { _ } = require('lodash');
+
+        //Informar al Main Renderer que la página está lista para inicializar la función setAutoTime.
+        document.addEventListener('DOMContentLoaded', (e) => {
+            setAutoTime();
+        })
+
+        // Declarando función setAutoTime
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
+
+        $(document).ready(function () {
+            ipcRenderer.send('productionReport:ready');
+
+            let names, type;
+            ipcRenderer.on('productionReport:info', (e, arr) => {
+                names = arr[0];
+                types = arr[1];
+                types.forEach(type => {
+                    $('#producType').append(`<option value ="${type.prodType_description}">${type.prodType_description.trim()}</option>`);
+                });
+                names.forEach(name => {
+                    $('#producCode').append(`<option value ="${name.produc_name.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
+                });
+
+                $('#producType').on('change', function () {
+                    return popuTypeSelector($('#producType').val());
+                });
+
+                $('#filters').on('submit', function (e) {
+                    e.preventDefault();
+                    return searchProduction(1);
+                });
+
+                $('.btnGenerarCsv').click(function(e) {
+                    e.preventDefault();
+                    return searchProduction(2);
+                })
+
+            });
+            ipcRenderer.on('productionReport:result', (e, arr) => {
+                if (arr.length > 0)
+                {
+                    $('#msg_result').text('');
+                    let num = 1;
+                    let prodDate;
+
+                    arr.forEach(production => {
+                        prodDate = new Date(Date.parse(production.produc_date));
+                        $('#production tbody').append(`<tr><td>${num}</td><td>${prodDate.toLocaleDateString('en-GB')}</td><td>${production.produc_type.trim()}</td><td>${production.produc_code}</td><td>${production.produc_name.trim()}</td><td>${production.produc_quan}</td></tr>`);
+                        num++;
+                        prodDate = null;
+                    });
+                }
+                else
+                {
+                    $('#msg_result').text('No se encontraron registron que cumplan con el criterio de búsqueda.');
+                }
+            })
+
+            function popuTypeSelector(prodType) {
+                $('#producCode').empty();
+                $('#producCode').append('<option value="-1">--- Seleccione ---</option>');
+
+                if (prodType != "-1") 
+                {
+                    let newProducts = _.filter(names, (name) => {
+                        return name.prodType_description == prodType;
+                    })
+
+                    newProducts.forEach(name => {
+                        $('#producCode').append(`<option value ="${name.produc_name.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
+                    });
+                }
+                else 
+                {
+                    names.forEach(name => {
+                        $('#producCode').append(`<option value ="${name.produc_name.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
+                    });
+                }
+            }
+
+            function searchProduction(option) 
+            {
+                let filterObj = buildQueryFilter();
+                if (filterObj != null)
+                {
+                    ipcRenderer.send('productionReport:search', [filterObj, option]);
+                }
+            }
+
+            function buildQueryFilter()
+            {
+                let filterObject = null;
+                if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#producType').val() != "-1" || $('#producCode').val() != "-1")
+                {
+                    $('#production tbody').empty();
+                    $('#msg').text('');
+
+                    let typeText, codeText;
+                    if ($('#producType').val() == "-1")
+                    {
+                        typeText = "";
+                    }
+                    else
+                    {
+                        typeText = $('#producType option:selected').text();
+                    }
+
+                    if ($('#producCode').val() == "-1")
+                    {
+                        codeText = "";
+                    }
+                    else
+                    {
+                        codeText = $('#producCode option:selected').val();
+                    }
+
+                    filterObject = 
+                    {
+                        fromDate: $('#fromDate').val(),
+                        toDate: $('#toDate').val(),
+                        producType: typeText,
+                        producCode: codeText
+                    }
+                }
+                else
+                {
+                    $('#msg').text('Debe seleccionar por lo menos un filtro.');
+                }
+                return filterObject;
+            }
+        })
+    </script>

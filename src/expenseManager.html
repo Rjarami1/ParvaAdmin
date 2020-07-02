@@ -11,38 +11,24 @@
     <title>Gestión de Gastos</title>
 </head>
 
-<style>
-    li span:hover {
-        cursor: pointer;
-    }
-
-    li img {
-        height: 10px;
-        width: 10px;
-    }
-
-    li img:hover {
-        cursor: pointer;
-    }
-</style>
-
 <body>
 
     <div class="encabezadoPrinSup">
-        <h2>Gestión de Gastos</h2>
+        <h1 class="margLeftTitulos">Gestión de Gastos</h1>
     </div>
 
     <div class="encabezadoPrinInf">
-        <h2 id="fecha" class="encabezadoPrinInflet"></h2>
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
     </div>
+
     <div class="centralGestGastos">
         <div class="container">
             <div class="row">
                 <div class="col-sm">
                     <h2>Crear Tipo:</h2><br>
-                    <label for="newType">Descripción:</label>&nbsp;&nbsp;
-                    <input type="text" name="newType" id="newType">&nbsp;&nbsp;
-                    <button id="createType">Crear</button><br>
+                    <label class="labelsVentas" for="newType">Descripción:</label>&nbsp;&nbsp;
+                    <input class="form-control" type="text" name="newType" id="newType"><br>
+                    <button type="button" class="btn btn-primary" id="createType">Crear</button><br>
                     <p id="msg_type" style="color: red"></p>
 
                     <h2>Tipos y Códigos Existentes:</h2><br>
@@ -55,24 +41,25 @@
                 <div class="col-sm">
                     <h2>Agregar Código:</h2><br>
 
-                    <label for="expenseType">Tipo de Gasto</label>&nbsp;&nbsp;
-                    <select name="expenseType" id="expenseType">
+                    <label class="labelsVentas" for="expenseType">Tipo de Gasto</label>
+                    <select class="form-control" name="expenseType" id="expenseType">
 
-                    </select><br><br>
+                    </select class="form-control"><br><br>
 
-                    <label for="newCodeCode">Código:</label>&nbsp;&nbsp;
-                    <input type="text" name="newCodeCode" id="newCodeCode">&nbsp;&nbsp;
-                    <label for="newCodeDesc">Descripción</label>&nbsp;&nbsp;
-                    <input type="text" name="newCodeDesc" id="newCodeDesc">&nbsp;&nbsp;
-                    <button id="addCode">Agregar</button><br>
+                    <label class="labelsVentas" for="newCodeCode">Código:</label><br>
+                    <input class="form-control" type="text" name="newCodeCode" id="newCodeCode"><br>
+                    <label class="labelsVentas" for="newCodeDesc">Descripción</label><br>
+                    <input class="form-control" type="text" name="newCodeDesc" id="newCodeDesc"><br>
+                    <button type="button" class="btn btn-primary" id="addCode">Agregar</button><br>
                     <p id="msg_code" style="color: red"></p>
 
                     <br>
                     <br>
-                    <button id="saveAll">Guardar Cambios</button>&nbsp;&nbsp;
-                    <button id="cancel">Cancelar</button><br>
+                    <button type="button" class="btn btn-success" id="saveAll">Guardar Cambios</button>&nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger" id="cancel">Cancelar</button><br>
 
-                    <img id="loading" src="../imagenes/load.gif" alt="loading..." style="height: 50px; width: 50px;" />
+                    <img id="loading" src="../images/Double Ring-1s-200px.gif" alt="loading..."
+                        style="height: 50px; width: 50px;" />
                     <p id="msg_done"></p>
                 </div>
             </div>
@@ -88,8 +75,12 @@
         //para ventanas emergentes.
         window.$ = window.jQuery = require('jquery');
         const { ipcRenderer } = require('electron');
-        const { dialog } = require('electron').remote
+        const { dialog } = require('electron').remote;
         const { _ } = require('lodash');
+
+        document.addEventListener('DOMContentLoaded', e => {
+            setAutoTime();
+        })
 
         //Cuando la página esté lista se le avisa al main.js que mandé la info de la base de datos
         $(document).ready(function () {
@@ -97,8 +88,10 @@
             ipcRenderer.send('expenseManager:ready');
         })
 
-        // Generando fecha
-        $('#fecha').text(`Fecha: ${todayDate()}`)
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
 
         //Variables globales de arreglo de tipos y códigos existentes en BD.
         let exp_types;

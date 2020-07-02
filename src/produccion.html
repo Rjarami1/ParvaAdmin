@@ -13,78 +13,151 @@
 <body>
 
     <div class="encabezadoPrinSup">
-        <h2>Regitro de Produccion</h2>
+        <h1 class="margLeftTitulos">Registro de Produccion</h1>
     </div>
 
     <div class="encabezadoPrinInf">
-        <h2 id="fecha" class="encabezadoPrinInflet"></h2>
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
     </div>
 
-    <form class="centralProd">
-        <!-- Falta alinear y recortar las casillas -->
-        <label for="production_date">Fecha: </label>
-        <input type="date" name="production_date" id="production_date">&nbsp;&nbsp;
+    <div class="container centralProd">
+        <div class="row">
+            <div class="col-xl">
 
-        <label for="production_type">Tipo de Produccion:</label>
-        <select name="production_type" id="production_type">
-            <option value="" selected></option>
-        </select><br><br>
+                <div class="row">
+                    <div class="col-xl">
+                        <h3>Productos disponibles</h3>
+                    </div>
+                    <div class="col-xl">
+                        <h3 id="selected_type"></h3>
+                    </div>
+                </div>
 
-        <h2>Productos disponibles:</h2><br>
-        <ul id="production_type"></ul>
+                <form>
 
-        <label for="product_code">Código Producto:</label>
-        <input type="text" id="product_code" name="product_code" disabled>&nbsp;&nbsp;
-        <br>
+                    <div class="row">
+                        <div class="tipoProd">
+                            <label for="production_type">Tipo de Produccion:</label>
+                            <select class=" form-control" name="production_type" id="production_type">
+                                <option value="" selected>--Seleccione Tipo--</option>
+                            </select>
+                        </div>
+                    </div>
 
-        <label for="product_name">Nombre del Producto: </label>
-        <input type="text" id="product_name" name="product_name" disabled><br>
+                    <div class="row filasProd">
+                        <div class="col-xl">
+                            <label for="production_date">Fecha: </label>
+                            <input type="date" class="text-secondary form-control" name="production_date"
+                                id="production_date" disabled>
+                        </div>
+                        <div class="col-xl">
+                            <label for="product_selection">Productos disponibles:</label>
+                            <select class="form-control" name="product_selection" id="product_selection">
+                                <option value="" selected>--Seleccione Producto--</option>
+                            </select>
+                        </div>
+                    </div>
 
-        <label for="product_quantity">Cantidad producida:</label>
-        <input type="number" name="product_quantity" id="product_quantity"><br>
-        <br>
+                    <div class="row filasProd">
+                        <div class="col-xl">
+                            <label for="product_code">Código Producto:</label>
+                            <input type="text" class="form-control" id="product_code" name="product_code">
+                            <!-- <label for="product_code">Código Producto:</label>
+                            <input type="text" class="form-control" id="product_code" name="product_code" disabled> -->
+                        </div>
+                        <div class="col-xl">
+                            <label for="product_name">Nombre del Producto: </label>
+                            <input type="text" class="text-secondary form-control" id="product_name" name="product_name"
+                                disabled>
+                        </div>
+                    </div>
 
-        <button type="submit" id="add_production">Adicionar Produccion</button>
-        <br>
+                    <div class="row">
+                        <div class="tipoProd">
+                            <label for="product_quantity">Cantidad producida:</label>
+                            <input type="number" class="form-control" name="product_quantity" id="product_quantity">
+                        </div>
+                    </div>
 
-        <p id="error_msg" style="color: red;"></p>
+                    <div class="row">
+                        <div class="btnAddProd">
+                            <button type="submit" class="btn btn btn-primary" id="add_production">Adicionar
+                                Produccion</button>
+                        </div>
+                    </div>
 
-        <h3>Produccion Adicionada:</h3><br>
+                    <div class="row">
+                        <div class="col-xl">
+                            <p id="error_msg" style="color: red;"></p>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
-        <div class="tablaProd"></div>
-        <table class="table table-striped" id="production_to_register">
-            <tr>
-                <th>Número</th>
-                <th>Tipo</th>
-                <th>Código</th>
-                <th>Nombre</th>
-                <th>Valor</th>
-                <th>Cantidad</th>
-            </tr>
+            <div class="col-xl">
+                <div class="row">
+                    <div class="col-xl">
+                        <h3>Produccion Adicionada:</h3>
+                        <div class="tablaProd">
+                            <table id="production_to_register" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Numero</th>
+                                        <th>Fecha</th>
+                                        <th>Código</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Tipo</th>
+                                    </tr>
+                                </thead>
 
-            <tbody>
+                                <tbody>
 
-            </tbody>
-        </table>
+                                </tbody>
+
+                            </table>
+
+                            <button class="btnRegProd btn btn btn-primary" id="save_production">Registrar
+                                Produccion</button>
+                            <p id="msg"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl">
+                        <p id="msg"></p>
+                        <img class="imgCarga" id="loading" src="../images/Double Ring-1s-200px.gif" alt="loading..."
+                            style="visibility: hidden; height: 50px; width: 50px;" />
+                    </div>
+                </div>
+            </div>
+
         </div>
+    </div>
 
-        <br>
-        <button class="buttonsEditProd" id="save_production">Registrar Produccion</button>
-        <p id="msg"></p>
-    </form>
 
     <!-- Importando funciones de utilidades -->
     <script src="../utilidades.js"></script>
 
     <script>
-        //Import electron to the html
+        //Se importan los modulos de jquery, electron y dialog que es un módulo de electron
+        //para ventanas emergentes.
+        window.$ = window.jQuery = require('jquery');
         const { ipcRenderer } = require('electron');
+        const { dialog } = require('electron').remote
+        const { _ } = require('lodash');
+
+        const selected = document.querySelector('#selected_type');
+        const log = document.getElementById('log');
 
         //Declaring the DOM elements for the html Production
         //Production date
-        const date = document.querySelector('#production_date');
+        const date1 = document.querySelector('#production_date');
         //Production type    
         const type = document.querySelector('#production_type');
+        //Product Selection
+        const choosen_product = document.querySelector('#product_selection');
         //Product code    
         const pro_code = document.querySelector('#product_code');
         //Product name       
@@ -98,7 +171,7 @@
         //Prodcution table to register         
         const pro_table = document.querySelector('#production_to_register');
         //Production save registers
-        const pro_save = document.querySelector('save_production');
+        const pro_save = document.querySelector('#save_production');
         //Production msg gif
         const msg = document.querySelector('#msg');
         //Production loading gif
@@ -109,44 +182,248 @@
 
         //Event after loading the window and been able to modify
         document.addEventListener('DOMContentLoaded', (e) => {
-            //Date object been initialized
-            var today = new Date();
 
             // Generando fecha
-            $('#fecha').text(`Fecha: ${todayDate()}`)
+            setAutoTime();
 
-            //Date format (Day)
-            var day = today.getDate().toString();
-            if (day.length < 2) {
-                day = `0${day}`;
-            }
-            //Date format (Month)
-            var month = today.getMonth() + 1
-            month = month.toString();
-            if (month.length < 2) {
-                month = `0${month}`
-            }
-            //Date is filled automatically in the correspondent space of production_date
-            var auto_date = today.getFullYear() + '-' + month + '-' + day;
-            date.value = auto_date;
+            date1.value = todayDate();
             //Ready msg for the main window
             ipcRenderer.send('production:create');
+
         })
 
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
+
         //Variable initiation for the production details based on the db
+        let prod_types;
+
+        //Variables globales de arreglo de tipos y códigos locales.
+        let local_prod_types;
+        let local_prod_codes;
+
         ipcRenderer.on('prodTypes:info', (e, arr) => {
             //Se alimentan la lista de seleccion del formulario con los tipos de produccion.
             let option;
-            console.log(arr);
             arr.forEach(produc_type => {
                 option = document.createElement('option');
                 option.value = produc_type.prodType_id;
                 option.textContent = produc_type.prodType_description;
-                console.log(option.textContent);
                 type.appendChild(option);
             });
-            console.log(type.appendChild(option))
         })
+
+        //Event to update the selection from the dropdown of the type of production
+        let temp_sel_type;
+        type.addEventListener('change', (e) => {
+            updateValue();
+            ipcRenderer.send('activeProducts:selected', temp_sel_type);
+        });
+
+        //Dropdown populate with available products based on the filtered product type
+        let temp_sel_product;
+        let temp_codprod;
+        let temp_nameprod;
+        let temp_prod_list;
+        let temp_prod_choosen;
+        ipcRenderer.on('filteredProdcuts:info', (e, arr) => {
+            cleanDropdownProducts();
+            temp_prod_list = arr;
+            let option;
+
+            arr.forEach(filter_product => {
+                option = document.createElement('option');
+                option.value = filter_product.product_id;
+                option.textContent = `${filter_product.code_prod} - ${filter_product.name_prod}`;
+                temp_codprod = filter_product.code_prod;
+                temp_nameprod = filter_product.name_prod;
+                choosen_product.appendChild(option);
+            })
+        })
+
+        choosen_product.addEventListener('change', (e) => {
+            temp_prod_choosen = choosen_product.value;
+            divideProdInfo();
+        })
+
+        ipcRenderer.on('production:error', (e) => {
+            msg.style.color = 'red';
+            msg.textContent = 'Ha ocurrido un error, no se pudo guardar la produccion.';
+
+            loading.style.visibility = 'hidden';
+            save.disabled = false;
+        })
+
+        ipcRenderer.on('production:success', (e) => {
+            msg.style.color = 'green';
+            msg.textContent = 'La informacion se ha guardado exitosamente';
+
+            added_prod = [];
+
+            let children = pro_table.childElementCount;
+
+            if (children > 1) {
+                let child;
+                while (pro_table.childElementCount > 1) {
+                    child = pro_table.lastElementChild;
+                    pro_table.removeChild(child);
+                }
+            }
+            loading.style.visibility = 'hidden';
+            pro_save.disabled = false;
+        })
+
+        //Add products to the temp table of production, form.
+        let added_prod = [];
+        let prod_obj;
+        let identifier = 1;//0
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (date1.value != "" && selected.textContent != "" && pro_code.value != "" && pro_name.value != "" && pro_quant.value != "") {
+
+                prod_obj =
+                {
+                    identifier: identifier,
+                    date: date1.value,
+                    type: selected.textContent.trim(),
+                    code: pro_code.value,
+                    name: pro_name.value.trim(),
+                    quantity: parseInt(pro_quant.value)
+                }
+                identifier++;
+
+                added_prod.push(prod_obj);
+                pro_code.value = '';
+                pro_name.value = '';
+                pro_quant.value = '';
+                error_msg.textContent = "";
+
+                display_added_prods();
+            }
+            else {
+                error_msg.textContent = "";
+                error_msg.textContent = 'Debe ingresar todos los campos. \n';
+
+                if (parseInt(pro_quant.value) <= 0) {
+                    error_msg.textContent += 'La cantidad no puede ser menor o igual a cero.';
+                }
+            }
+        })
+
+        pro_save.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            if (added_prod.length > 0) {
+                msg.textContent = '';
+                ipcRenderer.send('production:save', added_prod);
+                pro_save.disabled = true;
+            }
+            else {
+                msg.style.color = 'red';
+                msg.textContent = 'No se ha agregado ninguna produccion.';
+            }
+        })
+
+        //FUNCTIONS:
+        //function that updates the selected value from the dropdown
+        function updateValue(e) {
+            selected.textContent = type.options[type.selectedIndex].textContent;
+            temp_sel_type = selected.textContent.trim();
+        }
+
+        function cleanDropdownProducts(e) {
+            let option_number = choosen_product.childElementCount;
+            let child;
+            for (var i = 1; i < option_number; i++) {
+                child = choosen_product.lastElementChild;
+                choosen_product.removeChild(child);
+            }
+        }
+
+        function divideProdInfo(e) {
+            let option
+            temp_prod_list.forEach(temp_prod => {
+                if (temp_prod.product_id == temp_prod_choosen) {
+                    pro_name.value = temp_prod.name_prod;
+                    pro_code.value = temp_prod.code_prod;
+                }
+            })
+        }
+
+        function display_added_prods() {
+            let children = pro_table.childElementCount;
+            if (children > 1) {
+                let child;
+                while (pro_table.childElementCount > 1) {
+                    child = pro_table.lastElementChild;
+                    pro_table.removeChild(child);
+                }
+            }
+
+            let tr;
+            let td1, td2, td3, td4, td5, td6;
+            let prodText1, prodText2, prodText3, prodText4, prodText5;
+
+            added_prod.forEach(product => {
+                tr = document.createElement('tr');
+                tr.className = `tr_${product.identifier}`;
+                td1 = document.createElement('td');
+                td2 = document.createElement('td');
+                td3 = document.createElement('td');
+                td4 = document.createElement('td');
+                td5 = document.createElement('td');
+                td6 = document.createElement('td');
+
+                tr.addEventListener('dblclick', (e) => {
+                    deleteProduct(product.identifier);
+                })
+
+                itemText1 = document.createTextNode(product.identifier);
+                itemText2 = document.createTextNode(product.date);
+                itemText3 = document.createTextNode(product.type.trim());
+                itemText4 = document.createTextNode(product.code);
+                itemText5 = document.createTextNode(product.name.trim());
+                itemText6 = document.createTextNode(product.quantity);
+
+                td1.appendChild(itemText1);
+                td2.appendChild(itemText2);
+                td3.appendChild(itemText3);
+                td4.appendChild(itemText4);
+                td5.appendChild(itemText5);
+                td6.appendChild(itemText6);
+
+
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
+                tr.appendChild(td4);
+                tr.appendChild(td5);
+                tr.appendChild(td6);
+
+                pro_table.appendChild(tr);
+            });
+        }
+
+        function deleteProduct(ident) {
+            let temp_child = document.querySelector(`.tr_${ident}`);
+            pro_table.removeChild(temp_child);
+
+            let i = 0;
+            let j = 0;
+
+            added_prod.forEach(product => {
+                if (product.identifier == ident) {
+                    j = i;
+                }
+                ++i;
+            });
+
+            added_prod.splice(j, i);
+        }
+
     </script>
 </body>
 

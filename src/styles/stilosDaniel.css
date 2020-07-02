@@ -6,79 +6,139 @@ body .central {
 	transform: translate(-50%, -50%);
 }
 
-body .centralEditUser {
+body .centralCreatetUser {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	height: 80%;
-	width: 70%;
+}
+
+body .centralchangePsw {
+	width: auto;
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
 }
 
 body .centralEditUser {
 	position: absolute;
-	margin: 20px;
 	z-index: 100000;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	height: 80%;
-	width: 70%;
 }
 
 body .centralGastos {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
-	top: 50%;
+	top: 60%;
 	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 100%;
 }
 
 body .centralProd {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
-	top: 65%;
+	top: 60%;
 	transform: translate(-50%, -50%);
 	height: 80%;
-	width: 50%;
+	width: 100%;
+	font-size: 0.9rem;
+}
+
+body .centralRepGastos {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 60%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 100%;
+	font-size: 0.9rem;
+}
+
+.Espacio{
+	visibility: hidden;
+}
+
+body .centralVentas {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 100%;
+	font-size: 0.9rem;
+}
+
+.form-control{
+	font-size: 0.9rem;
+}
+
+.sizeEnter{
+	font-size: 0.5rem;
 }
 
 body .centralGestGastos {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
-	top: 65%;
+	top: 60%;
 	transform: translate(-50%, -50%);
 	height: 80%;
-	width: 50%;
+	width: 100%;
+	font-size: 0.9rem;
 }
-/* 
+
 body .tablaProd {
-	width: 900px;
-	height: 300px;
-	position: absolute;
+	width: 590px;
+	height: auto;
+	position: relative;
 	z-index: 100000;
 	left: 50%;
-	top: 51%;
+	top: 50%;
 	transform: translate(-50%, -50%);
-} */
+	margin: 2%;
+}
 
 body .tablaProd tr:hover {
 	background-color: rgba(0,0,0,.05);
 	cursor: pointer;
 }
 
-
-body .tablaGastos {
-	width: 500px;
-	height: 300px;
-	position: absolute;
+body .tablaRepGastos {
+	width: 100%;
+	height: 100%;
+	position: relative;
 	z-index: 100000;
 	left: 50%;
-	top: 110%;
+	top: 50%;
 	transform: translate(-50%, -50%);
+}
+
+
+body .tablaRepGastos tr:hover {
+	background-color: rgba(0,0,0,.05);
+	cursor: pointer;
+}
+
+
+body .tablaGastos {
+	width: 590px;
+	height: auto;
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
 }
 
 body .tablaGastos tr:hover {
@@ -86,8 +146,38 @@ body .tablaGastos tr:hover {
 	cursor: pointer;
 }
 
-.buttonsEditProd{
-	margin-top: 10px;
+
+
+.buttonsEditProdAct{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.buttonsSavePsw{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.buttonsEditProdEst{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 20%;
+}
+
+.buttonsEditProdCancel{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 30%;
 }
 
 .buttonResetPswd{
@@ -105,22 +195,23 @@ body .tablaGastos tr:hover {
 
 body .botonNuevoUsuario {
 	width: 200px;
-	position: absolute;
+	position: relative;
 	z-index: 100000;
-	left: 47%;
-	top: 20%;
+	left: 52%;
+	top: 38%;
 	transform: translate(-50%, -50%);
-	margin: 50px;
+	margin-bottom: 4%;
 }
 
 body .tablaAdmin {
-	width: 900px;
-	height: 300px;
-	position: absolute;
+	width: 80%;
+	height: auto;
+	position: relative;
 	z-index: 100000;
 	left: 50%;
-	top: 51%;
+	top: 50%;
 	transform: translate(-50%, -50%);
+	font-size: 0.9rem;
 }
 
 body .tablaAdmin tr:hover {
@@ -130,20 +221,20 @@ body .tablaAdmin tr:hover {
 
 body .botonCrearProducto {
 	width: 200px;
-	position: absolute;
+	position: relative;
 	z-index: 100000;
-	left: 45%;
-	top: 20%;
+	left: 50%;
+	top: 50%;
 	transform: translate(-50%, -50%);
-	margin: 50px;
+	margin-bottom: 4%;
 }
 
 body .tablaProductos {
-	width: 1000px;
-	height: 300px;
-	position: absolute;
+	width: 90%;
+	height: auto;
+	position: relative;
 	z-index: 100000;
-	left: 55%;
+	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 }
@@ -154,18 +245,29 @@ body .tablaProductos tr:hover {
 }
 
 body.fondo {
-	background-color: #b4cbf0;
+	background-color: #70B9F4;
+}
+
+body .posTitulo {
+	width: 100%;
+	position: absolute;
+	z-index: 100000;
+	left: 48%;
+	top: 7%;
+	transform: translate(-50%, -50%);
+	margin: 2%;
 }
 
 body .central .custom-form.p-4 {
 	width: 350px;
 	padding-top: 2rem;
-	background-color: #b4cbf0;
+	background-color: #FFFFFF;
 	margin: 70px;
 	border: 2.5px solid;
 	border-radius: 20px;
 	border-color: #574727;
 	position: relative;
+	margin-top: 20%;
 }
 
 body .encabezado {
@@ -176,7 +278,13 @@ body .encabezado {
 
 body .encabezadoPrinSup {
 	background-color: #6b81a4;
-	height: 130px;
+	height: 2%;
+	position: relative;
+}
+
+body .encabezadoPrinSupGastos {
+	background-color: #6b81a4;
+	height: 5%;
 	position: relative;
 }
 
@@ -240,3 +348,276 @@ body .central .buttonInsProd{
 	margin: 10px;
 }
 
+.numpad {
+	width: 22%;
+	height: 18%;
+	font-size: 30px;
+	margin: 2%;
+	padding: 0;
+}
+
+input#dateTime {
+	width: 230px;
+}
+
+.limpiar {
+	font-size: 17px;
+}
+
+.Enter {
+	font-size: 18px;
+}
+
+.centralProductos{
+	font-size: 0.9rem;
+}
+
+.foot {
+	margin-top: 4%;
+	margin-bottom: 1%;
+}
+
+.col1Ventas{
+	margin-top: 2%;
+}
+
+.endButton {
+	width: 300px;
+	height: 50px;
+	font-weight: bold;
+}
+
+.shiftButtons {
+	text-align: center;
+}
+
+.encabezadoPrinInfVentas{
+	background-color: #b4cbf0;
+	height: 30px;
+	position: relative;
+	margin-bottom: 20px;
+}
+
+body .container .row .col .form-control{
+	width: 200px;
+	height: auto;
+	padding: 2px;
+}
+
+body .container .row .col .labelsVentas{
+	margin-top: 5px;
+	margin-bottom: 2px;
+}
+
+.tableroNumVentas{
+	margin: 1%;
+	margin-left: 7.6%;
+}
+
+.btnAddGasto{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-bottom: 2%;
+	margin-top: 21%;
+
+}
+
+.btnBuscarGasto{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.btnRegGasto{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 20%;
+}
+
+.campTipoGasto{
+	margin: 1px;
+}
+
+.campCodGasto{
+	margin: 1px;
+}
+
+.formRepGastos{
+	margin-top: 2%;
+}
+
+.margLeftTitulos{
+	margin-left: 2%;
+}
+
+.textColor{
+	text-decoration-color: #6b81a4;
+}
+
+span:hover {
+	cursor: pointer;
+}
+
+li img {
+	height: 10px;
+	width: 10px;
+}
+
+li img:hover {
+	cursor: pointer;
+}
+
+.filasGastos{
+	margin-top: 2%;
+}
+
+.filasProd{
+	margin-bottom: 2%;
+}
+
+.imgCarga{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.centerFormInsProd{
+	position: absolute;
+	z-index: 100000;
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.centerFormEditProd{
+	position: absolute;
+	z-index: 100000;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 80%;
+}
+
+.btnInsProd{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.btnCanelProd{
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 104%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+}
+
+.btnAddProd{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+	margin-bottom: 2%;
+}
+
+.btnRegProd{
+	position: relative;
+	z-index: 100000;
+	left: 48%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 5%;
+}
+
+.tipoProd{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 10%;
+	width: 50%;
+}
+
+/* .selTipoProd{
+	position: relative;
+	z-index: 100000;
+	left: 20%;
+	transform: translate(-50%, -50%);
+	margin-top: 2.4%;
+} */
+
+.btnsEditUser{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+}
+
+.labelsEdituser{
+	margin-top: 5px;
+	margin-bottom: 2px;
+}
+
+.inputsEditUser{
+	position: relative;
+	z-index: 100000;
+	width: 50%;
+	left: 50%;
+	margin-top: 5%;
+	transform: translate(-50%, -50%);
+}
+
+.tablaEditUser {
+	width: 532px;
+	position: relative;
+	z-index: 100000;
+	left: 56%;
+	top: 45%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+	margin-bottom: 2%;
+	table-layout: fixed;
+}
+
+.posTitEditUsr {
+	position: relative;
+	z-index: 100000;
+	top: -20%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: 2%;
+	margin-bottom: 2%;
+}
+
+body .tablaResumVentas {
+	width: 1000px;
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	margin: 2%;
+}
+
+body .tablaResumVentas tr:hover {
+	background-color: rgba(0,0,0,.05);
+	cursor: pointer;
+}
+
+.containerVentasReview{
+	margin-top: 2%;
+}

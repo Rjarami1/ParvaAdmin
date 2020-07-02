@@ -1,11 +1,15 @@
 const electron = require('electron');
 const _ = require('lodash');
+const ObjectsToCsv = require('objects-to-csv');
 
 const db = require('./connection')
 const userMenu = require('./menuModules')
 
 //Initializing electron objects
 const { app, BrowserWindow, Menu, ipcMain } = electron
+
+//SET ENV
+process.env.NODE_ENV = 'production';
 
 //Declaring Browser Windows
 let mainWindow
@@ -23,6 +27,7 @@ let createprod
 let editwc
 
 let logged_user_id = -1;
+const relativeCsvlocation = './Reportes';
 
 function createMainWindow() {
 	mainWindow = new BrowserWindow({
@@ -98,8 +103,8 @@ ipcMain.on('admin:ready', e => {
 
 ipcMain.on('admin:create', e => {
 	createUserWindow = new BrowserWindow({
-		width: 500,
-		height: 600,
+		width: 400,
+		height: 500,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -126,7 +131,7 @@ ipcMain.on('prod:ready', e => {
 ipcMain.on('prod:create', e => {
 	createProdWindow = new BrowserWindow({
 		width: 350,
-		height: 500,
+		height: 600,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -152,8 +157,8 @@ ipcMain.on('prodEdit:cancel', e => {
 ipcMain.on('prodCreate:edit', (e, productid) => {
 	editProdWindow = new BrowserWindow
 		({
-			width: 300,
-			height: 550,
+			width: 350,
+			height: 600,
 			webPreferences:
 			{
 				nodeIntegration: true
@@ -167,7 +172,7 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 	editwc = editProdWindow.webContents;
 
 	editwc.on('dom-ready', () => {
-		const text1 = 'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod, productype FROM security."listProducts" WHERE product_id = $1;';
+		const text1 = 'SELECT product_id, code_prod, name_prod, val_prod, descp_prod, status_prod, productype, cost_prod FROM security."listProducts" WHERE product_id = $1;';
 
 		const values = [productid];
 		let prodInfo;
@@ -175,7 +180,6 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 		db.pool.query(text1, values)
 			.then(res => {
 				prodInfo = res.rows[0];
-				console.log(prodInfo);
 				let dataObject = {
 					prodInfo: prodInfo
 				};
@@ -191,11 +195,8 @@ ipcMain.on('prodCreate:edit', (e, productid) => {
 })
 
 ipcMain.on('prodEdit:update', (e, obj) => {
-	//console.log('Entro a prodEdit:update')
-	const prodText = 'UPDATE security."listProducts" SET code_prod=$1, name_prod=$2, val_prod=$3, descp_prod=$4 WHERE product_id=$5;'
-	const valuesP = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.product_id]
-	//console.log(valuesP)
-	//console.log('Antes del enviar el query')
+	const prodText = 'UPDATE security."listProducts" SET code_prod=$1, name_prod=$2, val_prod=$3, descp_prod=$4, cost_prod=$5 WHERE product_id=$6;'
+	const valuesP = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.cost_prod, obj.product_id]
 	db.pool
 		.query(prodText, valuesP)
 		.then(res => {
@@ -212,23 +213,21 @@ ipcMain.on('prodCreate:cancel', e => {
 })
 
 ipcMain.on('prodEdit:toggle', (e, id) => {
-	const text = 'SELECT security."prod_toggle_status"($1);'
-
+	const text = 'SELECT security."product_toggle_status"($1);'
 	db.pool.query(text, [id], (err, res) => {
 		if (err) {
 			console.log(err.stack)
 		} else {
-			editUserWindow.close()
+			editProdWindow.close()
 			sendProductsList()
 		}
 	})
 })
 
 ipcMain.on('prodCreate:create', (e, obj) => {
-	let values = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.production_type]
-	console.log(obj.production_type);
+	let values = [obj.code_prod, obj.name_prod, obj.val_prod, obj.descp_prod, obj.production_type, obj.prod_cost]
 	const text =
-		'INSERT INTO security."listProducts"(code_prod, name_prod, val_prod, descp_prod, status_prod, productype) VALUES ($1, $2, $3, $4, true, $5);'
+		'INSERT INTO security."listProducts"(code_prod, name_prod, val_prod, descp_prod, status_prod, productype, cost_prod) VALUES ($1, $2, $3, $4, true, $5, $6);'
 
 	db.pool.query(text, values, (err, res) => {
 		if (err) {
@@ -262,8 +261,8 @@ ipcMain.on('usrCreate:create', (e, obj) => {
 
 ipcMain.on('usrCreate:edit', (e, userid) => {
 	editUserWindow = new BrowserWindow({
-		width: 600,
-		height: 700,
+		width: 650,
+		height: 750,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -322,7 +321,6 @@ ipcMain.on('usrEdit:cancel', e => {
 })
 
 ipcMain.on('usrEdit:update', (e, obj) => {
-	// console.log(JSON.stringify(obj, null, 2));
 
 	const userText =
 		'UPDATE security.users SET name = $1, position = $2 WHERE user_id = $3;'
@@ -439,8 +437,41 @@ ipcMain.on('production:create', e => {
 		}
 		else {
 			mainwc.send('prodTypes:info', res1.rows)
-			console.log("Envio de tabla:")
-			//console.log(res1.rowss)
+		}
+	})
+})
+
+ipcMain.on('activeProducts:selected', (e, filter) => {
+	const text1 = `SELECT product_id, code_prod, name_prod FROM security."listProducts" WHERE productype = '${filter.trim()}' AND status_prod = true`;
+
+	db.pool.query(text1, (err1, res1) => {
+		if (err1) {
+			console.log(err1.stack)
+		}
+		else {
+			mainwc.send('filteredProdcuts:info', res1.rows)
+		}
+	})
+})
+
+ipcMain.on('production:save', (e, arr) => {
+	let qry = 'INSERT INTO public.production(produc_date, produc_code, produc_name, produc_quan, produc_type) VALUES ';
+	let pro_value;
+
+	arr.forEach(elm => {
+		pro_value = `(CURRENT_TIMESTAMP, ${elm.code}, '${elm.name}', ${elm.quantity}, '${elm.type}'),`;
+		qry += pro_value;
+	});
+
+	qry = qry.slice(0, -1);
+	qry += ';'
+	db.pool.query(qry, (err, res) => {
+		if (err) {
+			console.log(err.stack);
+			mainwc.send('production:error');
+		}
+		else {
+			mainwc.send('production:success');
 		}
 	})
 })
@@ -609,22 +640,26 @@ ipcMain.on('expenseManager:save', (e, arr) => {
 
 ipcMain.on('sales:ready', (e) => {
 	const text = 'SELECT * FROM security."listProducts" WHERE status_prod = true;';
-	const text2 = `SELECT FROM public.shifts WHERE user_id = ${logged_user_id} AND shift_status = true;`;
-	let status = false;
+	const text2 = `SELECT shift_id FROM public.shifts WHERE user_id = ${logged_user_id} AND shift_status = true;`;
+	let shift = -1;
+
 	db.pool.query(text, (err1, res1) => {
-		if(err1){
+		if (err1) {
 			console.log(err1.stack);
 		}
-		else{
+		else {
 			db.pool.query(text2, (err2, res2) => {
-				if(err2){
+				if (err2) {
 					console.log(err2.stack);
 				}
-				else{
-					if(res2.rowCount > 0){
-						status = true;
+				else {
+					if (res2.rowCount > 0) {
+						shift = res2.rows[0].shift_id;
 					}
-					mainwc.send('sales:info', [res1.rows, status]);
+					else {
+						sendSalesReview();
+					}
+					mainwc.send('sales:info', [res1.rows, shift]);
 				}
 			});
 		}
@@ -632,14 +667,16 @@ ipcMain.on('sales:ready', (e) => {
 })
 
 ipcMain.on('sales:start', e => {
-	const text = `INSERT INTO public.shifts (shift_start, shift_status, user_id) VALUES (CURRENT_TIMESTAMP, true, ${logged_user_id});`;
+	const text = `INSERT INTO public.shifts (shift_start, shift_status, user_id) VALUES (CURRENT_TIMESTAMP, true, ${logged_user_id}) RETURNING shift_id;`;
+	let shift;
 
 	db.pool.query(text, (err, res) => {
-		if(err){
+		if (err) {
 			console.log(err.stack);
 		}
-		else{
-			mainwc.send('sales:started');
+		else {
+			shift = res.rows[0].shift_id;
+			mainwc.send('sales:started', shift);
 		}
 	})
 })
@@ -649,11 +686,227 @@ ipcMain.on('sales:end', e => {
 	const text = `UPDATE public.shifts SET shift_status = false, shift_end = CURRENT_TIMESTAMP WHERE user_id = ${logged_user_id} AND shift_status = true;`;
 
 	db.pool.query(text, (err, res) => {
+		if (err) {
+			console.log(err.stack);
+		}
+		else {
+			sendSalesReview();
+		}
+	})
+})
+
+ipcMain.on('sales:register', (e, arr) => {
+	let text = 'INSERT INTO public.sales(product_id, quantity, value, sale_date, shift_id) VALUES ';
+	let regProducts = arr[0];
+	let shift = arr[1];
+
+	regProducts.forEach(product => {
+		text += `(${product.prod_id},${product.quantity},${product.value},CURRENT_TIMESTAMP,${shift}),`;
+	})
+
+	text = text.slice(0, -1);
+
+	db.pool.query(text, (err, res) => {
+		if (err) {
+			console.log(err.stack);
+		}
+		else {
+			mainwc.send('sales:done');
+		}
+	})
+})
+
+////////////
+ipcMain.on('productionReport:ready', e => {
+	const text1 = 'SELECT * FROM public.production_view'
+	const text2 = 'SELECT "prodType_description" FROM security."productionTypes" WHERE NOT "prodType_id" = 4;'
+
+	db.pool.query(text1, (err1, res1) => {
+		if (err1) {
+			console.log(err1.stack)
+		} else {
+			db.pool.query(text2, (err2, res2) => {
+				if (err2) {
+					console.log(err2.stack)
+				} else {
+					mainwc.send('productionReport:info', [res1.rows, res2.rows])
+				}
+			})
+		}
+	})
+})
+
+ipcMain.on('productionReport:search', (e, arr) => {
+
+	let obj = arr[0];
+	let text = 'SELECT "prodType_description", produc_date, produc_code, produc_name, produc_quan, produc_type, name_prod FROM public.production_view WHERE ';
+
+	if (obj.fromDate.length > 0)
+	{
+		text += `produc_date >= '${obj.fromDate}' AND `;
+	}
+	if (obj.toDate.length > 0)
+	{
+		text += `produc_date >= '${obj.toDate}' AND `;
+	}
+	if (obj.producType.length > 0)
+	{
+		text += `produc_type = '${obj.producType}' AND `;
+	}
+	if (obj.producCode.length > 0)
+	{
+		text += `produc_code = '${obj.producCode}';`;
+	}
+	else
+	{
+		text = text.slice(0,-5) + ';';
+	}
+
+	db.pool.query(text, (err, res) => {
+		if (err)
+		{
+			console.log(err.stack);
+		}
+		else
+		{
+			if(arr[1] == 1)
+			{
+				mainwc.send('productionReport:result', res.rows);
+			}
+			else
+			{
+				let today = new Date();
+				const csv = new ObjectsToCsv(res.rows);
+				csv.toDisk(`${relativeCsvlocation}/reporte_produccion_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
+			}
+		}
+	})
+})
+
+ipcMain.on('expenseReport:ready', (e) => {
+	
+	const text1 = 'SELECT DISTINCT type_description, type_id FROM public.expenses_view';
+	const text2 = 'SELECT DISTINCT expense_code, code_description, code_type_id FROM public.expenses_view';
+
+	db.pool.query(text1, (err1, res1) => {
+		if(err1){
+			console.log(err1.stack);
+		}
+		else{
+			db.pool.query(text2, (err2, res2) => {
+				if(err2){
+					console.log(err2.stack);
+				}
+				else{
+					mainwc.send('expenseReport:info', [res1.rows, res2.rows]);
+				}
+			})
+		}
+	})
+})
+
+ipcMain.on('expenseReport:search', (e, arr) => {
+	
+	let obj = arr[0];
+
+	let text = 'SELECT expense_date, type_description, expense_code, code_description, expense_value, expense_quantity, total FROM public.expenses_view WHERE ';
+
+	if(obj.fromDate.length > 0){
+		text += `expense_date >= '${obj.fromDate}' AND `;
+	}
+	if(obj.toDate.length > 0){
+		text += `expense_date <= '${obj.toDate}' AND `;
+	}
+	if(obj.expenseType.length > 0){
+		text += `type_description = '${obj.expenseType}' AND `
+	}
+
+	if(obj.expenseCode.length > 0){
+		text += `expense_code = '${obj.expenseCode}';`;
+	}
+	else{
+		text = text.slice(0,-5) + ';';
+	}
+
+	db.pool.query(text, (err, res) => {
 		if(err){
 			console.log(err.stack);
 		}
 		else{
-			mainwc.send('sales:ended');
+			if(arr[1] == 1){
+				mainwc.send('expenseReport:result', res.rows);
+			}
+			else{
+				let today = new Date();
+
+				const csv = new ObjectsToCsv(formatExpensesCsv(res.rows));
+				csv.toDisk(`${relativeCsvlocation}/reporte_gastos_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
+			}
+		}
+	})
+})
+
+ipcMain.on('salesReport:ready', (e) => {
+	
+	const text1 = 'SELECT DISTINCT name_prod, code_prod FROM public.salesreport_view';
+	const text2 = 'SELECT DISTINCT name FROM public.salesreport_view';
+
+	db.pool.query(text1, (err1, res1) => {
+		if(err1){
+			console.log(err1.stack);
+		}
+		else{
+			db.pool.query(text2, (err2, res2) => {
+				if(err2){
+					console.log(err2.stack);
+				}
+				else{
+					mainwc.send('salesReport:info', [res1.rows, res2.rows]);
+				}
+			})
+		}
+	})
+})
+
+ipcMain.on('salesReport:search', (e, arr) => {
+	
+	let obj = arr[0];
+
+	let text = 'SELECT sale_date, code_prod, name_prod, value, quantity, total, shift_id, name FROM public.salesreport_view WHERE ';
+
+	if(obj.fromDate.length > 0){
+		text += `sale_date >= '${obj.fromDate}' AND `;
+	}
+	if(obj.toDate.length > 0){
+		text += `sale_date <= '${obj.toDate}' AND `;
+	}
+	if(obj.product.length > 0){
+		text += `name_prod = '${obj.product}' AND `
+	}
+	if(obj.salesman.length > 0){
+		text += `name = '${obj.salesman}' AND `;
+	}
+	if(obj.shift.length > 0){
+		text += `shift_id = '${obj.shift}';`;
+	}
+	else{
+		text = text.slice(0,-5) + ';';
+	}
+
+	db.pool.query(text, (err, res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			if(arr[1] == 1){
+				mainwc.send('salesReport:result', res.rows);
+			}
+			else{
+				let today = new Date();
+
+				const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
+				csv.toDisk(`${relativeCsvlocation}/reporte_ventas_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
+			}
 		}
 	})
 })
@@ -742,8 +995,75 @@ function sendProductsList() {
 		if (err) {
 			console.log(err.stack)
 		} else {
-			products = res.rows
+			products = res.rows;
 			mainwc.send('products:info', products)
 		}
 	})
+}
+
+function sendSalesReview() {
+	const text = `SELECT * FROM public.sales_view WHERE shift_id = COALESCE((SELECT MAX(shift_id) FROM public.shifts WHERE user_id = ${logged_user_id}),-1);`;
+	let products = [];
+
+	db.pool.query(text, (err, res) => {
+		if (err) {
+			console.log(err.stack);
+		}
+		else {
+			products = res.rows;
+
+			mainwc.send('sales:review', products);
+		}
+	})
+}
+
+function formatExpensesCsv(collection){
+	var formattedCollection = [];
+	var formattedObject, formattedDate;
+
+	collection.forEach(element => {
+		formattedDate = new Date(Date.parse(element.expense_date));
+		
+		formattedObject = {
+			fecha_gasto: formattedDate.toLocaleDateString('en-GB'),
+			tipo_gasto: element.type_description.trim(),
+			codigo_gasto: element.expense_code.trim(),
+			descripcion_codigo_gasto: element.code_description.trim(),
+			valor_gasto: element.expense_value,
+			cantidad_gasto: element.expense_quantity,
+			total_gasto: element.total
+		};
+
+		formattedCollection.push(formattedObject);
+
+		formattedDate = null;
+	});
+
+	return formattedCollection;
+}
+
+function formatSalesCsv(collection){
+	var formattedCollection = [];
+	var formattedObject, formattedDate;
+
+	collection.forEach(element => {
+		formattedDate = new Date(Date.parse(element.sale_date));
+		
+		formattedObject = {
+			fecha_venta: formattedDate.toLocaleString().replace(',',' '),
+			codigo_producto_venta: element.code_prod.trim(),
+			nombre_producto_venta: element.name_prod.trim(),
+			valor_producto_venta: element.value,
+			cantidad_venta: element.quantity,
+			total_productos_venta: element.total,
+			id_turno_venta: element.shift_id,
+			nombre_vendedor_venta: element.name.trim()
+		};
+
+		formattedCollection.push(formattedObject);
+
+		formattedDate = null;
+	});
+
+	return formattedCollection;
 }

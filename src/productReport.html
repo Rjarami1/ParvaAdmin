@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/stilosDaniel.css" />
+
+    <meta charset="UTF-8">
+    <title>Reporte de Productos</title>
+</head>
+
+<body>
+
+    <div class="encabezadoPrinSup">
+        <h1 class="margLeftTitulos">Reporte de Productos</h1>
+    </div>
+
+    <div class="encabezadoPrinInf">
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
+    </div>
+
+
+    <div class="container centralRepProductos">
+
+        <div class="row">
+
+            <div class="col-xl-3">
+
+                <form id="filters">
+
+                    <label class="formRepProductos" for="producType">Tipo de Producto: </label>
+                    <select class="form-control" name="producType" id="producType">
+                        <option value="-1">--- Seleccione ---</option>
+                    </select>
+
+                    <label class="formRepProductos" for="producState">Estado del Producto: </label>
+                    <select class="form-control" name="producState" id="producState">
+                        <option value="-1">--- Seleccione ---</option>
+                    </select>
+
+                    <div class="formRepProductos">
+                        <button class="btnBuscarProducto btn btn btn-primary " type="submit">Buscar</button>
+                    </div>
+
+                    <div class="formRepProductos">
+                        <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
+                    </div>
+
+                    <div class="formRepProductos">
+                        <p id="msg" style="color: red;"></p>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="col-xl">
+
+                <table class="table table-striped tablaRepProduct" id="expenses">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Tipo de produccion</th>
+                            <th>Código del Producto</th>
+                            <th>Nombre del Producto</th>
+                            <th>Descripción</th>
+                            <th>Valor</th>
+                            <th>Costo de Produccion</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <p id="msg_result"></p>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Importando funciones de utilidades -->
+    <script src=" ../utilidades.js"></script>
+
+    <script>
+        window.$ = window.jQuery = require('jquery');
+        const { ipcRenderer } = require('electron');
+        const { _ } = require('lodash');
+
+        //Informar al Main Renderer que la página está lista para inicializar la función setAutoTime.
+        document.addEventListener('DOMContentLoaded', (e) => {
+            setAutoTime();
+        })
+
+        // Declarando función setAutoTime
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
+
+        $(document).ready(function () {
+            
+        })
+    </script>

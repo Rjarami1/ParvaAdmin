@@ -3,8 +3,14 @@
 
 <head>
 
+
+
     <!-- Bootstrap 4 CSS -->
     <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+
+    <!-- Datatable Css -->
+    <link rel="stylesheet" type="text/css" href="../dependencies/DataTables/datatables.min.css" />
+
     <link rel="stylesheet" href="styles/stilosDaniel.css">
 
     <meta charset="UTF-8">
@@ -15,61 +21,82 @@
 
 
     <div class="encabezadoPrinSup">
-        <h2>Administración de Usuarios</h2>
+        <h1 class="margLeftTitulos">Administración de Usuarios</h1>
     </div>
 
     <div class="encabezadoPrinInf">
-        <h2 id="fecha" class="encabezadoPrinInflet"></h2>
+        <h2 id="fecha" class="margLeftTitulos encabezadoPrinInflet"></h2>
     </div>
 
-
-    <p>Lista de Usuarios:</p>
-    <ul id="usersList"></ul>
-
-    <div class="botonNuevoUsuario">
-        <button id="createUser">Crear Usuario</button>
-    </div>
-
-    <div class="tablaAdmin">
+    <div class="container">
 
 
         <div class="row">
-            <table class="table table-striped" style="width: 100%;">
-                <tr>
-                    <th>ID</th>
-                    <th>Login</th>
-                    <th>Nombres</th>
-                    <th>Fecha de Creación</th>
-                    <th>Último Ingreso</th>
-                    <th>Cargo</th>
-                </tr>
-                <tbody>
-
-                </tbody>
-            </table>
+            <div class="col-xl">
+                <h3 class="margLeftTitulos textColor">Lista de Usuarios:</h3>
+                <ul id="usersList"></ul>
+            </div>
         </div>
+
+        <div class="row">
+            <div class="col-xl">
+                <div class="botonNuevoUsuario">
+                    <button type="button" class="btn btn btn-primary" id="createUser">Crear Usuario</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl">
+                <div class="tablaAdmin">
+                    <table id="tablaAdministrativo" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Login</th>
+                                <th>Nombres</th>
+                                <th>Fecha de Creación</th>
+                                <th>Último Ingreso</th>
+                                <th>Cargo</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="body">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
+
     <!-- Importando funciones de utilidades -->
-    <script src="../utilidades.js"></script>
+    <script src=" ../utilidades.js">
+    </script>
 
     <script>
         const { ipcRenderer } = require('electron');
-        const tabla = document.querySelector('table');
+        const body = document.querySelector('#body')
         const btn_addUser = document.querySelector('#createUser');
         // Requiriendo jquerry
         window.$ = window.jQuery = require('jquery')
 
         let x;
 
+
         //Informar al Main Renderer que la página está lista.
         document.addEventListener('DOMContentLoaded', (e) => {
             ipcRenderer.send('admin:ready');
-
-            // Generando fecha
-            $('#fecha').text(`Fecha: ${todayDate()}`)
+            setAutoTime();
         })
 
+        function setAutoTime() {
+            $('#fecha').text(dateTimeClock());
+            setTimeout('setAutoTime()', 1000);
+        }
         //Recibir la lista de usuarios del Main y desplegarlos
         ipcRenderer.on('users:info', (e, users) => {
 
@@ -121,8 +148,11 @@
                 tr.appendChild(td5);
                 tr.appendChild(td6);
 
-                tabla.appendChild(tr);
+                body.appendChild(tr);
             });
+
+            createDatatable()
+
         })
 
         ipcRenderer.on('users:reset', (e) => {
@@ -135,21 +165,32 @@
         })
 
         function cleanList() {
-            let table = document.querySelector('table');
-            let children = table.childElementCount;
+            let body = document.querySelector('#body');
+            let children = body.childElementCount;
 
             if (children > 1) {
                 let child;
-                while (table.childElementCount > 1) {
-                    child = table.lastElementChild;
-                    table.removeChild(child);
+                while (body.childElementCount > 1) {
+                    child = body.lastElementChild;
+                    body.removeChild(child);
                 }
             }
         }
 
     </script>
+
+
     <!-- jQuery library -->
     <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
+    <!-- Datatable jQuerry -->
+    <script type="text/javascript" src="../dependencies/DataTables/datatables.min.js"> </script>
+
+    <script>
+        function createDatatable() {
+            $('#tablaAdministrativo').DataTable();
+        }
+    </script>
 
 </body>
 
