@@ -8,6 +8,9 @@ const userMenu = require('./menuModules')
 //Initializing electron objects
 const { app, BrowserWindow, Menu, ipcMain } = electron
 
+//SET ENV
+process.env.NODE_ENV = 'production';
+
 //Declaring Browser Windows
 let mainWindow
 let createUserWindow
