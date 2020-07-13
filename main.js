@@ -9,7 +9,7 @@ const userMenu = require('./menuModules')
 const { app, BrowserWindow, Menu, ipcMain } = electron
 
 //SET ENV
-process.env.NODE_ENV = 'production';
+//process.env.NODE_ENV = 'production';
 
 //Declaring Browser Windows
 let mainWindow
@@ -906,6 +906,60 @@ ipcMain.on('salesReport:search', (e, arr) => {
 
 				const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
 				csv.toDisk(`${relativeCsvlocation}/reporte_ventas_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
+			}
+		}
+	})
+})
+
+ipcMain.on('shiftReport:ready', (e) => {
+	
+	const text = 'SELECT DISTINCT name FROM public.shifts_view';
+
+	db.pool.query(text, (err, res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			mainwc.send('shiftReport:info', res.rows);
+		}
+	})
+})
+
+ipcMain.on('shiftReport:search', (e, arr) => {
+	
+	let obj = arr[0];
+
+	let text = 'SELECT shift_id, shift_start, shift_end, shift_status, total_shift, name FROM public.shifts_view WHERE ';
+
+	if(obj.fromDate.length > 0){
+		text += `shift_start >= '${obj.fromDate}' AND `;
+	}
+	if(obj.toDate.length > 0){
+		text += `shift_start <= '${obj.toDate}' AND `;
+	}
+	if(obj.salesman.length > 0){
+		text += `name = '${obj.salesman}' AND `;
+	}
+	if(obj.shift.length > 0){
+		text += `shift_id = '${obj.shift}';`;
+	}
+	else{
+		text = text.slice(0,-5) + ';';
+	}
+
+	db.pool.query(text, (err, res) => {
+		if(err){
+			console.log(err.stack);
+		}
+		else{
+			if(arr[1] == 1){
+				mainwc.send('shiftReport:result', res.rows);
+			}
+			else{
+				let today = new Date();
+
+				const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
+				csv.toDisk(`${relativeCsvlocation}/reporte_turno_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
 			}
 		}
 	})
