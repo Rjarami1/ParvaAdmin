@@ -9,7 +9,7 @@ const userMenu = require('./menuModules')
 const { app, BrowserWindow, Menu, ipcMain } = electron
 
 //SET ENV
-process.env.NODE_ENV = 'production';
+//process.env.NODE_ENV = 'production';
 
 //Declaring Browser Windows
 let mainWindow
@@ -777,7 +777,7 @@ ipcMain.on('productionReport:search', (e, arr) => {
 			{
 				let today = new Date();
 				const csv = new ObjectsToCsv(res.rows);
-				csv.toDisk(`${relativeCsvlocation}/reporte_produccion_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}`).then(console.log('Generado'));
+				csv.toDisk(`${relativeCsvlocation}/reporte_produccion_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
 			}
 		}
 	})
