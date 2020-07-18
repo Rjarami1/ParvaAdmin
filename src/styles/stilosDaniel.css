@@ -35,7 +35,7 @@ body .centralGastos {
 	position: absolute;
 	z-index: 100000;
 	left: 50%;
-	top: 60%;
+	top: 55%;
 	transform: translate(-50%, -50%);
 	height: 80%;
 	width: 100%;
@@ -198,9 +198,9 @@ body .tablaGastos {
 	height: auto;
 	position: relative;
 	z-index: 100000;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
+	left: 0%;
+	top: 0%;
+	transform: translate(0%, -4%);
 	margin-top: 10%;
 }
 
@@ -483,7 +483,7 @@ body .container .row .col .labelsVentas{
 	left: 50%;
 	transform: translate(-50%, -50%);
 	margin-bottom: 2%;
-	margin-top: 21%;
+	margin-top: 10%;
 
 }
 
@@ -506,7 +506,7 @@ body .container .row .col .labelsVentas{
 	z-index: 100000;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	margin-top: 20%;
+	margin-top: 10%;
 }
 
 .campTipoGasto{
@@ -514,7 +514,7 @@ body .container .row .col .labelsVentas{
 }
 
 .campCodGasto{
-	margin: 1px;
+	margin: 2%;
 }
 
 .formRepGastos{
