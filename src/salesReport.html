@@ -21,68 +21,85 @@
     </div>
 
 
-    <div class="container centralRepGastos">
+    <div class="container centralRepVentas">
 
         <div class="row">
 
             <div class="col-xl-3">
 
                 <form id="filters">
-                    <label class="formRepGastos" for="fromDate">Desde: </label>
-                    <input type="date" class="form-control" name="fromDate" id="fromDate">
 
-                    <label class="formRepGastos" for="toDate">Hasta: </label>
-                    <input type="date" class="form-control" name="toDate" id="toDate">
+                    <div class="row">
 
-                    <label class="formRepGastos" for="product">Producto: </label>
-                    <select class="form-control" name="product" id="product">
-                        <option value="-1">--- Seleccione ---</option>
-                    </select>
 
-                    <label class="formRepGastos" for="salesman">Vendedor: </label>
-                    <select class="form-control" name="salesman" id="salesman">
-                        <option value="-1">--- Seleccione ---</option>
-                    </select>
+                        <label class="formRepGastos" for="fromDate">Desde: </label>
+                        <input type="date" class="form-control" name="fromDate" id="fromDate">
 
-                    <label class="formRepGastos" for="shiftID">ID Turno:</label>
-                    <input type="number" class="form-control" name="shiftID" id="shiftID">
+                        <label class="formRepGastos" for="toDate">Hasta: </label>
+                        <input type="date" class="form-control" name="toDate" id="toDate">
 
-                    <div class="formRepGastos">
-                        <button class="btnBuscarGasto btn btn btn-primary " type="submit">Buscar</button>
+                        <label class="formRepGastos" for="product">Producto: </label>
+                        <select class="form-control" name="product" id="product">
+                            <option value="-1">--- Seleccione ---</option>
+                        </select>
+
+                        <label class="formRepGastos" for="salesman">Vendedor: </label>
+                        <select class="form-control" name="salesman" id="salesman">
+                            <option value="-1">--- Seleccione ---</option>
+                        </select>
+
+                        <label class="formRepGastos" for="shiftID">ID Turno:</label>
+                        <input type="number" class="form-control" name="shiftID" id="shiftID">
                     </div>
 
-                    <div class="formRepGastos">
-                        <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
-                    </div>
+                    <div class="row formRepGastos">
+                        <div class="col-xl-5">
+                            <button class="btnBuscarGasto btn btn btn-primary " type="submit">Buscar</button>
+                        </div>
 
-                    <div class="formRepGastos">
-                        <p id="msg" style="color: red;"></p>
+                        <div class="col-xl-7">
+                            <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
+                        </div>
+
+                        <div class="formRepGastos">
+                            <p id="msg" style="color: red;"></p>
+                        </div>
                     </div>
                 </form>
 
             </div>
 
-            <div class="col-xl">
+            <div class="col-xl-9">
 
-                <table class="table table-striped tablaRepGastos" id="sales">
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Fecha y Hora de Venta</th>
-                            <th>Código</th>
-                            <th>Producto</th>
-                            <th>Valor</th>
-                            <th>Cantidad</th>
-                            <th>Total Productos</th>
-                            <th>ID Turno</th>
-                            <th>Vendedor</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="row tablaRepVentas">
 
-                <p id="msg_result"></p>
+                    <table class="table table-striped" id="sales">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Fecha y Hora de Venta</th>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Valor</th>
+                                <th>Cantidad</th>
+                                <th>Total Productos</th>
+                                <th>ID Turno</th>
+                                <th>Vendedor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="row">
+                    <p id="msg_result"></p>
+                </div>
+
             </div>
+
         </div>
     </div>
 
@@ -128,7 +145,7 @@
                     return searchSales(1);
                 });
 
-                $('.btnGenerarCsv').click(function(e) {
+                $('.btnGenerarCsv').click(function (e) {
                     e.preventDefault();
 
                     return searchSales(2);
@@ -158,16 +175,16 @@
 
             function searchSales(option) {
                 let filterObj = buildQueryFilter();
-                
-                if(filterObj != null)
+
+                if (filterObj != null)
                     ipcRenderer.send('salesReport:search', [filterObj, option]);
             }
 
-            function buildQueryFilter(){          
+            function buildQueryFilter() {
                 let filterObject = null;
-                
+
                 if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#product').val() != "-1" || $('#salesman').val() != "-1" || $('#shiftID').val() != "") {
-                    
+
                     $('#sales tbody').empty();
                     $('#msg').text('');
 
@@ -194,7 +211,7 @@
                         salesman: salesmanText
                     };
                 }
-                else{
+                else {
                     $('#msg').text('Debe seleccionar por lo menos un filtro.');
                 }
 

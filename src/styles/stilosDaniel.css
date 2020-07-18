@@ -63,6 +63,40 @@ body .centralRepGastos {
 	font-size: 0.9rem;
 }
 
+body .centralRepTurnos {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 60%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 100%;
+	font-size: 0.9rem;
+}
+
+body .centralRepProd {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 60%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 100%;
+	font-size: 0.9rem;
+}
+
+body .centralRepVentas {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	height: 80%;
+	width: 100%;
+	font-size: 0.9rem;
+}
+
+
 .Espacio{
 	visibility: hidden;
 }
@@ -123,6 +157,35 @@ body .tablaRepGastos {
 	transform: translate(-50%, -50%);
 }
 
+body .tablaRepTurn {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	z-index: 100000;
+	left: 53%;
+	top: 55%;
+	transform: translate(-50%, -50%);
+}
+
+body .tablaRepProduction {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	z-index: 100000;
+	left: 53%;
+	top: 60%;
+	transform: translate(-50%, -50%);
+}
+
+body .tablaRepVentas {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	z-index: 100000;
+	left: 53%;
+	top: 60%;
+	transform: translate(-50%, -50%);
+}
 
 body .tablaRepGastos tr:hover {
 	background-color: rgba(0,0,0,.05);
@@ -428,8 +491,14 @@ body .container .row .col .labelsVentas{
 	position: relative;
 	z-index: 100000;
 	left: 50%;
-	transform: translate(-50%, -50%);
-	margin-top: 10%;
+	transform: translate(-50%, 0%);
+}
+
+.btnGenerarCsv{
+	position: relative;
+	z-index: 100000;
+	left: 50%;
+	transform: translate(-50%, 0%);
 }
 
 .btnRegGasto{
@@ -449,7 +518,15 @@ body .container .row .col .labelsVentas{
 }
 
 .formRepGastos{
-	margin-top: 2%;
+	margin: 2%;
+	width: 100%;
+	margin-top: 10%;
+}
+
+.formRepProd{
+	margin: 2%;
+	width: 100%;
+	margin-top: 10%;
 }
 
 .margLeftTitulos{

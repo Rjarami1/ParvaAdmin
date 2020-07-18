@@ -28,55 +28,69 @@
             <div class="col-xl-3">
 
                 <form id="filters">
-                    <label class="formRepProd" for="fromDate">Desde: </label>
-                    <input type="date" class="form-control" name="fromDate" id="fromDate">
+                    <div class="row">
 
-                    <label class="formRepProd" for="toDate">Hasta: </label>
-                    <input type="date" class="form-control" name="toDate" id="toDate">
+                        <label class="formRepProd" for="fromDate">Desde: </label>
+                        <input type="date" class="form-control" name="fromDate" id="fromDate">
 
-                    <label class="formRepProd" for="producType">Tipo de Producto: </label>
-                    <select class="form-control" name="producType" id="producType">
-                        <option value="-1">--- Seleccione ---</option>
-                    </select>
+                        <label class="formRepProd" for="toDate">Hasta: </label>
+                        <input type="date" class="form-control" name="toDate" id="toDate">
 
-                    <label class="formRepProd" for="producCode">Nombre de Producto: </label>
-                    <select class="form-control" name="producCode" id="producCode">
-                        <option value="-1">--- Seleccione ---</option>
-                    </select>
+                        <label class="formRepProd" for="producType">Tipo de Producto: </label>
+                        <select class="form-control" name="producType" id="producType">
+                            <option value="-1">--- Seleccione ---</option>
+                        </select>
 
-                    <div class="formRepProd">
-                        <button class="btnBuscarProd btn btn btn-primary " type="submit">Buscar</button>
+                        <label class="formRepProd" for="producCode">Nombre de Producto: </label>
+                        <select class="form-control" name="producCode" id="producCode">
+                            <option value="-1">--- Seleccione ---</option>
+                        </select>
                     </div>
 
-                    <div class="formRepProd">
-                        <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
+                    <div class="row formRepProd">
+
+                        <div class="col-xl-5">
+                            <button class="btnBuscarProd btn btn btn-primary " type="submit">Buscar</button>
+                        </div>
+
+                        <div class="col-xl-7">
+                            <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
+                        </div>
+
+                        <div class="formRepProd">
+                            <p id="msg" style="color: red;"></p>
+                        </div>
                     </div>
 
-                    <div class="formRepProd">
-                        <p id="msg" style="color: red;"></p>
-                    </div>
                 </form>
 
 
             </div>
 
-            <div class="col-xl">
+            <div class="col-xl-9">
 
-                <table class="table table-striped tablaRepProduction" id="production">
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Fecha de Produccion</th>
-                            <th>Tipo de Producto</th>
-                            <th>Codigo del Producto</th>
-                            <th>Nombre de Producto</th>
-                            <th>Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="row tablaRepProduction">
+                    <table class="table table-striped" id="production">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Fecha de Produccion</th>
+                                <th>Tipo de Producto</th>
+                                <th>Codigo del Producto</th>
+                                <th>Nombre de Producto</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                <p id="msg_result"></p>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <p id="msg_result"></p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -124,15 +138,14 @@
                     return searchProduction(1);
                 });
 
-                $('.btnGenerarCsv').click(function(e) {
+                $('.btnGenerarCsv').click(function (e) {
                     e.preventDefault();
                     return searchProduction(2);
                 })
 
             });
             ipcRenderer.on('productionReport:result', (e, arr) => {
-                if (arr.length > 0)
-                {
+                if (arr.length > 0) {
                     $('#msg_result').text('');
                     let num = 1;
                     let prodDate;
@@ -144,8 +157,7 @@
                         prodDate = null;
                     });
                 }
-                else
-                {
+                else {
                     $('#msg_result').text('No se encontraron registron que cumplan con el criterio de búsqueda.');
                 }
             })
@@ -154,8 +166,7 @@
                 $('#producCode').empty();
                 $('#producCode').append('<option value="-1">--- Seleccione ---</option>');
 
-                if (prodType != "-1") 
-                {
+                if (prodType != "-1") {
                     let newProducts = _.filter(names, (name) => {
                         return name.prodType_description == prodType;
                     })
@@ -164,51 +175,42 @@
                         $('#producCode').append(`<option value ="${name.produc_name.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
                     });
                 }
-                else 
-                {
+                else {
                     names.forEach(name => {
                         $('#producCode').append(`<option value ="${name.produc_name.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
                     });
                 }
             }
 
-            function searchProduction(option) 
-            {
+            function searchProduction(option) {
                 let filterObj = buildQueryFilter();
-                if (filterObj != null)
-                {
+                if (filterObj != null) {
                     ipcRenderer.send('productionReport:search', [filterObj, option]);
                 }
             }
 
-            function buildQueryFilter()
-            {
+            function buildQueryFilter() {
                 let filterObject = null;
-                if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#producType').val() != "-1" || $('#producCode').val() != "-1")
-                {
+                if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#producType').val() != "-1" || $('#producCode').val() != "-1") {
                     $('#production tbody').empty();
                     $('#msg').text('');
 
                     let typeText, codeText;
-                    if ($('#producType').val() == "-1")
-                    {
+                    if ($('#producType').val() == "-1") {
                         typeText = "";
                     }
-                    else
-                    {
+                    else {
                         typeText = $('#producType option:selected').text();
                     }
 
-                    if ($('#producCode').val() == "-1")
-                    {
+                    if ($('#producCode').val() == "-1") {
                         codeText = "";
                     }
-                    else
-                    {
+                    else {
                         codeText = $('#producCode option:selected').val();
                     }
 
-                    filterObject = 
+                    filterObject =
                     {
                         fromDate: $('#fromDate').val(),
                         toDate: $('#toDate').val(),
@@ -216,8 +218,7 @@
                         producCode: codeText
                     }
                 }
-                else
-                {
+                else {
                     $('#msg').text('Debe seleccionar por lo menos un filtro.');
                 }
                 return filterObject;

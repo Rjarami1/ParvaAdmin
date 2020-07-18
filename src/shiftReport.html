@@ -21,60 +21,73 @@
     </div>
 
 
-    <div class="container centralRepGastos">
+    <div class="container centralRepTurnos">
 
         <div class="row">
 
             <div class="col-xl-3">
 
                 <form id="filters">
-                    <label class="formRepGastos" for="fromDate">Desde: </label>
-                    <input type="date" class="form-control" name="fromDate" id="fromDate">
+                    <div class="row">
 
-                    <label class="formRepGastos" for="toDate">Hasta: </label>
-                    <input type="date" class="form-control" name="toDate" id="toDate">
+                        <label class="formRepGastos" for="fromDate">Desde: </label>
+                        <input type="date" class="form-control" name="fromDate" id="fromDate">
 
-                    <label class="formRepGastos" for="salesman">Vendedor: </label>
-                    <select class="form-control" name="salesman" id="salesman">
-                        <option value="-1">--- Seleccione ---</option>
-                    </select>
+                        <label class="formRepGastos" for="toDate">Hasta: </label>
+                        <input type="date" class="form-control" name="toDate" id="toDate">
 
-                    <label class="formRepGastos" for="shiftID">ID Turno:</label>
-                    <input type="number" class="form-control" name="shiftID" id="shiftID">
+                        <label class="formRepGastos" for="salesman">Vendedor: </label>
+                        <select class="form-control" name="salesman" id="salesman">
+                            <option value="-1">--- Seleccione ---</option>
+                        </select>
 
-                    <div class="formRepGastos">
-                        <button class="btnBuscarGasto btn btn btn-primary " type="submit">Buscar</button>
+                        <label class="formRepGastos" for="shiftID">ID Turno:</label>
+                        <input type="number" class="form-control" name="shiftID" id="shiftID">
+
                     </div>
 
-                    <div class="formRepGastos">
-                        <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
+                    <div class="row formRepGastos">
+                        <div class="col-xl-5">
+                            <button class="btnBuscarGasto btn btn btn-primary " type="submit">Buscar</button>
+                        </div>
+
+                        <div class="col-xl-7">
+                            <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
+                        </div>
+
+                        <div class="formRepGastos">
+                            <p id="msg" style="color: red;"></p>
+                        </div>
                     </div>
 
-                    <div class="formRepGastos">
-                        <p id="msg" style="color: red;"></p>
-                    </div>
                 </form>
 
             </div>
 
-            <div class="col-xl">
+            <div class="col-xl-9">
 
-                <table class="table table-striped tablaRepGastos" id="shifts">
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Fecha y Hora Inicio</th>
-                            <th>Fecha y Hora Fin</th>
-                            <th>ID Turno</th>
-                            <th>Estado</th>
-                            <th>Total Ventas</th>
-                            <th>Vendedor</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="row tablaRepTurn">
+                    <table class="table table-striped" id="shifts">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Fecha y Hora Inicio</th>
+                                <th>Fecha y Hora Fin</th>
+                                <th>ID Turno</th>
+                                <th>Estado</th>
+                                <th>Total Ventas</th>
+                                <th>Vendedor</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
 
-                <p id="msg_result"></p>
+                </div>
+
+                <div class="row">
+                    <p id="msg_result"></p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -116,7 +129,7 @@
                     return searchShifts(1);
                 });
 
-                $('.btnGenerarCsv').click(function(e) {
+                $('.btnGenerarCsv').click(function (e) {
                     e.preventDefault();
 
                     return searchShifts(2);
@@ -148,16 +161,16 @@
 
             function searchShifts(option) {
                 let filterObj = buildQueryFilter();
-                
-                if(filterObj != null)
+
+                if (filterObj != null)
                     ipcRenderer.send('shiftReport:search', [filterObj, option]);
             }
 
-            function buildQueryFilter(){          
+            function buildQueryFilter() {
                 let filterObject = null;
-                
+
                 if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#salesman').val() != "-1" || $('#shiftID').val() != "") {
-                    
+
                     $('#shifts tbody').empty();
                     $('#msg').text('');
 
@@ -177,7 +190,7 @@
                         salesman: salesmanText
                     };
                 }
-                else{
+                else {
                     $('#msg').text('Debe seleccionar por lo menos un filtro.');
                 }
 
