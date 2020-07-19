@@ -167,9 +167,9 @@
 			let body = document.querySelector('#bodyProductos')
 			let children = body.childElementCount
 
-			if (children > 1) {
+			if (children > 0) {
 				let child
-				while (body.childElementCount > 1) {
+				while (body.childElementCount > 0) {
 					child = body.lastElementChild
 					body.removeChild(child)
 				}
