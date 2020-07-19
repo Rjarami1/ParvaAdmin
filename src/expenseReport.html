@@ -28,32 +28,37 @@
             <div class="col-xl-3">
 
                 <form id="filters">
-                    <label class="formRepGastos" for="fromDate">Desde: </label>
-                    <input type="date" class="form-control" name="fromDate" id="fromDate">
+                    <div class="row">
+                        <label class="formRepGastos" for="fromDate">Desde: </label>
+                        <input type="date" class="form-control" name="fromDate" id="fromDate">
 
-                    <label class="formRepGastos" for="toDate">Hasta: </label>
-                    <input type="date" class="form-control" name="toDate" id="toDate">
+                        <label class="formRepGastos" for="toDate">Hasta: </label>
+                        <input type="date" class="form-control" name="toDate" id="toDate">
 
-                    <label class="formRepGastos" for="expenseType">Tipo de Gasto: </label>
-                    <select class="form-control" name="expenseType" id="expenseType">
-                        <option value="-1">--- Seleccione ---</option>
-                    </select>
+                        <label class="formRepGastos" for="expenseType">Tipo de Gasto: </label>
+                        <select class="form-control" name="expenseType" id="expenseType">
+                            <option value="-1">--- Seleccione ---</option>
+                        </select>
 
-                    <label class="formRepGastos" for="expenseCode">Código de gasto: </label>
-                    <select class="form-control" name="expenseCode" id="expenseCode">
-                        <option value="-1">--- Seleccione ---</option>
-                    </select>
-
-                    <div class="formRepGastos">
-                        <button class="btnBuscarGasto btn btn btn-primary " type="submit">Buscar</button>
+                        <label class="formRepGastos" for="expenseCode">Código de gasto: </label>
+                        <select class="form-control" name="expenseCode" id="expenseCode">
+                            <option value="-1">--- Seleccione ---</option>
+                        </select>
                     </div>
 
-                    <div class="formRepGastos">
-                        <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
-                    </div>
+                    <div class="row formRepGastos">
 
-                    <div class="formRepGastos">
-                        <p id="msg" style="color: red;"></p>
+                        <div class="col-xl-5">
+                            <button class="btnBuscarGasto btn btn btn-primary " type="submit">Buscar</button>
+                        </div>
+
+                        <div class="col-xl-7">
+                            <button class="btnGenerarCsv btn btn btn-primary " type="button">Generar CSV</button>
+                        </div>
+
+                        <div class="formRepGastos">
+                            <p id="msg" style="color: red;"></p>
+                        </div>
                     </div>
                 </form>
 
@@ -141,7 +146,7 @@
                     return searchExpenses(1);
                 });
 
-                $('.btnGenerarCsv').click(function(e) {
+                $('.btnGenerarCsv').click(function (e) {
                     e.preventDefault();
 
                     return searchExpenses(2);
@@ -192,16 +197,16 @@
 
             function searchExpenses(option) {
                 let filterObj = buildQueryFilter();
-                
-                if(filterObj != null)
+
+                if (filterObj != null)
                     ipcRenderer.send('expenseReport:search', [filterObj, option]);
             }
 
-            function buildQueryFilter(){          
+            function buildQueryFilter() {
                 let filterObject = null;
-                
+
                 if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#expenseType').val() != "-1" || $('#expenseCode').val() != "-1") {
-                    
+
                     $('#expenses tbody').empty();
                     $('#msg').text('');
 
@@ -227,7 +232,7 @@
                         expenseCode: codeText
                     }
                 }
-                else{
+                else {
                     $('#msg').text('Debe seleccionar por lo menos un filtro.');
                 }
 

@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="styles/stilosDaniel.css" />
 
     <meta charset="UTF-8">
-    <title>Reporte de Ventas</title>
+    <title>Reporte de Turno</title>
 </head>
 
 <body>
 
     <div class="encabezadoPrinSup">
-        <h1 class="margLeftTitulos">Reporte de Ventas</h1>
+        <h1 class="margLeftTitulos">Reporte de Turno</h1>
     </div>
 
     <div class="encabezadoPrinInf">
@@ -21,27 +21,20 @@
     </div>
 
 
-    <div class="container centralRepVentas">
+    <div class="container centralRepTurnos">
 
         <div class="row">
 
             <div class="col-xl-3">
 
                 <form id="filters">
-
                     <div class="row">
-
 
                         <label class="formRepGastos" for="fromDate">Desde: </label>
                         <input type="date" class="form-control" name="fromDate" id="fromDate">
 
                         <label class="formRepGastos" for="toDate">Hasta: </label>
                         <input type="date" class="form-control" name="toDate" id="toDate">
-
-                        <label class="formRepGastos" for="product">Producto: </label>
-                        <select class="form-control" name="product" id="product">
-                            <option value="-1">--- Seleccione ---</option>
-                        </select>
 
                         <label class="formRepGastos" for="salesman">Vendedor: </label>
                         <select class="form-control" name="salesman" id="salesman">
@@ -50,6 +43,7 @@
 
                         <label class="formRepGastos" for="shiftID">ID Turno:</label>
                         <input type="number" class="form-control" name="shiftID" id="shiftID">
+
                     </div>
 
                     <div class="row formRepGastos">
@@ -65,31 +59,27 @@
                             <p id="msg" style="color: red;"></p>
                         </div>
                     </div>
+
                 </form>
 
             </div>
 
             <div class="col-xl-9">
 
-                <div class="row tablaRepVentas">
-
-                    <table class="table table-striped" id="sales">
+                <div class="row tablaRepTurn">
+                    <table class="table table-striped" id="shifts">
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Fecha y Hora de Venta</th>
-                                <th>Código</th>
-                                <th>Producto</th>
-                                <th>Valor</th>
-                                <th>Cantidad</th>
-                                <th>Total Productos</th>
+                                <th>Fecha y Hora Inicio</th>
+                                <th>Fecha y Hora Fin</th>
                                 <th>ID Turno</th>
+                                <th>Estado</th>
+                                <th>Total Ventas</th>
                                 <th>Vendedor</th>
                             </tr>
                         </thead>
-                        <tbody>
-
-                        </tbody>
+                        <tbody></tbody>
                     </table>
 
                 </div>
@@ -99,7 +89,6 @@
                 </div>
 
             </div>
-
         </div>
     </div>
 
@@ -125,16 +114,11 @@
 
         $(document).ready(function () {
 
-            ipcRenderer.send('salesReport:ready');
+            ipcRenderer.send('shiftReport:ready');
 
-            let products, salesmen;
-            ipcRenderer.on('salesReport:info', (e, arr) => {
-                products = arr[0];
-                salesmen = arr[1];
-
-                products.forEach(product => {
-                    $('#product').append(`<option value="${product.name_prod.trim()}">${product.code_prod} - ${product.name_prod.trim()}</option>`);
-                });
+            let salesmen;
+            ipcRenderer.on('shiftReport:info', (e, arr) => {
+                salesmen = arr;
 
                 salesmen.forEach(salesman => {
                     $('#salesman').append(`<option value="${salesman.name.trim()}">${salesman.name.trim()}</option>`);
@@ -142,30 +126,32 @@
 
                 $('#filters').on('submit', function (e) {
                     e.preventDefault();
-                    return searchSales(1);
+                    return searchShifts(1);
                 });
 
                 $('.btnGenerarCsv').click(function (e) {
                     e.preventDefault();
 
-                    return searchSales(2);
+                    return searchShifts(2);
                 })
 
             });
 
-            ipcRenderer.on('salesReport:result', (e, arr) => {
+            ipcRenderer.on('shiftReport:result', (e, arr) => {
                 if (arr.length > 0) {
 
                     $('#msg_result').text('');
                     let num = 1;
-                    let saleDate;
+                    let shift_start_date, shift_end_date;
 
-                    arr.forEach(sale => {
-                        saleDate = new Date(Date.parse(sale.sale_date));
-                        $('#sales tbody').append(`<tr><td>${num}</td><td>${saleDate.toLocaleDateString('en-GB')}</td><td>${sale.code_prod.trim()}</td><td>${sale.name_prod.trim()}</td><td>${formatCurrency(sale.value)}</td><td>${sale.quantity}</td><td>${formatCurrency(sale.total)}</td><td>${sale.shift_id}</td><td>${sale.name}</td></tr>`);
+                    arr.forEach(shift => {
+                        shift_start_date = new Date(Date.parse(shift.shift_start));
+                        shift_end_date = new Date(Date.parse(shift.shift_end));
+                        $('#shifts tbody').append(`<tr><td>${num}</td><td>${shift_start_date.toLocaleDateString('en-GB')}</td><td>${shift_end_date.toLocaleDateString('en-GB')}</td><td>${shift.shift_id}</td><td>${shift.shift_status}</td><td>${formatCurrency(parseInt(shift.total_shift))}</td><td>${shift.name}</td></tr>`);
                         num++;
 
-                        saleDate = null;
+                        shift_start_date = null;
+                        shift_end_date = null;
                     });
                 }
                 else {
@@ -173,28 +159,22 @@
                 }
             });
 
-            function searchSales(option) {
+            function searchShifts(option) {
                 let filterObj = buildQueryFilter();
 
                 if (filterObj != null)
-                    ipcRenderer.send('salesReport:search', [filterObj, option]);
+                    ipcRenderer.send('shiftReport:search', [filterObj, option]);
             }
 
             function buildQueryFilter() {
                 let filterObject = null;
 
-                if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#product').val() != "-1" || $('#salesman').val() != "-1" || $('#shiftID').val() != "") {
+                if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#salesman').val() != "-1" || $('#shiftID').val() != "") {
 
-                    $('#sales tbody').empty();
+                    $('#shifts tbody').empty();
                     $('#msg').text('');
 
-                    let productText, salesmanText;
-                    if ($('#product').val() == "-1") {
-                        productText = "";
-                    }
-                    else {
-                        productText = $('#product option:selected').val();
-                    }
+                    let salesmanText;
 
                     if ($('#salesman').val() == "-1") {
                         salesmanText = "";
@@ -207,7 +187,6 @@
                         fromDate: $('#fromDate').val(),
                         toDate: $('#toDate').val(),
                         shift: $('#shiftID').val(),
-                        product: productText,
                         salesman: salesmanText
                     };
                 }
