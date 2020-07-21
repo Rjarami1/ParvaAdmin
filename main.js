@@ -1,15 +1,16 @@
 const electron = require('electron');
 const _ = require('lodash');
 const ObjectsToCsv = require('objects-to-csv');
+const fs = require('fs');
 
 const db = require('./connection')
 const userMenu = require('./menuModules')
 
 //Initializing electron objects
-const { app, BrowserWindow, Menu, ipcMain } = electron
+const { app, BrowserWindow, Menu, ipcMain, dialog } = electron
 
 //SET ENV
-//process.env.NODE_ENV = 'production';
+process.env.NODE_ENV = 'production';
 
 //Declaring Browser Windows
 let mainWindow
@@ -27,7 +28,24 @@ let createprod
 let editwc
 
 let logged_user_id = -1;
-const relativeCsvlocation = './Reportes';
+const relativeCsvlocation = __dirname + '\\Reportes';
+
+//Sección para verificar que la carpeta de reportes exista y si no que sea creada.
+fs.stat(relativeCsvlocation, (err, stats) => {
+	if(err){
+		if(err.code == 'ENOENT'){
+			fs.mkdir(relativeCsvlocation, () =>{
+				console.log('Carpeta "Reportes" creada.');
+			});
+		}
+		else{
+			dialog.showErrorBox('Se ha producido un error', 'Ha ocurrido un error con la carpeta de reportes. Código del error: ' + err.code);
+		}
+	}
+	else{
+		console.log('Carpeta de Reportes encontrada.');
+	}
+})
 
 function createMainWindow() {
 	mainWindow = new BrowserWindow({
@@ -66,7 +84,8 @@ ipcMain.on('login:in', (e, arr) => {
 	//Realiza consulta
 	db.pool.query(text1, values1, (err, res) => {
 		if (err) {
-			console.log(err.stack)
+			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		} else {
 			userInfo = res.rows[0]
 			if (userInfo == undefined) {
@@ -79,6 +98,7 @@ ipcMain.on('login:in', (e, arr) => {
 				db.pool.query(text2, values2, (err, res) => {
 					if (err) {
 						console.log(err.stack)
+						dialog.showErrorBox('Se ha producido un error', err.stack);
 					}
 				})
 				mainWindow.loadFile('src/welcome.html')
@@ -202,7 +222,10 @@ ipcMain.on('prodEdit:update', (e, obj) => {
 		.then(res => {
 			console.log('Product details has been updated!')
 		})
-		.catch(err => console.log(err.stack))
+		.catch(err => {
+			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
+		})
 
 	editProdWindow.close()
 	sendProductsList()
@@ -217,6 +240,7 @@ ipcMain.on('prodEdit:toggle', (e, id) => {
 	db.pool.query(text, [id], (err, res) => {
 		if (err) {
 			console.log(err.stack)
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		} else {
 			editProdWindow.close()
 			sendProductsList()
@@ -232,6 +256,7 @@ ipcMain.on('prodCreate:create', (e, obj) => {
 	db.pool.query(text, values, (err, res) => {
 		if (err) {
 			console.log(err.stack)
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		} else {
 			sendProductsList()
 			createProdWindow.close()
@@ -252,6 +277,7 @@ ipcMain.on('usrCreate:create', (e, obj) => {
 	db.pool.query(text, values, (err, res) => {
 		if (err) {
 			console.log(err.stack)
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		} else {
 			sendUsersList()
 			createUserWindow.close()
@@ -347,7 +373,10 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 		.then(res => {
 			console.log('User name and position updated!')
 		})
-		.catch(err => console.log(err.stack))
+		.catch(err => {
+			console.log(err.stack)
+			dialog.showErrorBox('Se ha producido un error', err.stack);
+		})
 
 	if (obj.addedModules.length > 0) {
 		db.pool
@@ -355,7 +384,10 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 			.then(res => {
 				console.log('Modules added to user!')
 			})
-			.catch(err => console.log(err.stack))
+			.catch(err => {
+				console.log(err.stack)
+				dialog.showErrorBox('Se ha producido un error', err.stack);
+			})
 	}
 
 	if (obj.removedModules.length > 0) {
@@ -364,7 +396,10 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 			.then(res => {
 				console.log('Modules removed from user!')
 			})
-			.catch(err => console.log(err.stack))
+			.catch(err => {
+				console.log(err.stack)
+				dialog.showErrorBox('Se ha producido un error', err.stack);
+			})
 	}
 
 	editUserWindow.close()
@@ -377,6 +412,7 @@ ipcMain.on('usrEdit:toggle', (e, id) => {
 	db.pool.query(text, [id], (err, res) => {
 		if (err) {
 			console.log(err.stack)
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		} else {
 			editUserWindow.close()
 			sendUsersList()
@@ -390,6 +426,7 @@ ipcMain.on('usrEdit:reset', (e, id) => {
 	db.pool.query(text, [id], (err, res) => {
 		if (err) {
 			console.log(err.stack)
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		} else {
 			editUserWindow.close()
 			mainwc.send('users:reset')
@@ -404,6 +441,7 @@ ipcMain.on('change:pass', (e, arr) => {
 		db.pool.query(text, [arr[1], userInfo.user_id], (err, res) => {
 			if (err) {
 				console.log(err.stack)
+				dialog.showErrorBox('Se ha producido un error', err.stack);
 				mainwc.send('change:done', false)
 			} else {
 				mainwc.send('change:done', true)
@@ -421,6 +459,7 @@ ipcMain.on('production:ready', e => {
 	db.pool.query(text1, (err1, res1) => {
 		if (err1) {
 			console.log(err1.stack);
+			dialog.showErrorBox('Se ha producido un error', err1.stack);
 		}
 		else {
 			createProdWindow.send('productionTypes:info', res1.rows)
@@ -434,6 +473,7 @@ ipcMain.on('production:create', e => {
 	db.pool.query(text1, (err1, res1) => {
 		if (err1) {
 			console.log(err1.stack);
+			dialog.showErrorBox('Se ha producido un error', err1.stack);
 		}
 		else {
 			mainwc.send('prodTypes:info', res1.rows)
@@ -447,6 +487,7 @@ ipcMain.on('activeProducts:selected', (e, filter) => {
 	db.pool.query(text1, (err1, res1) => {
 		if (err1) {
 			console.log(err1.stack)
+			dialog.showErrorBox('Se ha producido un error', err1.stack);
 		}
 		else {
 			mainwc.send('filteredProdcuts:info', res1.rows)
@@ -468,6 +509,7 @@ ipcMain.on('production:save', (e, arr) => {
 	db.pool.query(qry, (err, res) => {
 		if (err) {
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 			mainwc.send('production:error');
 		}
 		else {
@@ -483,10 +525,12 @@ ipcMain.on('expense:ready', e => {
 	db.pool.query(text1, (err1, res1) => {
 		if (err1) {
 			console.log(err1.stack)
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		} else {
 			db.pool.query(text2, (err2, res2) => {
 				if (err2) {
 					console.log(err2.stack)
+					dialog.showErrorBox('Se ha producido un error', err2.stack);
 				} else {
 					mainwc.send('expense:info', [res1.rows, res2.rows])
 				}
@@ -510,6 +554,7 @@ ipcMain.on('expense:save', (e, arr) => {
 	db.pool.query(query, (err, res) => {
 		if (err) {
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 			mainwc.send('expense:error');
 		}
 		else {
@@ -526,10 +571,12 @@ ipcMain.on('expenseManager:ready', (e) => {
 	db.pool.query(text1, (err1, res1) => {
 		if (err1) {
 			console.log(err1.stack);
+			dialog.showErrorBox('Se ha producido un error', err1.stack);
 		} else {
 			db.pool.query(text2, (err2, res2) => {
 				if (err2) {
 					console.log(err2.stack);
+					dialog.showErrorBox('Se ha producido un error', err2.stack);
 				} else {
 					mainwc.send('expenseManager:info', [res1.rows, res2.rows]);
 				}
@@ -591,6 +638,7 @@ ipcMain.on('expenseManager:save', (e, arr) => {
 		})
 			.catch(err => {
 				console.log(err.stack);
+				dialog.showErrorBox('Se ha producido un error', err.stack);
 			});
 
 		promises.push(promise1);
@@ -616,6 +664,7 @@ ipcMain.on('expenseManager:save', (e, arr) => {
 		})
 			.catch(err => {
 				console.log(err.stack);
+				dialog.showErrorBox('Se ha producido un error', err.stack);
 			})
 
 		promises.push(promise3);
@@ -634,6 +683,7 @@ ipcMain.on('expenseManager:save', (e, arr) => {
 	)
 		.catch(err => {
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 			mainwc.send('expenseManager:error');
 		})
 })
@@ -646,11 +696,13 @@ ipcMain.on('sales:ready', (e) => {
 	db.pool.query(text, (err1, res1) => {
 		if (err1) {
 			console.log(err1.stack);
+			dialog.showErrorBox('Se ha producido un error', err1.stack);
 		}
 		else {
 			db.pool.query(text2, (err2, res2) => {
 				if (err2) {
 					console.log(err2.stack);
+					dialog.showErrorBox('Se ha producido un error', err2.stack);
 				}
 				else {
 					if (res2.rowCount > 0) {
@@ -673,6 +725,7 @@ ipcMain.on('sales:start', e => {
 	db.pool.query(text, (err, res) => {
 		if (err) {
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
 		else {
 			shift = res.rows[0].shift_id;
@@ -688,6 +741,7 @@ ipcMain.on('sales:end', e => {
 	db.pool.query(text, (err, res) => {
 		if (err) {
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
 		else {
 			sendSalesReview();
@@ -709,6 +763,7 @@ ipcMain.on('sales:register', (e, arr) => {
 	db.pool.query(text, (err, res) => {
 		if (err) {
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
 		else {
 			mainwc.send('sales:done');
@@ -724,10 +779,12 @@ ipcMain.on('productionReport:ready', e => {
 	db.pool.query(text1, (err1, res1) => {
 		if (err1) {
 			console.log(err1.stack)
+			dialog.showErrorBox('Se ha producido un error', err1.stack);
 		} else {
 			db.pool.query(text2, (err2, res2) => {
 				if (err2) {
 					console.log(err2.stack)
+					dialog.showErrorBox('Se ha producido un error', err2.stack);
 				} else {
 					mainwc.send('productionReport:info', [res1.rows, res2.rows])
 				}
@@ -766,6 +823,7 @@ ipcMain.on('productionReport:search', (e, arr) => {
 		if (err)
 		{
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
 		else
 		{
@@ -791,11 +849,13 @@ ipcMain.on('expenseReport:ready', (e) => {
 	db.pool.query(text1, (err1, res1) => {
 		if(err1){
 			console.log(err1.stack);
+			dialog.showErrorBox('Se ha producido un error', err1.stack);
 		}
 		else{
 			db.pool.query(text2, (err2, res2) => {
 				if(err2){
 					console.log(err2.stack);
+					dialog.showErrorBox('Se ha producido un error', err2.stack);
 				}
 				else{
 					mainwc.send('expenseReport:info', [res1.rows, res2.rows]);
@@ -831,6 +891,7 @@ ipcMain.on('expenseReport:search', (e, arr) => {
 	db.pool.query(text, (err, res) => {
 		if(err){
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
 		else{
 			if(arr[1] == 1){
@@ -854,11 +915,13 @@ ipcMain.on('salesReport:ready', (e) => {
 	db.pool.query(text1, (err1, res1) => {
 		if(err1){
 			console.log(err1.stack);
+			dialog.showErrorBox('Se ha producido un error', err1.stack);
 		}
 		else{
 			db.pool.query(text2, (err2, res2) => {
 				if(err2){
 					console.log(err2.stack);
+					dialog.showErrorBox('Se ha producido un error', err2.stack);
 				}
 				else{
 					mainwc.send('salesReport:info', [res1.rows, res2.rows]);
@@ -896,6 +959,7 @@ ipcMain.on('salesReport:search', (e, arr) => {
 	db.pool.query(text, (err, res) => {
 		if(err){
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
 		else{
 			if(arr[1] == 1){
@@ -918,6 +982,7 @@ ipcMain.on('shiftReport:ready', (e) => {
 	db.pool.query(text, (err, res) => {
 		if(err){
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
 		else{
 			mainwc.send('shiftReport:info', res.rows);
@@ -950,6 +1015,7 @@ ipcMain.on('shiftReport:search', (e, arr) => {
 	db.pool.query(text, (err, res) => {
 		if(err){
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
 		else{
 			if(arr[1] == 1){
@@ -958,7 +1024,7 @@ ipcMain.on('shiftReport:search', (e, arr) => {
 			else{
 				let today = new Date();
 
-				const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
+				const csv = new ObjectsToCsv(formatShiftCsv(res.rows));
 				csv.toDisk(`${relativeCsvlocation}/reporte_turno_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
 			}
 		}
@@ -1034,6 +1100,7 @@ function sendUsersList() {
 	db.pool.query(text, (err, res) => {
 		if (err) {
 			console.log(err.stack)
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		} else {
 			users = res.rows
 			mainwc.send('users:info', users)
@@ -1048,6 +1115,7 @@ function sendProductsList() {
 	db.pool.query(text, (err, res) => {
 		if (err) {
 			console.log(err.stack)
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		} else {
 			products = res.rows;
 			mainwc.send('products:info', products)
@@ -1062,6 +1130,7 @@ function sendSalesReview() {
 	db.pool.query(text, (err, res) => {
 		if (err) {
 			console.log(err.stack);
+			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
 		else {
 			products = res.rows;
@@ -1112,6 +1181,38 @@ function formatSalesCsv(collection){
 			total_productos_venta: element.total,
 			id_turno_venta: element.shift_id,
 			nombre_vendedor_venta: element.name.trim()
+		};
+
+		formattedCollection.push(formattedObject);
+
+		formattedDate = null;
+	});
+
+	return formattedCollection;
+}
+
+function formatShiftCsv(collection){
+	var formattedCollection = [];
+	var formattedObject, formattedStartDate, formattedEndDate;
+
+	collection.forEach(element => {
+		formattedStartDate = new Date(Date.parse(element.shift_start));
+		formattedEndDate = new Date(Date.parse(element.shift_end));
+
+		if(formattedEndDate == 'Invalid Date'){
+			formattedEndDate = '-'
+		}
+		else{
+			formattedEndDate = formattedEndDate.toLocaleString().replace(',',' ')
+		}
+		
+		formattedObject = {
+			id_turno: element.shift_id,
+			inicio_turno: formattedStartDate.toLocaleString().replace(',',' '),
+			fin_turno: formattedEndDate,
+			estado_turno: element.shift_status.trim(),
+			total_turno: element.total_shift,
+			nombre_vendedor: element.name
 		};
 
 		formattedCollection.push(formattedObject);

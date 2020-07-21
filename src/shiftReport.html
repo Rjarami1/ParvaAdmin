@@ -147,7 +147,15 @@
                     arr.forEach(shift => {
                         shift_start_date = new Date(Date.parse(shift.shift_start));
                         shift_end_date = new Date(Date.parse(shift.shift_end));
-                        $('#shifts tbody').append(`<tr><td>${num}</td><td>${shift_start_date.toLocaleDateString('en-GB')}</td><td>${shift_end_date.toLocaleDateString('en-GB')}</td><td>${shift.shift_id}</td><td>${shift.shift_status}</td><td>${formatCurrency(parseInt(shift.total_shift))}</td><td>${shift.name}</td></tr>`);
+
+                        if(shift_end_date == 'Invalid Date'){
+                            shift_end_date = '-'
+                        }
+                        else{
+                            shift_end_date = shift_end_date.toLocaleString();
+                        }
+
+                        $('#shifts tbody').append(`<tr><td>${num}</td><td>${shift_start_date.toLocaleString()}</td><td>${shift_end_date}</td><td>${shift.shift_id}</td><td>${shift.shift_status}</td><td>${formatCurrency(parseInt(shift.total_shift))}</td><td>${shift.name}</td></tr>`);
                         num++;
 
                         shift_start_date = null;

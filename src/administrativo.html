@@ -110,7 +110,7 @@
             users.forEach(user => {
                 dateCreate = new Date(Date.parse(user.date_create));
                 dateLast = new Date(Date.parse(user.date_last_login));
-
+                
                 tr = document.createElement('tr');
                 td1 = document.createElement('td');
                 td2 = document.createElement('td');
@@ -128,7 +128,12 @@
                 itemText2 = document.createTextNode(user.cedula);
                 itemText3 = document.createTextNode(user.name);
                 itemText4 = document.createTextNode(dateCreate.toLocaleString());
-                itemText5 = document.createTextNode(dateLast.toLocaleString());
+                if(dateLast == 'Invalid Date'){
+                    itemText5 = document.createTextNode('No ha ingresado');
+                }
+                else{
+                    itemText5 = document.createTextNode(dateLast.toLocaleString());
+                }
                 itemText6 = document.createTextNode(user.position);
 
                 dateCreate = null;
