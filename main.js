@@ -10,7 +10,7 @@ const userMenu = require('./menuModules')
 const { app, BrowserWindow, Menu, ipcMain, dialog } = electron
 
 //SET ENV
-process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'production';
 
 //Declaring Browser Windows
 let mainWindow
@@ -32,17 +32,17 @@ const relativeCsvlocation = __dirname + '\\Reportes';
 
 //Sección para verificar que la carpeta de reportes exista y si no que sea creada.
 fs.stat(relativeCsvlocation, (err, stats) => {
-	if(err){
-		if(err.code == 'ENOENT'){
-			fs.mkdir(relativeCsvlocation, () =>{
+	if (err) {
+		if (err.code == 'ENOENT') {
+			fs.mkdir(relativeCsvlocation, () => {
 				console.log('Carpeta "Reportes" creada.');
 			});
 		}
-		else{
+		else {
 			dialog.showErrorBox('Se ha producido un error', 'Ha ocurrido un error con la carpeta de reportes. Código del error: ' + err.code);
 		}
 	}
-	else{
+	else {
 		console.log('Carpeta de Reportes encontrada.');
 	}
 })
@@ -798,41 +798,32 @@ ipcMain.on('productionReport:search', (e, arr) => {
 	let obj = arr[0];
 	let text = 'SELECT "prodType_description", produc_date, produc_code, produc_name, produc_quan, produc_type, name_prod FROM public.production_view WHERE ';
 
-	if (obj.fromDate.length > 0)
-	{
+	if (obj.fromDate.length > 0) {
 		text += `produc_date >= '${obj.fromDate}' AND `;
 	}
-	if (obj.toDate.length > 0)
-	{
+	if (obj.toDate.length > 0) {
 		text += `produc_date >= '${obj.toDate}' AND `;
 	}
-	if (obj.producType.length > 0)
-	{
+	if (obj.producType.length > 0) {
 		text += `produc_type = '${obj.producType}' AND `;
 	}
-	if (obj.producCode.length > 0)
-	{
+	if (obj.producCode.length > 0) {
 		text += `produc_code = '${obj.producCode}';`;
 	}
-	else
-	{
-		text = text.slice(0,-5) + ';';
+	else {
+		text = text.slice(0, -5) + ';';
 	}
 
 	db.pool.query(text, (err, res) => {
-		if (err)
-		{
+		if (err) {
 			console.log(err.stack);
 			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
-		else
-		{
-			if(arr[1] == 1)
-			{
+		else {
+			if (arr[1] == 1) {
 				mainwc.send('productionReport:result', res.rows);
 			}
-			else
-			{
+			else {
 				let today = new Date();
 				const csv = new ObjectsToCsv(res.rows);
 				csv.toDisk(`${relativeCsvlocation}/reporte_produccion_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
@@ -842,22 +833,22 @@ ipcMain.on('productionReport:search', (e, arr) => {
 })
 
 ipcMain.on('expenseReport:ready', (e) => {
-	
+
 	const text1 = 'SELECT DISTINCT type_description, type_id FROM public.expenses_view';
 	const text2 = 'SELECT DISTINCT expense_code, code_description, code_type_id FROM public.expenses_view';
 
 	db.pool.query(text1, (err1, res1) => {
-		if(err1){
+		if (err1) {
 			console.log(err1.stack);
 			dialog.showErrorBox('Se ha producido un error', err1.stack);
 		}
-		else{
+		else {
 			db.pool.query(text2, (err2, res2) => {
-				if(err2){
+				if (err2) {
 					console.log(err2.stack);
 					dialog.showErrorBox('Se ha producido un error', err2.stack);
 				}
-				else{
+				else {
 					mainwc.send('expenseReport:info', [res1.rows, res2.rows]);
 				}
 			})
@@ -866,38 +857,38 @@ ipcMain.on('expenseReport:ready', (e) => {
 })
 
 ipcMain.on('expenseReport:search', (e, arr) => {
-	
+
 	let obj = arr[0];
 
 	let text = 'SELECT expense_date, type_description, expense_code, code_description, expense_value, expense_quantity, total FROM public.expenses_view WHERE ';
 
-	if(obj.fromDate.length > 0){
+	if (obj.fromDate.length > 0) {
 		text += `expense_date >= '${obj.fromDate}' AND `;
 	}
-	if(obj.toDate.length > 0){
+	if (obj.toDate.length > 0) {
 		text += `expense_date <= '${obj.toDate}' AND `;
 	}
-	if(obj.expenseType.length > 0){
+	if (obj.expenseType.length > 0) {
 		text += `type_description = '${obj.expenseType}' AND `
 	}
 
-	if(obj.expenseCode.length > 0){
+	if (obj.expenseCode.length > 0) {
 		text += `expense_code = '${obj.expenseCode}';`;
 	}
-	else{
-		text = text.slice(0,-5) + ';';
+	else {
+		text = text.slice(0, -5) + ';';
 	}
 
 	db.pool.query(text, (err, res) => {
-		if(err){
+		if (err) {
 			console.log(err.stack);
 			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
-		else{
-			if(arr[1] == 1){
+		else {
+			if (arr[1] == 1) {
 				mainwc.send('expenseReport:result', res.rows);
 			}
-			else{
+			else {
 				let today = new Date();
 
 				const csv = new ObjectsToCsv(formatExpensesCsv(res.rows));
@@ -908,22 +899,22 @@ ipcMain.on('expenseReport:search', (e, arr) => {
 })
 
 ipcMain.on('salesReport:ready', (e) => {
-	
+
 	const text1 = 'SELECT DISTINCT name_prod, code_prod FROM public.salesreport_view';
 	const text2 = 'SELECT DISTINCT name FROM public.salesreport_view';
 
 	db.pool.query(text1, (err1, res1) => {
-		if(err1){
+		if (err1) {
 			console.log(err1.stack);
 			dialog.showErrorBox('Se ha producido un error', err1.stack);
 		}
-		else{
+		else {
 			db.pool.query(text2, (err2, res2) => {
-				if(err2){
+				if (err2) {
 					console.log(err2.stack);
 					dialog.showErrorBox('Se ha producido un error', err2.stack);
 				}
-				else{
+				else {
 					mainwc.send('salesReport:info', [res1.rows, res2.rows]);
 				}
 			})
@@ -932,40 +923,40 @@ ipcMain.on('salesReport:ready', (e) => {
 })
 
 ipcMain.on('salesReport:search', (e, arr) => {
-	
+
 	let obj = arr[0];
 
 	let text = 'SELECT sale_date, code_prod, name_prod, value, quantity, total, shift_id, name FROM public.salesreport_view WHERE ';
 
-	if(obj.fromDate.length > 0){
+	if (obj.fromDate.length > 0) {
 		text += `sale_date >= '${obj.fromDate}' AND `;
 	}
-	if(obj.toDate.length > 0){
+	if (obj.toDate.length > 0) {
 		text += `sale_date <= '${obj.toDate}' AND `;
 	}
-	if(obj.product.length > 0){
+	if (obj.product.length > 0) {
 		text += `name_prod = '${obj.product}' AND `
 	}
-	if(obj.salesman.length > 0){
+	if (obj.salesman.length > 0) {
 		text += `name = '${obj.salesman}' AND `;
 	}
-	if(obj.shift.length > 0){
+	if (obj.shift.length > 0) {
 		text += `shift_id = '${obj.shift}';`;
 	}
-	else{
-		text = text.slice(0,-5) + ';';
+	else {
+		text = text.slice(0, -5) + ';';
 	}
 
 	db.pool.query(text, (err, res) => {
-		if(err){
+		if (err) {
 			console.log(err.stack);
 			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
-		else{
-			if(arr[1] == 1){
+		else {
+			if (arr[1] == 1) {
 				mainwc.send('salesReport:result', res.rows);
 			}
-			else{
+			else {
 				let today = new Date();
 
 				const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
@@ -976,52 +967,52 @@ ipcMain.on('salesReport:search', (e, arr) => {
 })
 
 ipcMain.on('shiftReport:ready', (e) => {
-	
+
 	const text = 'SELECT DISTINCT name FROM public.shifts_view';
 
 	db.pool.query(text, (err, res) => {
-		if(err){
+		if (err) {
 			console.log(err.stack);
 			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
-		else{
+		else {
 			mainwc.send('shiftReport:info', res.rows);
 		}
 	})
 })
 
 ipcMain.on('shiftReport:search', (e, arr) => {
-	
+
 	let obj = arr[0];
 
 	let text = 'SELECT shift_id, shift_start, shift_end, shift_status, total_shift, name FROM public.shifts_view WHERE ';
 
-	if(obj.fromDate.length > 0){
+	if (obj.fromDate.length > 0) {
 		text += `shift_start >= '${obj.fromDate}' AND `;
 	}
-	if(obj.toDate.length > 0){
+	if (obj.toDate.length > 0) {
 		text += `shift_start <= '${obj.toDate}' AND `;
 	}
-	if(obj.salesman.length > 0){
+	if (obj.salesman.length > 0) {
 		text += `name = '${obj.salesman}' AND `;
 	}
-	if(obj.shift.length > 0){
+	if (obj.shift.length > 0) {
 		text += `shift_id = '${obj.shift}';`;
 	}
-	else{
-		text = text.slice(0,-5) + ';';
+	else {
+		text = text.slice(0, -5) + ';';
 	}
 
 	db.pool.query(text, (err, res) => {
-		if(err){
+		if (err) {
 			console.log(err.stack);
 			dialog.showErrorBox('Se ha producido un error', err.stack);
 		}
-		else{
-			if(arr[1] == 1){
+		else {
+			if (arr[1] == 1) {
 				mainwc.send('shiftReport:result', res.rows);
 			}
-			else{
+			else {
 				let today = new Date();
 
 				const csv = new ObjectsToCsv(formatShiftCsv(res.rows));
@@ -1140,13 +1131,13 @@ function sendSalesReview() {
 	})
 }
 
-function formatExpensesCsv(collection){
+function formatExpensesCsv(collection) {
 	var formattedCollection = [];
 	var formattedObject, formattedDate;
 
 	collection.forEach(element => {
 		formattedDate = new Date(Date.parse(element.expense_date));
-		
+
 		formattedObject = {
 			fecha_gasto: formattedDate.toLocaleDateString('en-GB'),
 			tipo_gasto: element.type_description.trim(),
@@ -1165,15 +1156,15 @@ function formatExpensesCsv(collection){
 	return formattedCollection;
 }
 
-function formatSalesCsv(collection){
+function formatSalesCsv(collection) {
 	var formattedCollection = [];
 	var formattedObject, formattedDate;
 
 	collection.forEach(element => {
 		formattedDate = new Date(Date.parse(element.sale_date));
-		
+
 		formattedObject = {
-			fecha_venta: formattedDate.toLocaleString().replace(',',' '),
+			fecha_venta: formattedDate.toLocaleString().replace(',', ' '),
 			codigo_producto_venta: element.code_prod.trim(),
 			nombre_producto_venta: element.name_prod.trim(),
 			valor_producto_venta: element.value,
@@ -1191,7 +1182,7 @@ function formatSalesCsv(collection){
 	return formattedCollection;
 }
 
-function formatShiftCsv(collection){
+function formatShiftCsv(collection) {
 	var formattedCollection = [];
 	var formattedObject, formattedStartDate, formattedEndDate;
 
@@ -1199,16 +1190,16 @@ function formatShiftCsv(collection){
 		formattedStartDate = new Date(Date.parse(element.shift_start));
 		formattedEndDate = new Date(Date.parse(element.shift_end));
 
-		if(formattedEndDate == 'Invalid Date'){
+		if (formattedEndDate == 'Invalid Date') {
 			formattedEndDate = '-'
 		}
-		else{
-			formattedEndDate = formattedEndDate.toLocaleString().replace(',',' ')
+		else {
+			formattedEndDate = formattedEndDate.toLocaleString().replace(',', ' ')
 		}
-		
+
 		formattedObject = {
 			id_turno: element.shift_id,
-			inicio_turno: formattedStartDate.toLocaleString().replace(',',' '),
+			inicio_turno: formattedStartDate.toLocaleString().replace(',', ' '),
 			fin_turno: formattedEndDate,
 			estado_turno: element.shift_status.trim(),
 			total_turno: element.total_shift,
