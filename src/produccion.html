@@ -52,8 +52,8 @@
                         </div>
                         <div class="col-xl">
                             <label for="product_selection">Productos disponibles:</label>
-                            <select class="form-control" name="product_selection" id="product_selection">
-                                <option value="" selected>--Seleccione Producto--</option>
+                            <select class="form-control" name="product_selection" id="product_selection" data-index="-1">
+                                <option value="0" selected>--Seleccione Producto--</option>
                             </select>
                         </div>
                     </div>
@@ -315,10 +315,11 @@
 
         pro_save.addEventListener('click', (e) => {
             e.preventDefault();
+            ipcRenderer.send('production:save', added_prod);
 
             if (added_prod.length > 0) {
                 msg.textContent = '';
-                ipcRenderer.send('production:save', added_prod);
+                
                 pro_save.disabled = true;
             }
             else {
