@@ -10,11 +10,7 @@ const userMenu = require('./menuModules')
 const { app, BrowserWindow, Menu, ipcMain, dialog } = electron
 
 //SET ENV
-<<<<<<< HEAD
 //process.env.NODE_ENV = 'production';
-=======
-// process.env.NODE_ENV = 'production';
->>>>>>> c45f298e16ac23ae79cd2ac5b9bd8ee26ffbe1a8
 
 //Declaring Browser Windows
 let mainWindow
