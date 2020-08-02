@@ -10,7 +10,7 @@ const userMenu = require('./menuModules')
 const { app, BrowserWindow, Menu, ipcMain, dialog } = electron
 
 //SET ENV
-process.env.NODE_ENV = 'production';
+//process.env.NODE_ENV = 'production';
 
 //Declaring Browser Windows
 let mainWindow
@@ -28,24 +28,6 @@ let createprod
 let editwc
 
 let logged_user_id = -1;
-const relativeCsvlocation = __dirname + '\\Reportes';
-
-//Sección para verificar que la carpeta de reportes exista y si no que sea creada.
-fs.stat(relativeCsvlocation, (err, stats) => {
-	if(err){
-		if(err.code == 'ENOENT'){
-			fs.mkdir(relativeCsvlocation, () =>{
-				console.log('Carpeta "Reportes" creada.');
-			});
-		}
-		else{
-			dialog.showErrorBox('Se ha producido un error', 'Ha ocurrido un error con la carpeta de reportes. Código del error: ' + err.code);
-		}
-	}
-	else{
-		console.log('Carpeta de Reportes encontrada.');
-	}
-})
 
 function createMainWindow() {
 	mainWindow = new BrowserWindow({
@@ -55,6 +37,9 @@ function createMainWindow() {
 			nodeIntegration: true
 		}
 	})
+
+	mainWindow.maximize();
+	mainWindow.show();
 
 	mainwc = mainWindow.webContents
 
@@ -69,7 +54,7 @@ app.on('ready', () => {
 	createMainWindow()
 
 	let mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
-	Menu.setApplicationMenu(mainMenu)
+	Menu.setApplicationMenu(mainMenu)	
 })
 
 ipcMain.on('login:in', (e, arr) => {
@@ -819,6 +804,8 @@ ipcMain.on('productionReport:search', (e, arr) => {
 		text = text.slice(0,-5) + ';';
 	}
 
+	console.log('query: ' + text);
+
 	db.pool.query(text, (err, res) => {
 		if (err)
 		{
@@ -834,8 +821,16 @@ ipcMain.on('productionReport:search', (e, arr) => {
 			else
 			{
 				let today = new Date();
-				const csv = new ObjectsToCsv(res.rows);
-				csv.toDisk(`${relativeCsvlocation}/reporte_produccion_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
+
+				dialog.showSaveDialog({
+					title: 'Generar reporte de producción',
+					defaultPath: `reporte_produccion_${today.getDate().toString()}_${(today.getMonth() + 1).toString()}_${today.getFullYear().toString()}.csv`
+				}).then(obj => {
+					if(obj.filePath != undefined){
+						const csv = new ObjectsToCsv(res.rows);
+						csv.toDisk(obj.filePath).then(console.log('Generado'));		
+					}
+				})
 			}
 		}
 	})
@@ -900,8 +895,15 @@ ipcMain.on('expenseReport:search', (e, arr) => {
 			else{
 				let today = new Date();
 
-				const csv = new ObjectsToCsv(formatExpensesCsv(res.rows));
-				csv.toDisk(`${relativeCsvlocation}/reporte_gastos_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
+				dialog.showSaveDialog({
+					title: 'Generar reporte de gastos',
+					defaultPath: `reporte_gastos_${today.getDate().toString()}_${(today.getMonth() + 1).toString()}_${today.getFullYear().toString()}.csv`
+				}).then(obj => {
+					if(obj.filePath != ''){
+						const csv = new ObjectsToCsv(formatExpensesCsv(res.rows));
+						csv.toDisk(obj.filePath).then(console.log('Generado'));		
+					}
+				})
 			}
 		}
 	})
@@ -968,8 +970,15 @@ ipcMain.on('salesReport:search', (e, arr) => {
 			else{
 				let today = new Date();
 
-				const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
-				csv.toDisk(`${relativeCsvlocation}/reporte_ventas_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
+				dialog.showSaveDialog({
+					title: 'Generar reporte de ventas',
+					defaultPath: `reporte_ventas_${today.getDate().toString()}_${(today.getMonth() + 1).toString()}_${today.getFullYear().toString()}.csv`
+				}).then(obj => {
+					if(obj.filePath != ''){
+						const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
+						csv.toDisk(obj.filePath).then(console.log('Generado'));	
+					}
+				})
 			}
 		}
 	})
@@ -1024,8 +1033,15 @@ ipcMain.on('shiftReport:search', (e, arr) => {
 			else{
 				let today = new Date();
 
-				const csv = new ObjectsToCsv(formatShiftCsv(res.rows));
-				csv.toDisk(`${relativeCsvlocation}/reporte_turno_${today.getDate().toString()}_${today.getMonth().toString()}_${today.getFullYear().toString()}.csv`).then(console.log('Generado'));
+				dialog.showSaveDialog({
+					title: 'Generar reporte de turno',
+					defaultPath: `reporte_turno_${today.getDate().toString()}_${(today.getMonth() + 1).toString()}_${today.getFullYear().toString()}.csv`
+				}).then(obj => {
+					if(obj.filePath != ''){
+						const csv = new ObjectsToCsv(formatShiftCsv(res.rows));
+						csv.toDisk(obj.filePath).then(console.log('Generado'));		
+					}
+				})
 			}
 		}
 	})
