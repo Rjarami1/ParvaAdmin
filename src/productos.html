@@ -154,9 +154,10 @@
 
 				bodyProd.appendChild(pr)
 			})
-
-			createDatatable()
+			//ipcRenderer.send('prod:ready')
+			//createDatatable()
 		})
+		createDatatable()
 
 		btn_addProduct.addEventListener('click', e => {
 			e.preventDefault()
@@ -186,6 +187,7 @@
 
 	<script>
 		function createDatatable() {
+			//ipcRenderer.send('prod:ready')
 			$('#tablaDeProductos').DataTable();
 		}
 	</script>
