@@ -781,6 +781,7 @@ ipcMain.on('productionReport:ready', e => {
 ipcMain.on('productionReport:search', (e, arr) => {
 
 	let obj = arr[0];
+	console.log(obj)
 	let text = 'SELECT "prodType_description", produc_date, produc_code, produc_name, produc_quan, produc_type, name_prod FROM public.production_view WHERE ';
 
 	if (obj.fromDate.length > 0) {
@@ -793,7 +794,7 @@ ipcMain.on('productionReport:search', (e, arr) => {
 		text += `produc_type = '${obj.producType}' AND `;
 	}
 	if (obj.producCode.length > 0) {
-		text += `produc_code = '${obj.producCode}';`;
+		text += `produc_name = '${obj.producCode}';`;
 	}
 	else {
 		text = text.slice(0, -5) + ';';
@@ -873,6 +874,8 @@ ipcMain.on('expenseReport:search', (e, arr) => {
 	else {
 		text = text.slice(0, -5) + ';';
 	}
+
+	console.log('query: ' + text);
 
 	db.pool.query(text, (err, res) => {
 		if (err) {
