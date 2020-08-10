@@ -127,10 +127,12 @@
                 });
                 names.forEach(name => {
                     $('#producCode').append(`<option value ="${name.produc_name.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
+                    //$('#producCode').append(`<option value ="${name.produc_code.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
                 });
 
                 $('#producType').on('change', function () {
                     return popuTypeSelector($('#producType').val());
+                    //console.log(popuTypeSelector($('#producType').val()));
                 });
 
                 $('#filters').on('submit', function (e) {
@@ -184,6 +186,7 @@
 
             function searchProduction(option) {
                 let filterObj = buildQueryFilter();
+                console.log(filterObj)
                 if (filterObj != null) {
                     ipcRenderer.send('productionReport:search', [filterObj, option]);
                 }
@@ -203,11 +206,12 @@
                         typeText = $('#producType option:selected').text();
                     }
 
-                    if ($('#producCode').val() == "-1") {
+                    if ($('#producCode').val() == "-1") {//-1
                         codeText = "";
                     }
                     else {
                         codeText = $('#producCode option:selected').val();
+                        console.log(codeText);
                     }
 
                     filterObject =
