@@ -794,7 +794,7 @@ ipcMain.on('productionReport:search', (e, arr) => {
 		text += `produc_type = '${obj.producType}' AND `;
 	}
 	if (obj.producCode.length > 0) {
-		text += `produc_name = '${obj.producCode}';`;
+		text += `produc_code = '${obj.producCode}';`;
 	}
 	else {
 		text = text.slice(0, -5) + ';';
