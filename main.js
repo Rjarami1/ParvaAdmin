@@ -60,12 +60,13 @@ app.on('ready', () => {
 ipcMain.on('login:in', (e, arr) => {
 	//Construye consulta
 	const text1 =
-		'SELECT * FROM security.users WHERE cedula = $1 AND password = $2 AND active = true'
+		'SELECT * FROM security.users WHERE cedula = $1 AND password = $2 AND active = true;'
 	const values1 = arr
 
 	const text2 =
-		'UPDATE security.users SET date_last_login = LOCALTIMESTAMP WHERE user_id = $1'
-
+		'UPDATE security.users SET date_last_login = LOCALTIMESTAMP WHERE user_id = $1;'
+		
+	const text3 = 'SELECT page_name FROM security.modules WHERE module_id = $1;';
 	//Realiza consulta
 	db.pool.query(text1, values1, (err, res) => {
 		if (err) {
@@ -80,16 +81,33 @@ ipcMain.on('login:in', (e, arr) => {
 			} else {
 				const values2 = [userInfo.user_id]
 				logged_user_id = userInfo.user_id;
-				db.pool.query(text2, values2, (err, res) => {
-					if (err) {
+				db.pool.query(text2, values2, (err2, res2) => {
+					if (err2) {
 						console.log(err.stack)
-						dialog.showErrorBox('Se ha producido un error', err.stack);
+						dialog.showErrorBox('Se ha producido un error', err2.stack);
 					}
 				})
-				mainWindow.loadFile('src/welcome.html')
-				mainwc.on('dom-ready', () => {
-					mainwc.send('user:name', userInfo.name)
-				})
+				if(userInfo.default_page_id != null){
+					if(userInfo.default_page_id != null){
+						const values3 = [userInfo.default_page_id]
+						db.pool.query(text3, values3, (err3, res3) => {
+							if(err3){
+								console.log(err.stack)
+								dialog.showErrorBox('Se ha producido un error', err3.stack);
+							}
+							else{
+								let pageInfo = res3.rows[0];
+								mainWindow.loadFile('src/' + pageInfo.page_name);
+							}
+						})
+					}
+				}
+				else{
+					mainWindow.loadFile('src/welcome.html')
+					mainwc.on('dom-ready', () => {
+						mainwc.send('user:name', userInfo.name)
+					})
+				}
 				userMenu
 					.createMenu(userInfo.user_id, mainWindow) //Construye menu según módulos asignados a usuario
 					.then(res => {
@@ -289,7 +307,7 @@ ipcMain.on('usrCreate:edit', (e, userid) => {
 
 	editwc.on('dom-ready', () => {
 		const text1 =
-			'SELECT user_id, cedula, password, date_create, date_last_login, name, "position", active FROM security.users WHERE user_id = $1;'
+			'SELECT user_id, cedula, password, date_create, date_last_login, name, "position", active, default_page_id FROM security.users WHERE user_id = $1;'
 		const text2 =
 			'SELECT "userModule_id", module_id, user_id FROM security."UsersModules" WHERE user_id = $1;'
 		const text3 =
@@ -353,6 +371,9 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 
 	const removeModulesText = `DELETE FROM security."UsersModules" WHERE module_id IN (${idquery}) AND user_id = ${obj.user_id};`
 
+	const defaultPageText = 'UPDATE security.users SET default_page_id = $1 WHERE user_id = $2;';
+	const values2 = [obj.defaultPage, obj.user_id];
+
 	db.pool
 		.query(userText, values1)
 		.then(res => {
@@ -385,6 +406,16 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 				console.log(err.stack)
 				dialog.showErrorBox('Se ha producido un error', err.stack);
 			})
+	}
+
+	if(obj.defaultPage != null){
+		db.pool.query(defaultPageText, values2).then(res => {
+			console.log('Default Page Updated!')
+		})
+		.catch(err => {
+			console.log(err.stack)
+			dialog.showErrorBox('Se ha producido un error', err.stack);
+		})
 	}
 
 	editUserWindow.close()

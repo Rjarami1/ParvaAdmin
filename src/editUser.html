@@ -75,6 +75,15 @@
 
                         <div class="row">
                             <div class="col-xl">
+                                <label for="default_page">Página por Defecto:</label>
+                                <select name="default_page" id="default_page">
+                                    <option value="-1">---Seleccionar---</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl">
                                 <button type="submit" class="btnsEditUser btn btn btn-success"
                                     id="submit">Guardar</button>
                             </div>
@@ -101,18 +110,24 @@
         const errormsg = document.querySelector('p');
         const btn_status = document.querySelector('#btn_status');
         const btn_reset = document.querySelector('#reset_pswd');
+        const page_select = document.querySelector('#default_page');
 
-        let userid;
+        let userid, def_module;
         let user_modules = [];
 
         let addModules = [];
         let removeModules = [];
+
+        let modules;
+        let allModules;
+        let option;
 
         ipcRenderer.on('usrEdit:userInfo', (e, dataObject) => {
             name.value = dataObject.userInfo.name.trim();
             position.value = dataObject.userInfo.position.trim();
 
             userid = dataObject.userInfo.user_id;
+            def_module = dataObject.userInfo.default_page_id;
 
             dataObject.userModules.forEach(module => {
                 user_modules.push(module.module_id);
@@ -125,10 +140,10 @@
                 btn_status.textContent = "Activar";
             }
 
-            console.log(user_modules);
+            //console.log(user_modules);
 
             //Aca esta el codigo para los checkbox de la edicion de los moudlos por usuario.
-            let modules = dataObject.modules;
+            modules = dataObject.modules;
             let userModules = dataObject.userModules;
             let tr = document.createElement('tr');
             let td;
@@ -160,6 +175,11 @@
                         checkbox.checked = true;
                     }
                 });
+   
+                checkbox.addEventListener('change', (e) => {
+                    e.preventDefault();
+                    updatePageSelector();
+                });
 
                 td.appendChild(label);
                 td.appendChild(checkbox);
@@ -171,6 +191,23 @@
 
             table.appendChild(tr);
             tr = null;
+
+            userModules.forEach(userModule => {
+                option = document.createElement('option');
+                option.value = userModule.module_id;
+                modules.forEach(module => {
+                    if(module.module_id == userModule.module_id)
+                        option.textContent = module.module_name;
+                });
+                page_select.appendChild(option);
+            });
+
+            if(def_module == null){
+                page_select.value = -1;
+            }
+            else{
+                page_select.value = def_module;
+            }
         })//Aca termina la porcion de codigo para editar los modulos del usuario a editar.
 
         cancel.addEventListener('click', (e) => {
@@ -194,7 +231,8 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            let allModules = document.querySelectorAll('.modules');
+            let selectedPage;
+            allModules = document.querySelectorAll('.modules');
 
             allModules.forEach(module => {
                 if (module.checked) {
@@ -207,6 +245,13 @@
                 }
             });
 
+            if(page_select.value == def_module){
+                selectedPage = null;
+            }
+            else{
+                selectedPage = page_select.value;
+            }
+
             if (name.value == '' || position.value == '') {
                 errormsg.textContent = 'No deje ningún campo vacío.'
                 errormsg.style.color = 'red';
@@ -218,13 +263,46 @@
                     userName: name.value,
                     userPosition: position.value,
                     addedModules: addModules,
-                    removedModules: removeModules
+                    removedModules: removeModules,
+                    defaultPage: selectedPage
                 }
 
                 ipcRenderer.send('usrEdit:update', sendObject);
             }
 
         })
+
+        function updatePageSelector(){
+            let selectedModule = page_select.value;
+            let chkModules = [];
+            allModules = document.querySelectorAll('.modules');
+
+            allModules.forEach(module => {
+                if (module.checked) {
+                    chkModules.push(module.value);
+                }
+            });
+
+            let option_number = page_select.childElementCount;
+            let child;
+            for (var i = 1; i < option_number; i++) {
+                child = page_select.lastElementChild;
+                page_select.removeChild(child);
+            }
+
+            chkModules.forEach(chkModule => {
+                option = document.createElement('option');
+                option.value = chkModule;
+                modules.forEach(module => {
+                    if(module.module_id == chkModule)
+                        option.textContent = module.module_name;
+                });
+                page_select.appendChild(option);
+                if(chkModule == selectedModule)
+                page_select.value = chkModule;
+            });
+        }
+
     </script>
 
     <!-- jQuery library -->
