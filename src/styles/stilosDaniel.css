@@ -112,6 +112,14 @@ body .centralVentas {
 	font-size: 0.9rem;
 }
 
+.centralWelcome {
+	position: absolute;
+	z-index: 100000;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
 .form-control{
 	font-size: 0.9rem;
 }
@@ -641,7 +649,6 @@ li img:hover {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	margin-top: 2%;
 }
 
 .labelsEdituser{
@@ -666,7 +673,7 @@ li img:hover {
 	top: 45%;
 	transform: translate(-50%, -50%);
 	margin-top: 2%;
-	margin-bottom: 2%;
+	margin-bottom: 10%;
 	table-layout: fixed;
 }
 

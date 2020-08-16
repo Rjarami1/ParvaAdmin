@@ -28,7 +28,7 @@
                         <div class="row">
                             <div class="inputsEditUser">
                                 <div class="col-xl">
-                                    <label class="labelsEdituser" for="name">Nombre:</label>
+                                    <label class="labelsEdituser" for="name"><strong>Nombre:</strong></label>
                                 </div>
                                 <div class="col-xl">
                                     <input class="form-control" type="text" name="name" id="name">
@@ -39,7 +39,7 @@
                         <div class="row">
                             <div class="inputsEditUser">
                                 <div class="col-xl">
-                                    <label class="labelsEdituser" for="position">Cargo:</label>
+                                    <label class="labelsEdituser" for="position"><strong>Cargo:</strong></label>
                                 </div>
                                 <div class="col-xl">
                                     <input class="form-control" type="text" name="position" id="position">
@@ -48,20 +48,14 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-xl buttonResetPswd">
+                            <div class="col buttonResetPswd">
                                 <button type="button" class="btnsEditUser btn btn btn-primary"
-                                    id="reset_pswd">Reestablecer
-                                    Contraseña</button>
+                                    id="reset_pswd">Reestablecer Contraseña</button>
+                            </div>
+                            <div class="col buttonResetPswd">
+                                <button type="button" class="btnsEditUser btn btn btn-success" id="btn_status"></button>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-xl buttonResetPswd">
-                                <button type="button" class="btnsEditUser btn btn btn-secondary"
-                                    id="btn_status"></button>
-                            </div>
-                        </div>
-
 
                         <p id="error"></p>
 
@@ -74,22 +68,24 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-xl">
-                                <label for="default_page">Página por Defecto:</label>
-                                <select name="default_page" id="default_page">
-                                    <option value="-1">---Seleccionar---</option>
-                                </select>
+                            <div class="inputsEditUser">
+                                <div class="col-xl">
+                                    <label for="default_page"><strong>Página por Defecto:</strong> </label>
+                                    <select name="default_page" class="form-control" id="default_page">
+                                        <option value="-1">---Seleccionar---</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-xl">
-                                <button type="submit" class="btnsEditUser btn btn btn-success"
-                                    id="submit">Guardar</button>
-                            </div>
-                            <div class="col-xl">
+                            <div class="col">
                                 <button type="button" class="btnsEditUser btn btn btn-danger"
                                     id="cancel">Cancelar</button>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btnsEditUser btn btn btn-success"
+                                    id="submit">Guardar</button>
                             </div>
                         </div>
 
@@ -175,7 +171,7 @@
                         checkbox.checked = true;
                     }
                 });
-   
+
                 checkbox.addEventListener('change', (e) => {
                     e.preventDefault();
                     updatePageSelector();
@@ -196,16 +192,16 @@
                 option = document.createElement('option');
                 option.value = userModule.module_id;
                 modules.forEach(module => {
-                    if(module.module_id == userModule.module_id)
+                    if (module.module_id == userModule.module_id)
                         option.textContent = module.module_name;
                 });
                 page_select.appendChild(option);
             });
 
-            if(def_module == null){
+            if (def_module == null) {
                 page_select.value = -1;
             }
-            else{
+            else {
                 page_select.value = def_module;
             }
         })//Aca termina la porcion de codigo para editar los modulos del usuario a editar.
@@ -245,10 +241,10 @@
                 }
             });
 
-            if(page_select.value == def_module){
+            if (page_select.value == def_module) {
                 selectedPage = null;
             }
-            else{
+            else {
                 selectedPage = page_select.value;
             }
 
@@ -272,7 +268,7 @@
 
         })
 
-        function updatePageSelector(){
+        function updatePageSelector() {
             let selectedModule = page_select.value;
             let chkModules = [];
             allModules = document.querySelectorAll('.modules');
@@ -294,12 +290,12 @@
                 option = document.createElement('option');
                 option.value = chkModule;
                 modules.forEach(module => {
-                    if(module.module_id == chkModule)
+                    if (module.module_id == chkModule)
                         option.textContent = module.module_name;
                 });
                 page_select.appendChild(option);
-                if(chkModule == selectedModule)
-                page_select.value = chkModule;
+                if (chkModule == selectedModule)
+                    page_select.value = chkModule;
             });
         }
 
