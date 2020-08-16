@@ -54,7 +54,7 @@ app.on('ready', () => {
 	createMainWindow()
 
 	let mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
-	Menu.setApplicationMenu(mainMenu)	
+	Menu.setApplicationMenu(mainMenu)
 })
 
 ipcMain.on('login:in', (e, arr) => {
@@ -65,7 +65,7 @@ ipcMain.on('login:in', (e, arr) => {
 
 	const text2 =
 		'UPDATE security.users SET date_last_login = LOCALTIMESTAMP WHERE user_id = $1;'
-		
+
 	const text3 = 'SELECT page_name FROM security.modules WHERE module_id = $1;';
 	//Realiza consulta
 	db.pool.query(text1, values1, (err, res) => {
@@ -100,7 +100,7 @@ ipcMain.on('login:in', (e, arr) => {
 						}
 					})
 				}
-				else{
+				else {
 					mainWindow.loadFile('src/welcome.html')
 					mainwc.on('dom-ready', () => {
 						mainwc.send('user:name', userInfo.name)
@@ -289,7 +289,7 @@ ipcMain.on('usrCreate:create', (e, obj) => {
 ipcMain.on('usrCreate:edit', (e, userid) => {
 	editUserWindow = new BrowserWindow({
 		width: 650,
-		height: 750,
+		height: 800,
 		webPreferences: {
 			nodeIntegration: true
 		},
@@ -406,14 +406,14 @@ ipcMain.on('usrEdit:update', (e, obj) => {
 			})
 	}
 
-	if(obj.defaultPage != null){
+	if (obj.defaultPage != null) {
 		db.pool.query(defaultPageText, values2).then(res => {
 			console.log('Default Page Updated!')
 		})
-		.catch(err => {
-			console.log(err.stack)
-			dialog.showErrorBox('Se ha producido un error', err.stack);
-		})
+			.catch(err => {
+				console.log(err.stack)
+				dialog.showErrorBox('Se ha producido un error', err.stack);
+			})
 	}
 
 	editUserWindow.close()
@@ -823,7 +823,7 @@ ipcMain.on('productionReport:search', (e, arr) => {
 		text += `produc_type = '${obj.producType}' AND `;
 	}
 	if (obj.producCode.length > 0) {
-		text += `produc_name = '${obj.producCode}';`;
+		text += `produc_code = '${obj.producCode}';`;
 	}
 	else {
 		text = text.slice(0, -5) + ';';
@@ -847,9 +847,9 @@ ipcMain.on('productionReport:search', (e, arr) => {
 					title: 'Generar reporte de producción',
 					defaultPath: `reporte_produccion_${today.getDate().toString()}_${(today.getMonth() + 1).toString()}_${today.getFullYear().toString()}.csv`
 				}).then(obj => {
-					if(obj.filePath != undefined){
+					if (obj.filePath != undefined) {
 						const csv = new ObjectsToCsv(res.rows);
-						csv.toDisk(obj.filePath).then(console.log('Generado'));		
+						csv.toDisk(obj.filePath).then(console.log('Generado'));
 					}
 				})
 			}
@@ -922,9 +922,9 @@ ipcMain.on('expenseReport:search', (e, arr) => {
 					title: 'Generar reporte de gastos',
 					defaultPath: `reporte_gastos_${today.getDate().toString()}_${(today.getMonth() + 1).toString()}_${today.getFullYear().toString()}.csv`
 				}).then(obj => {
-					if(obj.filePath != ''){
+					if (obj.filePath != '') {
 						const csv = new ObjectsToCsv(formatExpensesCsv(res.rows));
-						csv.toDisk(obj.filePath).then(console.log('Generado'));		
+						csv.toDisk(obj.filePath).then(console.log('Generado'));
 					}
 				})
 			}
@@ -997,9 +997,9 @@ ipcMain.on('salesReport:search', (e, arr) => {
 					title: 'Generar reporte de ventas',
 					defaultPath: `reporte_ventas_${today.getDate().toString()}_${(today.getMonth() + 1).toString()}_${today.getFullYear().toString()}.csv`
 				}).then(obj => {
-					if(obj.filePath != ''){
+					if (obj.filePath != '') {
 						const csv = new ObjectsToCsv(formatSalesCsv(res.rows));
-						csv.toDisk(obj.filePath).then(console.log('Generado'));	
+						csv.toDisk(obj.filePath).then(console.log('Generado'));
 					}
 				})
 			}
@@ -1060,9 +1060,9 @@ ipcMain.on('shiftReport:search', (e, arr) => {
 					title: 'Generar reporte de turno',
 					defaultPath: `reporte_turno_${today.getDate().toString()}_${(today.getMonth() + 1).toString()}_${today.getFullYear().toString()}.csv`
 				}).then(obj => {
-					if(obj.filePath != ''){
+					if (obj.filePath != '') {
 						const csv = new ObjectsToCsv(formatShiftCsv(res.rows));
-						csv.toDisk(obj.filePath).then(console.log('Generado'));		
+						csv.toDisk(obj.filePath).then(console.log('Generado'));
 					}
 				})
 			}

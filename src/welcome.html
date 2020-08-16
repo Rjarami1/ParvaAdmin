@@ -1,19 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="../dependencies/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="styles/stilosDaniel.css">
+
     <meta charset="UTF-8">
     <title>Bienvenido!</title>
 </head>
+
 <body>
-    <h1>Bienvenido <span id="userName"></span>!</h1>
+
+    <div class="container">
+
+        <div class="centralWelcome">
+
+            <img src="../images/welcomeImage.png" alt="loading..." />
+
+            <h1 class="text-center">Bienvenido <span id="userName"></span>!</h1>
+        </div>
+    </div>
+
+
 
     <script>
-        const {ipcRenderer} = require('electron');
+        const { ipcRenderer } = require('electron');
 
         ipcRenderer.on('user:name', (e, name) => {
             document.querySelector('#userName').textContent = name;
             console.log(name);
         })
     </script>
+
+    <!-- jQuery library -->
+    <script src="../dependencies/bootstrap-4.4.1-dist/js/jQuery.js"></script>
+
 </body>
+
 </html>

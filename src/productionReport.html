@@ -122,11 +122,12 @@
             ipcRenderer.on('productionReport:info', (e, arr) => {
                 names = arr[0];
                 types = arr[1];
+                console.log(names)
                 types.forEach(type => {
                     $('#producType').append(`<option value ="${type.prodType_description}">${type.prodType_description.trim()}</option>`);
                 });
                 names.forEach(name => {
-                    $('#producCode').append(`<option value ="${name.produc_name.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
+                    $('#producCode').append(`<option value ="${name.produc_code}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
                     //$('#producCode').append(`<option value ="${name.produc_code.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
                 });
 
