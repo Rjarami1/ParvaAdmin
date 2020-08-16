@@ -75,10 +75,10 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Fecha de Produccion</th>
-                                <th>Tipo de Producto</th>
                                 <th>Codigo del Producto</th>
                                 <th>Nombre de Producto</th>
-                                <th>Cantidad</th>
+                                <th>Cantidad Producida</th>
+                                <th>Tipo de Producto</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -122,18 +122,16 @@
             ipcRenderer.on('productionReport:info', (e, arr) => {
                 names = arr[0];
                 types = arr[1];
-                console.log(names)
                 types.forEach(type => {
-                    $('#producType').append(`<option value ="${type.prodType_description}">${type.prodType_description.trim()}</option>`);
+                    $('#producType').append(`<option value ="${type.tipo_producto}">${type.tipo_producto}</option>`);
                 });
                 names.forEach(name => {
-                    $('#producCode').append(`<option value ="${name.produc_code}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
+                    $('#producCode').append(`<option value ="${name.codigo_producto}">${name.codigo_producto} - ${name.nombre_producto}</option>`);
                     //$('#producCode').append(`<option value ="${name.produc_code.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
                 });
 
                 $('#producType').on('change', function () {
                     return popuTypeSelector($('#producType').val());
-                    //console.log(popuTypeSelector($('#producType').val()));
                 });
 
                 $('#filters').on('submit', function (e) {
@@ -154,8 +152,9 @@
                     let prodDate;
 
                     arr.forEach(production => {
-                        prodDate = new Date(Date.parse(production.produc_date));
-                        $('#production tbody').append(`<tr><td>${num}</td><td>${prodDate.toLocaleDateString('en-GB')}</td><td>${production.produc_type.trim()}</td><td>${production.produc_code}</td><td>${production.produc_name.trim()}</td><td>${production.produc_quan}</td></tr>`);
+                        prodDate = new Date(Date.parse(production.fecha_produccion));
+                        //prodDate = production.fecha_produccion;
+                        $('#production tbody').append(`<tr><td>${num}</td><td>${prodDate.toLocaleDateString('en-GB')}</td><td>${production.codigo_producto}</td><td>${production.nombre_producto}</td><td>${production.cantidad_producida}</td><td>${production.tipo_producto}</td></tr>`);
                         num++;
                         prodDate = null;
                     });
@@ -171,16 +170,18 @@
 
                 if (prodType != "-1") {
                     let newProducts = _.filter(names, (name) => {
-                        return name.prodType_description == prodType;
+                        //console.log(JSON.stringify(name))
+                        return name.tipo_producto == prodType;
                     })
 
                     newProducts.forEach(name => {
-                        $('#producCode').append(`<option value ="${name.produc_name.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
+                        //$('#producCode').append(`<option value ="${name.produc_name.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
+                        $('#producCode').append(`<option value ="${name.codigo_producto}">${name.codigo_producto} - ${name.nombre_producto}</option>`);
                     });
                 }
                 else {
                     names.forEach(name => {
-                        $('#producCode').append(`<option value ="${name.produc_name.trim()}">${name.produc_code} - ${name.produc_name.trim()}</option>`);
+                        $('#producCode').append(`<option value ="${name.codigo_producto}">${name.codigo_producto} - ${name.nombre_producto}</option>`);
                     });
                 }
             }
@@ -188,6 +189,7 @@
             function searchProduction(option) {
                 let filterObj = buildQueryFilter();
                 console.log(filterObj)
+                console.log(option)
                 if (filterObj != null) {
                     ipcRenderer.send('productionReport:search', [filterObj, option]);
                 }
@@ -195,6 +197,7 @@
 
             function buildQueryFilter() {
                 let filterObject = null;
+                console.log('FilterObject:' + filterObject)
                 if ($('#fromDate').val() != "" || $('#toDate').val() != "" || $('#producType').val() != "-1" || $('#producCode').val() != "-1") {
                     $('#production tbody').empty();
                     $('#msg').text('');
@@ -219,8 +222,8 @@
                     {
                         fromDate: $('#fromDate').val(),
                         toDate: $('#toDate').val(),
-                        producType: typeText,
-                        producCode: codeText
+                        tipo_producto: typeText,
+                        codigo_producto: codeText
                     }
                 }
                 else {

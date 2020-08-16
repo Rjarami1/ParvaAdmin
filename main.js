@@ -789,8 +789,8 @@ ipcMain.on('sales:register', (e, arr) => {
 
 ////////////
 ipcMain.on('productionReport:ready', e => {
-	const text1 = 'SELECT * FROM public.production_view'
-	const text2 = 'SELECT "prodType_description" FROM security."productionTypes" WHERE NOT "prodType_id" = 4;'
+	const text1 = 'SELECT DISTINCT(codigo_producto), nombre_producto, tipo_producto FROM public.production_view ORDER BY tipo_producto ASC' //names
+	const text2 = 'SELECT DISTINCT(tipo_producto) FROM public.production_view' //types
 
 	db.pool.query(text1, (err1, res1) => {
 		if (err1) {
@@ -802,6 +802,8 @@ ipcMain.on('productionReport:ready', e => {
 					console.log(err2.stack)
 					dialog.showErrorBox('Se ha producido un error', err2.stack);
 				} else {
+					//console.log(res1.rows)//types
+					//clsconsole.log(res2.rows)//names
 					mainwc.send('productionReport:info', [res1.rows, res2.rows])
 				}
 			})
@@ -812,20 +814,19 @@ ipcMain.on('productionReport:ready', e => {
 ipcMain.on('productionReport:search', (e, arr) => {
 
 	let obj = arr[0];
-	console.log(obj)
-	let text = 'SELECT "prodType_description", produc_date, produc_code, produc_name, produc_quan, produc_type, name_prod FROM public.production_view WHERE ';
-
+	let text = 'SELECT fecha_produccion, codigo_producto, nombre_producto, cantidad_producida, "tipo_producto" FROM public.production_view WHERE ';
+	console.log(text)
 	if (obj.fromDate.length > 0) {
 		text += `produc_date >= '${obj.fromDate}' AND `;
 	}
 	if (obj.toDate.length > 0) {
 		text += `produc_date >= '${obj.toDate}' AND `;
 	}
-	if (obj.producType.length > 0) {
-		text += `produc_type = '${obj.producType}' AND `;
+	if (obj.tipo_producto.length > 0) {
+		text += `tipo_producto = '${obj.tipo_producto}' AND `;
 	}
-	if (obj.producCode.length > 0) {
-		text += `produc_code = '${obj.producCode}';`;
+	if (obj.codigo_producto.length > 0) {
+		text += `codigo_producto = '${obj.codigo_producto}';`;
 	}
 	else {
 		text = text.slice(0, -5) + ';';
