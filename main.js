@@ -87,20 +87,18 @@ ipcMain.on('login:in', (e, arr) => {
 						dialog.showErrorBox('Se ha producido un error', err2.stack);
 					}
 				})
-				if(userInfo.default_page_id != null){
-					if(userInfo.default_page_id != null){
-						const values3 = [userInfo.default_page_id]
-						db.pool.query(text3, values3, (err3, res3) => {
-							if(err3){
-								console.log(err.stack)
-								dialog.showErrorBox('Se ha producido un error', err3.stack);
-							}
-							else{
-								let pageInfo = res3.rows[0];
-								mainWindow.loadFile('src/' + pageInfo.page_name);
-							}
-						})
-					}
+				if(userInfo.default_page_id != null && userInfo.default_page_id != -1){
+					const values3 = [userInfo.default_page_id]
+					db.pool.query(text3, values3, (err3, res3) => {
+						if(err3){
+							console.log(err.stack)
+							dialog.showErrorBox('Se ha producido un error', err3.stack);
+						}
+						else{
+							let pageInfo = res3.rows[0];
+							mainWindow.loadFile('src/' + pageInfo.page_name);
+						}
+					})
 				}
 				else{
 					mainWindow.loadFile('src/welcome.html')
