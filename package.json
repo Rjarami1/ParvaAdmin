@@ -26,7 +26,7 @@
     "pg": "^7.17.1"
   },
   "devDependencies": {
-    "electron": "^7.1.12",
+    "electron": "^11.5.0",
     "electron-packager": "^15.0.0"
   }
 }
